@@ -1,0 +1,306 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Secen Pick Server
+paths:
+  /dialog:
+    get:
+      parameters:
+        - name: genre
+          required: true
+          type: string
+          in: query
+          description: ““, “anime“, “manga“, “book“のうちのどれか
+        - name: offset
+          required: true
+          type: integer
+          in: query
+          format: int64
+          description: オフセット。初めは0
+        - name: limit
+          required: true
+          type: integer
+          in: query
+          format: int64
+          description: 取得する記録の数
+        - name: sort
+          required: false
+          type: string
+          in: query
+          description: デフォで新着順。””, “like“, “comment“, “combined“
+        - name: q
+          required: false
+          type: string
+          in: query
+          description: "#スタートの場合はタグ, そうでない場合は文字列と判断"
+      operationId: getDialog
+      responses:
+        200:
+          description: return dialogs
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/dialog"
+        400:
+          description: request error
+          schema:
+            $ref: "#/definitions/error"
+        500:
+          description: internal serever error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      parameters:
+        - name: token
+          type: string
+          in: header
+          required: true
+        - name: content
+          required: true
+          in: body
+          description: セリフ投稿時に必要なパラメータ
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+              title:
+                type: string
+              author:
+                type: string
+              link:
+                type: string
+              style:
+                type: string
+              user_id:
+                type: integer
+              comment:
+                type: string
+      operationId: postDialog
+      responses:
+        200:
+          description: 投稿成功
+          schema:
+            type: string
+        400:
+          description: request error
+          schema:
+            $ref: "#/definitions/error"
+        500:
+          description: internal serever error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+  /dialog/{id}/comment:
+    get:
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: offset
+          required: true
+          type: integer
+          in: query
+          format: int64
+          description: オフセット。初めは0
+        - name: limit
+          required: true
+          type: integer
+          in: query
+          format: int64
+          description: 取得する記録の数
+      operationId: getCommentById
+      responses:
+        200:
+          description: 取得成功
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/comment"
+        400:
+          description: request error
+          schema:
+            $ref: "#/definitions/error"
+        500:
+          description: internal serever error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      parameters:
+        - name: id
+          required: true
+          in: path
+          type: string
+        - name: token
+          in: header
+          required: true
+          type: string
+        - name: comment
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              comment:
+                type: string
+      operationId: postComment
+      responses:
+        400:
+          description: request error
+          schema:
+            $ref: "#/definitions/error"
+        500:
+          description: internal serever error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+  /tag:
+    get:
+      parameters:
+        - name: genre
+          required: true
+          type: string
+          in: query
+          description: “title“, “author“, “speaker“, “other“のうちのどれか。typeによる絞り込み。空欄だと全部。
+        - name: offset
+          required: true
+          type: integer
+          in: query
+          format: int64
+          description: オフセット。初めは0
+        - name: limit
+          required: true
+          type: integer
+          in: query
+          format: int64
+          description: 取得する記録の数
+        - name: sort
+          required: false
+          type: string
+          in: query
+          description: デフォで新着順。
+      operationId: getTag
+      responses:
+        200:
+          description: 取得成功
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/tag"
+        400:
+          description: request error
+          schema:
+            $ref: "#/definitions/error"
+        500:
+          description: internal serever error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: postTag
+      parameters:
+        - name: tag
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                description: “title“, “author“, “speaker“ “other“のうちのどれか。typeによる絞り込み。空欄だと全部。
+      responses:
+        400:
+          description: request error
+          schema:
+            $ref: "#/definitions/error"
+        500:
+          description: internal serever error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+
+definitions:
+  dialog:
+    type: object
+    properties:
+      id:
+        type: integer
+      content:
+        type: string
+      title:
+        type: string
+      author:
+        type: string
+      link:
+        type: string
+      style:
+        type: string
+      user_id:
+        type: integer
+  comment:
+    type: object
+    properties:
+      content:
+        type: string
+      user:
+        $ref: "#/definitions/user"
+  user:
+    type: object
+    properties:
+      id:
+        type: integer
+      display_name:
+        type: string
+        description: ユーザ名
+      photo_url:
+        type: string
+        description: 画像の保存先URL
+  tag:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+  error:
+    type: string

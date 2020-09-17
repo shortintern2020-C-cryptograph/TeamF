@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  server:
+    build: ./server
+#    image: shortintern2020-C-cryptograph/TeamF/server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/go/src/github.com/shortintern2020-C-cryptograph/TeamF/server/
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
