@@ -31,4 +31,4 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO_NAME }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA ./server
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
