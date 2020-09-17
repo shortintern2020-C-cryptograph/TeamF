@@ -21,5 +21,22 @@ $ go get -u github.com/go-swagger/go-swagger/cmd/swagger@v0.25.0
 [Custom Server Tutorial](https://goswagger.io/tutorial/custom-server.html) をこのリポジトリでは参考にする。
 
 ```bash
-$ swagger generate server -a routemangement --exclude-main --strict-additional-properties -t gen -f ./swagger.yml
+cd ${GOPATH}/src/github.com/shortintern2020-C-cryptograph/TeamF
+$ swagger generate server -a scenepicks --exclude-main --strict-additional-properties -t gen -f ./swagger.yml
+```
+
+## サーバの起動
+ローカルでサーバを起動する
+```
+# 起動
+make local/run
+```
+
+dockerを利用してサーバを起動
+```
+# 起動
+make docker/run
+
+# 停止
+make docker/stop
 ```
