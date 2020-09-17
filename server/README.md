@@ -16,6 +16,8 @@ $ go get -u github.com/go-swagger/go-swagger/cmd/swagger@v0.25.0
 ```
 
 ## swagger generate
+../swagger.ymlを変更する度、以下のコマンドを実行する。
+
 `go-swagger`を利用して、SwaggerファイルからGoコードを生成する。
 
 [Custom Server Tutorial](https://goswagger.io/tutorial/custom-server.html) をこのリポジトリでは参考にする。
