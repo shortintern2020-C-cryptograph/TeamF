@@ -14,7 +14,8 @@ local/run:
 	@echo 'connect server port :3000 !!!'
 
 docker/run:
-	$(MAKE) docker/run/server
+	docker-compose -f ./docker-compose.yml up -d
+	#$(MAKE) docker/run/server
 #	$(MAKE) docker/run/db
 
 docker/run/server:
@@ -23,9 +24,9 @@ docker/run/server:
 	@echo 'connect server port :3000 !!!'
 
 docker/stop:
-	$(MAKE) docker/stop/server
+	docker-compose down
+	#$(MAKE) docker/stop/server
 	#docker container rm $(SERVER_CONTAINER_NAME)
-
 
 docker/stop/server:
 	docker-compose down

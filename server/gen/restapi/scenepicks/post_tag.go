@@ -117,3 +117,60 @@ func (o *PostTagBody) UnmarshalBinary(b []byte) error {
 	*o = res
 	return nil
 }
+
+// PostTagOKBody post tag o k body
+//
+// swagger:model PostTagOKBody
+type PostTagOKBody struct {
+
+	// id
+	ID int64 `json:"id,omitempty"`
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// UnmarshalJSON unmarshals this object while disallowing additional properties from JSON
+func (o *PostTagOKBody) UnmarshalJSON(data []byte) error {
+	var props struct {
+
+		// id
+		ID int64 `json:"id,omitempty"`
+
+		// message
+		Message string `json:"message,omitempty"`
+	}
+
+	dec := json.NewDecoder(bytes.NewReader(data))
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&props); err != nil {
+		return err
+	}
+
+	o.ID = props.ID
+	o.Message = props.Message
+	return nil
+}
+
+// Validate validates this post tag o k body
+func (o *PostTagOKBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *PostTagOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *PostTagOKBody) UnmarshalBinary(b []byte) error {
+	var res PostTagOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}

@@ -12,6 +12,8 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/validate"
 )
 
 // NewPostTagParams creates a new PostTagParams object
@@ -35,6 +37,11 @@ type PostTagParams struct {
 	  In: body
 	*/
 	Tag PostTagBody
+	/*
+	  Required: true
+	  In: header
+	*/
+	Token string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -68,8 +75,33 @@ func (o *PostTagParams) BindRequest(r *http.Request, route *middleware.MatchedRo
 	} else {
 		res = append(res, errors.Required("tag", "body", ""))
 	}
+	if err := o.bindToken(r.Header[http.CanonicalHeaderKey("token")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindToken binds and validates parameter Token from header.
+func (o *PostTagParams) bindToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("token", "header", rawData)
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+
+	if err := validate.RequiredString("token", "header", raw); err != nil {
+		return err
+	}
+
+	o.Token = raw
+
 	return nil
 }

@@ -18,6 +18,9 @@ var (
 
 func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
   "swagger": "2.0",
   "info": {
     "title": "Secen Pick Server",
@@ -148,7 +151,15 @@ func init() {
           "200": {
             "description": "投稿成功",
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -242,14 +253,14 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "name": "id",
-            "in": "path",
+            "name": "token",
+            "in": "header",
             "required": true
           },
           {
             "type": "string",
-            "name": "token",
-            "in": "header",
+            "name": "id",
+            "in": "path",
             "required": true
           },
           {
@@ -268,9 +279,17 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "登録成功",
+            "description": "投稿成功",
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -370,6 +389,12 @@ func init() {
         "operationId": "postTag",
         "parameters": [
           {
+            "type": "string",
+            "name": "token",
+            "in": "header",
+            "required": true
+          },
+          {
             "name": "tag",
             "in": "body",
             "required": true,
@@ -389,9 +414,17 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "取得成功",
+            "description": "投稿成功",
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -443,18 +476,21 @@ func init() {
         "link": {
           "type": "string"
         },
+        "source": {
+          "type": "string"
+        },
         "style": {
           "type": "string"
         },
         "title": {
           "type": "string"
-        },
-        "user_id": {
-          "type": "integer"
         }
       }
     },
     "error": {
+      "type": "string"
+    },
+    "principal": {
       "type": "string"
     },
     "tag": {
@@ -486,10 +522,20 @@ func init() {
           "type": "string"
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "tokenAuth": {
+      "type": "apiKey",
+      "name": "X-API-Key",
+      "in": "header"
     }
   }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
   "swagger": "2.0",
   "info": {
     "title": "Secen Pick Server",
@@ -620,7 +666,15 @@ func init() {
           "200": {
             "description": "投稿成功",
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -714,14 +768,14 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "name": "id",
-            "in": "path",
+            "name": "token",
+            "in": "header",
             "required": true
           },
           {
             "type": "string",
-            "name": "token",
-            "in": "header",
+            "name": "id",
+            "in": "path",
             "required": true
           },
           {
@@ -740,9 +794,17 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "登録成功",
+            "description": "投稿成功",
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -842,6 +904,12 @@ func init() {
         "operationId": "postTag",
         "parameters": [
           {
+            "type": "string",
+            "name": "token",
+            "in": "header",
+            "required": true
+          },
+          {
             "name": "tag",
             "in": "body",
             "required": true,
@@ -861,9 +929,17 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "取得成功",
+            "description": "投稿成功",
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -915,18 +991,21 @@ func init() {
         "link": {
           "type": "string"
         },
+        "source": {
+          "type": "string"
+        },
         "style": {
           "type": "string"
         },
         "title": {
           "type": "string"
-        },
-        "user_id": {
-          "type": "integer"
         }
       }
     },
     "error": {
+      "type": "string"
+    },
+    "principal": {
       "type": "string"
     },
     "tag": {
@@ -958,6 +1037,13 @@ func init() {
           "type": "string"
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "tokenAuth": {
+      "type": "apiKey",
+      "name": "X-API-Key",
+      "in": "header"
     }
   }
 }`))
