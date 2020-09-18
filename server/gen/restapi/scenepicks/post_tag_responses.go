@@ -13,6 +13,48 @@ import (
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 )
 
+// PostTagOKCode is the HTTP code returned for type PostTagOK
+const PostTagOKCode int = 200
+
+/*PostTagOK 取得成功
+
+swagger:response postTagOK
+*/
+type PostTagOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload string `json:"body,omitempty"`
+}
+
+// NewPostTagOK creates PostTagOK with default headers values
+func NewPostTagOK() *PostTagOK {
+
+	return &PostTagOK{}
+}
+
+// WithPayload adds the payload to the post tag o k response
+func (o *PostTagOK) WithPayload(payload string) *PostTagOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post tag o k response
+func (o *PostTagOK) SetPayload(payload string) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostTagOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	payload := o.Payload
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
+	}
+}
+
 // PostTagBadRequestCode is the HTTP code returned for type PostTagBadRequest
 const PostTagBadRequestCode int = 400
 

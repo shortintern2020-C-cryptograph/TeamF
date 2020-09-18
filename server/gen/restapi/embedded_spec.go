@@ -267,6 +267,23 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": "登録成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/comment"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "request error",
             "schema": {
@@ -382,6 +399,12 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": "取得成功",
+            "schema": {
+              "type": "string"
+            }
+          },
           "400": {
             "description": "request error",
             "schema": {
@@ -727,6 +750,23 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": "登録成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/comment"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "request error",
             "schema": {
@@ -842,6 +882,12 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": "取得成功",
+            "schema": {
+              "type": "string"
+            }
+          },
           "400": {
             "description": "request error",
             "schema": {
