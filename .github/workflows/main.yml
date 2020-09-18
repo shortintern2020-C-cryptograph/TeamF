@@ -30,5 +30,5 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO_NAME }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA ./server
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
+          docker build -t 211193617135.dkr.ecr.ap-northeast-1.amazonaws.com/scenepicks:$GITHUB_SHA ./server
+          docker push 211193617135.dkr.ecr.ap-northeast-1.amazonaws.com/scenepicks:$GITHUB_SHA
