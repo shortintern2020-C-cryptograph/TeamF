@@ -1,0 +1,10 @@
+.container {
+  position: absolute;
+  top: 2%;
+  left: 2%;
+  background-color: #ccc;
+  height: 70px;
+  max-width: 600px;
+  min-width: 350px; //iPhoneXの横幅くらいにしてみた
+  border-radius: 6px;
+}
