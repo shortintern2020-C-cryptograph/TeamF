@@ -24,24 +24,27 @@ func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 }
 
 func PostDialog(p scenepicks.PostDialogParams) middleware.Responder {
-	idToken := p.Token
-	token, err := auth.VerifyIDToken(context.Background(), idToken)
-	if err != nil {
-		fmt.Printf("error verifying ID token: %v\n", err)
-		return scenepicks.NewPostDialogBadRequest()
-	}
-	fmt.Printf("uid: %s", token.UID)
-	userRecord, err := auth.GetUser(context.Background(), token)
-	if err != nil {
-		fmt.Printf("error getting user record: %v\n", err)
-		return scenepicks.NewPostDialogBadRequest()
-	}
+	//idToken := p.Token
+	//token, err := auth.VerifyIDToken(context.Background(), idToken)
+	//if err != nil {
+	//	fmt.Printf("error verifying ID token: %v\n", err)
+	//	return scenepicks.NewPostDialogBadRequest()
+	//}
+	//fmt.Printf("uid: %s", token.UID)
+	//userRecord, err := auth.GetUser(context.Background(), token)
+	//if err != nil {
+	//	fmt.Printf("error getting user record: %v\n", err)
+	//	return scenepicks.NewPostDialogBadRequest()
+	//}
 	// getUserWithFirebaseRecord(userRecord)
 	// =>firebaseUidを持つuserがDBに存在すれば更新、存在しなければ新たに作成
-	schema := make([]*models.Dialog, 0)
-	params := &scenepicks.GetDialogOKBody{
-		Message: "success",
-		Schema:  schema,
-	}
-	return scenepicks.NewPostDialogOK().WithPayload(params)
+	content := p.Content
+	//title := p.Title
+	//author := p.Author
+	//link := p.Link
+	//style := p.Style
+	//comment := p.Comment
+	//tags := p.Tags
+	fmt.Printf("content: %s", content)
+	return scenepicks.NewPostDialogOK().WithPayload("success")
 }
