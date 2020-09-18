@@ -1,22 +1,18 @@
 import Head from 'next/head'
-import { useContext } from 'react'
-import SignIn from '../components/SignIn'
-import AuthContextProvider, { AuthContext } from '../contexts/AuthContext'
 import styles from '../styles/Home.module.scss'
+import Layout from '../components/Layout'
 
 const Home = () => {
-  const { user, setUser, isLoading, setLoading, setSignInModalOpen } = useContext(AuthContext)
-  console.log(user, isLoading)
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div>hello nextjs</div>
-      <button onClick={() => setSignInModalOpen(true)}>open</button>
-      <SignIn />
-    </div>
+    <Layout>
+      <div className={styles.container}>
+        <Head>
+          <title>Create Next App</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        {/* ここにcanvas */}
+      </div>
+    </Layout>
   )
 }
 

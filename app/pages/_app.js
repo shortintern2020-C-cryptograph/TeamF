@@ -14,9 +14,7 @@ const MyApp = ({ Component, pageProps }) => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser)
-        // setSignInSuccessOpen(true)
-        console.log(`successfully logged in!`)
-        addToast('Saved Successfully', { appearance: 'success' })
+        addToast(`signed in as ${firebaseUser.providerData[0].displayName}`, { appearance: 'success' })
       } else {
         setUser(null)
         console.log('not logged in')

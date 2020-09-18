@@ -10,11 +10,10 @@ if (typeof window !== 'undefined') {
   firebaseui = require('firebaseui-ja')
 }
 
-const SignIn = ({ isLoading }) => {
+const SignIn = () => {
   const { ui, setUi, user, signInModalOpen, setSignInModalOpen } = useContext(AuthContext)
 
   const uiStart = () => {
-    console.log('render')
     ui.start('#firebaseui-auth-container', {
       signInSuccessUrl: '/',
       signInOptions: [firebase.auth.TwitterAuthProvider.PROVIDER_ID]
