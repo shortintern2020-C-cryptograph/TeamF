@@ -1,5 +1,3 @@
-/* eslint import/prefer-default-export:0 */
-
 export const firebaseConfig = {
   apiKey: 'AIzaSyDZ-zZYBZ6yjEt5OUShw9OyhnLOM92SLsc',
   authDomain: 'rakuten-ec1cd.firebaseapp.com',

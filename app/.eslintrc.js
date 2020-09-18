@@ -6,9 +6,9 @@ module.exports = {
   plugins: ['react', 'prettier'],
   extends: [
     'plugin:react/recommended',
-    'airbnb',
+    // 'airbnb',
     // 'plugin:import/errors',
-    'plugin:import/warnings',
+    // 'plugin:import/warnings',
     'prettier',
     'prettier/react'
   ],

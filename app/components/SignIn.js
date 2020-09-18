@@ -2,11 +2,11 @@ import React, { useState, useEffect, useContext } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import { AuthContext } from '../contexts/AuthContext'
+
 let firebaseui
 if (typeof window !== 'undefined') {
   firebaseui = require('firebaseui-ja')
 }
-/* eslint react-hooks/exhaustive-deps: 0 */
 
 const SignIn = ({ isLoading }) => {
   const [didMount, setDidMount] = useState(false)

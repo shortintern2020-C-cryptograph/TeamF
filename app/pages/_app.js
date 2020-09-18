@@ -7,7 +7,7 @@ import '../styles/globals.scss'
 import 'firebaseui-ja/dist/firebaseui.css'
 
 const MyApp = ({ Component, pageProps }) => {
-  const { user, setUser, setLoading } = useContext(AuthContext)
+  const { setUser, setLoading } = useContext(AuthContext)
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
