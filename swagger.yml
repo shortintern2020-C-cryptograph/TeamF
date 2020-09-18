@@ -116,7 +116,7 @@ paths:
         - name: id
           required: true
           in: path
-          type: string
+          type: integer
         - name: offset
           required: true
           type: integer
@@ -163,7 +163,7 @@ paths:
         - name: id
           required: true
           in: path
-          type: string
+          type: integer
         - name: comment
           in: body
           required: true

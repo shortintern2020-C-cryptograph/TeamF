@@ -13,6 +13,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
@@ -41,7 +42,7 @@ type PostCommentByIDParams struct {
 	  Required: true
 	  In: path
 	*/
-	ID string
+	ID int64
 	/*
 	  Required: true
 	  In: header
@@ -105,7 +106,11 @@ func (o *PostCommentByIDParams) bindID(rawData []string, hasKey bool, formats st
 	// Required: true
 	// Parameter is provided by construction from the route
 
-	o.ID = raw
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("id", "path", "int64", raw)
+	}
+	o.ID = value
 
 	return nil
 }

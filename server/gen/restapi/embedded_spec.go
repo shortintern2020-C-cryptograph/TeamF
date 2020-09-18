@@ -188,7 +188,7 @@ func init() {
         "operationId": "getCommentById",
         "parameters": [
           {
-            "type": "string",
+            "type": "integer",
             "name": "id",
             "in": "path",
             "required": true
@@ -258,7 +258,7 @@ func init() {
             "required": true
           },
           {
-            "type": "string",
+            "type": "integer",
             "name": "id",
             "in": "path",
             "required": true
@@ -703,7 +703,7 @@ func init() {
         "operationId": "getCommentById",
         "parameters": [
           {
-            "type": "string",
+            "type": "integer",
             "name": "id",
             "in": "path",
             "required": true
@@ -773,7 +773,7 @@ func init() {
             "required": true
           },
           {
-            "type": "string",
+            "type": "integer",
             "name": "id",
             "in": "path",
             "required": true

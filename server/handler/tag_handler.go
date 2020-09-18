@@ -6,6 +6,7 @@ import (
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi/scenepicks"
 	"log"
+	"time"
 )
 
 func GetTag(p scenepicks.GetTagParams) middleware.Responder {
@@ -16,24 +17,9 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 	genre := p.Genre
 	//q := p.Q
 	fmt.Printf("GET /tag offset: %d, limit: %d, sort: %v, genre: %s", offset, limit, sort, genre)
-	schema := make([]*models.Tag, 0)
-
-	// TODO: offset, limit, sortを利用した取得をできるように実装
-	//SELECTを実行
-	rows, err := sqlHandler.DB.Queryx("SELECT * FROM tag")
+	schema, err := getTag()
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	var tag *models.Tag
-	for rows.Next() {
-
-		//rows.Scanの代わりにrows.StructScanを使う
-		err := rows.StructScan(tag)
-		if err != nil {
-			log.Fatal(err)
-		}
-		schema = append(schema, tag)
 	}
 
 	result := &models.Tag{
@@ -58,20 +44,36 @@ func PostTag(p scenepicks.PostTagParams) middleware.Responder {
 	// TODO: ここでfirebase認証
 
 	// DBへ書き込み
-	tx := sqlHandler.DB.MustBegin()
-	result, err := tx.NamedExec("INSERT INTO tag (name, type) VALUES (:name, :type)",
-		map[string]interface{}{
-			"name": p.Tag.Name,
-			"type": p.Tag.Type,
-		})
-	tx.Commit()
+	id, err := postTag(name, tagType)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
-	id, _ := result.LastInsertId()
 	params := &scenepicks.PostTagOKBody{
 		Message: "success",
 		ID:      id,
 	}
 	return scenepicks.NewPostTagOK().WithPayload(params)
+}
+
+type tag struct {
+
+	// id
+	ID int64 `json:"id,omitempty" db:"id"`
+
+	Name string `json:"id,omitempty" db:"name"`
+
+	Type string `json:"type,omitempty" db:"type"`
+
+	CTime time.Time `json:"ctime" db:"ctime"`
+
+	UTime time.Time `json:"utime" db:"utime"`
+}
+
+func mapTag(t tag) models.Tag {
+	res := models.Tag{
+		ID:   t.ID,
+		Name: t.Name,
+		Type: t.Type,
+	}
+	return res
 }

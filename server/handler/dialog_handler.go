@@ -14,26 +14,18 @@ import (
 
 func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 	genre := p.Genre
-
 	fmt.Printf("genre: %s", genre)
-	schema := make([]*models.Dialog, 0)
 
-	// TODO: 1. offset, limitを利用した取得をできるようにする
-	// TODO: 2. queryを利用した検索をできるようにする(likeを利用?)
-	dialogs := []dialog{}
-	err := sqlHandler.DB.Select(&dialogs, "SELECT * FROM dialog where source=?", p.Genre)
+	schema, err := getDialog(genre)
 	if err != nil {
 		log.Fatal(err)
-	}
-	for _, x := range dialogs {
-		res := mapDialog(x)
-		schema = append(schema, &res)
 	}
 
 	params := &scenepicks.GetDialogOKBody{
 		Message: "success",
 		Schema:  schema,
 	}
+
 	return scenepicks.NewGetDialogOK().WithPayload(params)
 }
 
@@ -54,31 +46,23 @@ func PostDialog(p scenepicks.PostDialogParams) middleware.Responder {
 	//}
 	// getUserWithFirebaseRecord(userRecord)
 	// =>firebaseUidを持つuserがDBに存在すれば更新、存在しなければ新たに作成
-	content := p.Content
+	content := p.Content.Content
 	//title := p.Title
 	//author := p.Author
 	//link := p.Link
 	//style := p.Style
 	//comment := p.Comment
 	//tags := p.Tags
-	fmt.Printf("POST /tag content: %s, key: %s", content.Comment, p.Token)
-
-	// DBへの書き込み
-	tx := sqlHandler.DB.MustBegin()
-	result, err := tx.NamedExec("INSERT INTO dialog (content, title, author, source, link, style) VALUES (:content, :title, :author, :source, :link, :style)",
-		map[string]interface{}{
-			"content": p.Content.Content,
-			"title":   p.Content.Title,
-			"author":  p.Content.Author,
-			"source":  "normal",
-			"link":    p.Content.Link,
-			"style":   p.Content.Style,
-		})
-	tx.Commit()
+	fmt.Printf("POST /tag content: %s, key: %s", content, p.Token)
+	title := p.Content.Title
+	author := p.Content.Author
+	source := ""
+	link := p.Content.Link
+	style := p.Content.Style
+	id, err := postDialog(content, title, author, source, link, style)
 	if err != nil {
 		log.Fatal(err)
 	}
-	id, _ := result.LastInsertId()
 	params := &scenepicks.PostDialogOKBody{
 		Message: "success",
 		ID:      id,
