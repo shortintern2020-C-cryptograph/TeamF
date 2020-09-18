@@ -1,11 +1,9 @@
 import firebase from 'firebase/app'
+import 'firebase/auth'
 import { firebaseConfig } from './constants'
 
-const InitializeFirebase = () => {
-  if (firebase.apps.length > 0) {
-    return
-  }
+if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig)
+  firebase.auth().languageCode = 'ja'
 }
-
-export default InitializeFirebase
+export default firebase
