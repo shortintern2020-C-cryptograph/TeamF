@@ -3,11 +3,12 @@ import firebase from '../config/firebase'
 import 'firebase/auth'
 import AuthContextProvider, { AuthContext } from '../contexts/AuthContext'
 import '../styles/globals.scss'
-// import '../styles/firebaseui.module.css'
 import 'firebaseui-ja/dist/firebaseui.css'
 import Splash from '../components/Splash'
+import { ToastProvider, useToasts } from 'react-toast-notifications'
 
 const MyApp = ({ Component, pageProps }) => {
+  const { addToast } = useToasts()
   const { setUser, setLoading, isLoading } = useContext(AuthContext)
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
@@ -15,6 +16,7 @@ const MyApp = ({ Component, pageProps }) => {
         setUser(firebaseUser)
         // setSignInSuccessOpen(true)
         console.log(`successfully logged in!`)
+        addToast('Saved Successfully', { appearance: 'success' })
       } else {
         setUser(null)
         console.log('not logged in')
@@ -30,9 +32,11 @@ const MyApp = ({ Component, pageProps }) => {
 
 const MyAppContainer = ({ Component, pageProps }) => {
   return (
-    <AuthContextProvider>
-      <MyApp pageProps={pageProps} Component={Component} />
-    </AuthContextProvider>
+    <ToastProvider PlacementType="bottom-center" autoDismiss={true}>
+      <AuthContextProvider>
+        <MyApp pageProps={pageProps} Component={Component} />
+      </AuthContextProvider>
+    </ToastProvider>
   )
 }
 
