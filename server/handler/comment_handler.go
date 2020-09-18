@@ -33,5 +33,5 @@ func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 func PostCommentById(p scenepicks.PostCommentByIDParams) middleware.Responder {
 	comment := p.Comment
 	fmt.Printf("comment: %s", comment)
-	return scenepicks.NewPostCommentByIDDefault()
+	return scenepicks.NewPostCommentByIDOK().WithPayload("success")
 }

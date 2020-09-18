@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"context"
 	"fmt"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 	//"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi"
