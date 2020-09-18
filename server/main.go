@@ -1,14 +1,19 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
+	firebase "firebase.google.com/go"
+	"google.golang.org/api/option"
+	"firebase.google.com/go/auth"
 	"github.com/go-openapi/loads"
-	"github.com/go-openapi/runtime/middleware"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi/scenepicks"
 	"log"
+	"net/http"
+	"os"
 )
 
 func main() {
@@ -26,6 +31,18 @@ func main() {
 	flag.Parse()
 	server.Port = *portFlag
 
+	opt := option.WithCredentialsFile(os.Getenv("rakuten-ec1cd-firebase-adminsdk-tzhja-b3295121a5.json"))
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		os.Exit(1)
+	}
+	auth, err := app.Auth(context.Background())
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		os.Exit(1)
+	}
+
 	api.GetDialogHandler = scenepicks.GetDialogHandlerFunc(
 		func(p scenepicks.GetDialogParams) middleware.Responder {
 			genre := p.Genre
@@ -38,7 +55,36 @@ func main() {
 			return scenepicks.NewGetDialogOK().WithPayload(params)
 		})
 
+	api.PostDialogHandler = scenepicks.PostDialogHandlerFunc(
+		func(p scenepicks.PostDialogParams) middleware.Responder {
+			idToken := p.Token
+			token, err := auth.VerifyIDToken(context.Background(), idToken)
+			if err != nil {
+				fmt.Printf("error verifying ID token: %v\n", err)
+				return scenepicks.NewPostDialogBadRequest()
+			}
+			fmt.Printf("uid: %s", token.UID)
+			userRecord, err := auth.GetUser(context.Background(), token)
+			if err != nil {
+				fmt.Printf("error getting user record: %v\n", err)
+				return scenepicks.NewPostDialogBadRequest()
+			}
+			// getUserWithFirebaseRecord(userRecord)
+			// =>firebaseUidを持つuserがDBに存在すれば更新、存在しなければ新たに作成
+			schema := make([]*models.Dialog, 0)
+			params := &scenepicks.GetDialogOKBody{
+				Message: "success",
+				Schema:  schema,
+			}
+			return scenepicks.NewPostDialogOK().WithPayload(params)
+		})
+
+
+
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)
 	}
 }
+
+
+
