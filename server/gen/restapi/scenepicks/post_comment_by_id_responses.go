@@ -25,7 +25,7 @@ type PostCommentByIDOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *PostCommentByIDOKBody `json:"body,omitempty"`
+	Payload string `json:"body,omitempty"`
 }
 
 // NewPostCommentByIDOK creates PostCommentByIDOK with default headers values
@@ -35,13 +35,13 @@ func NewPostCommentByIDOK() *PostCommentByIDOK {
 }
 
 // WithPayload adds the payload to the post comment by Id o k response
-func (o *PostCommentByIDOK) WithPayload(payload *PostCommentByIDOKBody) *PostCommentByIDOK {
+func (o *PostCommentByIDOK) WithPayload(payload string) *PostCommentByIDOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post comment by Id o k response
-func (o *PostCommentByIDOK) SetPayload(payload *PostCommentByIDOKBody) {
+func (o *PostCommentByIDOK) SetPayload(payload string) {
 	o.Payload = payload
 }
 
@@ -49,11 +49,9 @@ func (o *PostCommentByIDOK) SetPayload(payload *PostCommentByIDOKBody) {
 func (o *PostCommentByIDOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	if o.Payload != nil {
-		payload := o.Payload
-		if err := producer.Produce(rw, payload); err != nil {
-			panic(err) // let the recovery middleware deal with this
-		}
+	payload := o.Payload
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
 	}
 }
 

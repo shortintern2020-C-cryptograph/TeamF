@@ -270,18 +270,7 @@ func init() {
           "200": {
             "description": "登録成功",
             "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/comment"
-                  }
-                }
-              }
+              "type": "string"
             }
           },
           "400": {
@@ -753,18 +742,7 @@ func init() {
           "200": {
             "description": "登録成功",
             "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/comment"
-                  }
-                }
-              }
+              "type": "string"
             }
           },
           "400": {
