@@ -167,6 +167,10 @@ paths:
                 type: string
       operationId: postCommentById
       responses:
+        200:
+          description: 登録成功
+          schema:
+            type: string
         400:
           description: request error
           schema:
@@ -244,6 +248,10 @@ paths:
                 type: string
                 description: “title“, “author“, “speaker“ “other“のうちのどれか。typeによる絞り込み。空欄だと全部。
       responses:
+        200:
+          description: 取得成功
+          schema:
+            type: string
         400:
           description: request error
           schema:
