@@ -5,9 +5,10 @@ import AuthContextProvider, { AuthContext } from '../contexts/AuthContext'
 import '../styles/globals.scss'
 // import '../styles/firebaseui.module.css'
 import 'firebaseui-ja/dist/firebaseui.css'
+import Splash from '../components/Splash'
 
 const MyApp = ({ Component, pageProps }) => {
-  const { setUser, setLoading } = useContext(AuthContext)
+  const { setUser, setLoading, isLoading } = useContext(AuthContext)
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
@@ -21,6 +22,9 @@ const MyApp = ({ Component, pageProps }) => {
       setLoading(false)
     })
   }, [])
+  if (isLoading) {
+    return <Splash />
+  }
   return <Component {...pageProps} />
 }
 

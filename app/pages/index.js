@@ -5,8 +5,8 @@ import AuthContextProvider, { AuthContext } from '../contexts/AuthContext'
 import styles from '../styles/Home.module.scss'
 
 const Home = () => {
-  // const { user, setUser, isLoading, setLoading } = useContext(AuthContext)
-  // console.log(user, isLoading)
+  const { user, setUser, isLoading, setLoading, setSignInModalOpen } = useContext(AuthContext)
+  console.log(user, isLoading)
   return (
     <div className={styles.container}>
       <Head>
@@ -14,6 +14,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>hello nextjs</div>
+      <button onClick={() => setSignInModalOpen(true)}>open</button>
       <SignIn />
     </div>
   )
