@@ -24,7 +24,6 @@ func main() {
 	api := scenepicks.NewSecenPickServerAPI(swaggerSpec)
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
-
 	flag.Parse()
 	server.Port = *portFlag
 
@@ -64,12 +63,9 @@ func main() {
 	//		return scenepicks.NewPostDialogOK().WithPayload(params)
 	//	})
 
-
+	server.ConfigureAPI() // ここで各ハンドラとAPIを繋ぐ
 
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)
 	}
 }
-
-
-

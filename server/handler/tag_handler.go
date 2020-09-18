@@ -12,9 +12,16 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 	offset := p.Offset
 	limit := p.Limit
 	sort := p.Sort
+	genre := p.Genre
 	//q := p.Q
-	fmt.Printf("offset: %d, limit: %d, sort: %v", offset, limit, sort)
+	fmt.Printf("GET /tag offset: %d, limit: %d, sort: %v, genre: %s\n", offset, limit, sort, genre)
 	schema := make([]*models.Tag, 0)
+	result := &models.Tag{
+		ID:   1,
+		Name: "ハウルの動く城",
+		Type: "アニメ",
+	}
+	schema = append(schema, result)
 	params := &scenepicks.GetTagOKBody{
 		Message: "success",
 		Schema:  schema,
@@ -29,6 +36,7 @@ func PostTag(p scenepicks.PostTagParams) middleware.Responder {
 	//dialog_id := p.DialogId
 	name := p.Tag.Name
 	tagType := p.Tag.Type
-	fmt.Printf("name: %s, type: %s", name, tagType)
+	token := p.XToken
+	fmt.Printf("POST /tag name: %s, type: %s, token: %s\n", name, tagType, token)
 	return scenepicks.NewPostTagOK().WithPayload("success")
 }

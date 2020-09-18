@@ -9,11 +9,9 @@ import (
 	//"os"
 )
 
-
-
 func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 	genre := p.Genre
-	fmt.Printf("genre: %s", genre)
+	fmt.Printf("GET /dialog genre: %s\n", genre)
 	schema := make([]*models.Dialog, 0)
 	params := &scenepicks.GetDialogOKBody{
 		Message: "success",
@@ -44,6 +42,6 @@ func PostDialog(p scenepicks.PostDialogParams) middleware.Responder {
 	//style := p.Style
 	//comment := p.Comment
 	//tags := p.Tags
-	fmt.Printf("content: %s", content)
+	fmt.Printf("POST /dialog content: %s, key: %s\n", content.Comment, p.XToken)
 	return scenepicks.NewPostDialogOK().WithPayload("success")
 }

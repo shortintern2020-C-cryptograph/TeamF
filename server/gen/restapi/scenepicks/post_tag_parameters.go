@@ -12,6 +12,8 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/validate"
 )
 
 // NewPostTagParams creates a new PostTagParams object
@@ -32,6 +34,11 @@ type PostTagParams struct {
 
 	/*
 	  Required: true
+	  In: header
+	*/
+	XToken string
+	/*
+	  Required: true
 	  In: body
 	*/
 	Tag PostTagBody
@@ -45,6 +52,10 @@ func (o *PostTagParams) BindRequest(r *http.Request, route *middleware.MatchedRo
 	var res []error
 
 	o.HTTPRequest = r
+
+	if err := o.bindXToken(r.Header[http.CanonicalHeaderKey("X-Token")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
@@ -71,5 +82,26 @@ func (o *PostTagParams) BindRequest(r *http.Request, route *middleware.MatchedRo
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindXToken binds and validates parameter XToken from header.
+func (o *PostTagParams) bindXToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("X-Token", "header", rawData)
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+
+	if err := validate.RequiredString("X-Token", "header", raw); err != nil {
+		return err
+	}
+
+	o.XToken = raw
+
 	return nil
 }

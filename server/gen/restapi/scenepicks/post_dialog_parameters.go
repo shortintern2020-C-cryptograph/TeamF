@@ -32,16 +32,16 @@ type PostDialogParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*
+	  Required: true
+	  In: header
+	*/
+	XToken string
 	/*セリフ投稿時に必要なパラメータ
 	  Required: true
 	  In: body
 	*/
 	Content PostDialogBody
-	/*
-	  Required: true
-	  In: header
-	*/
-	Token string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -52,6 +52,10 @@ func (o *PostDialogParams) BindRequest(r *http.Request, route *middleware.Matche
 	var res []error
 
 	o.HTTPRequest = r
+
+	if err := o.bindXToken(r.Header[http.CanonicalHeaderKey("X-Token")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
@@ -75,20 +79,16 @@ func (o *PostDialogParams) BindRequest(r *http.Request, route *middleware.Matche
 	} else {
 		res = append(res, errors.Required("content", "body", ""))
 	}
-	if err := o.bindToken(r.Header[http.CanonicalHeaderKey("token")], true, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
 }
 
-// bindToken binds and validates parameter Token from header.
-func (o *PostDialogParams) bindToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindXToken binds and validates parameter XToken from header.
+func (o *PostDialogParams) bindXToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	if !hasKey {
-		return errors.Required("token", "header", rawData)
+		return errors.Required("X-Token", "header", rawData)
 	}
 	var raw string
 	if len(rawData) > 0 {
@@ -97,11 +97,11 @@ func (o *PostDialogParams) bindToken(rawData []string, hasKey bool, formats strf
 
 	// Required: true
 
-	if err := validate.RequiredString("token", "header", raw); err != nil {
+	if err := validate.RequiredString("X-Token", "header", raw); err != nil {
 		return err
 	}
 
-	o.Token = raw
+	o.XToken = raw
 
 	return nil
 }

@@ -2,6 +2,8 @@ swagger: '2.0'
 info:
   version: 1.0.0
   title: Secen Pick Server
+consumes:
+  - application/json
 paths:
   /dialog:
     get:
@@ -60,10 +62,10 @@ paths:
             $ref: "#/definitions/error"
     post:
       parameters:
-        - name: token
+        - name: X-Token
+          required: true
           type: string
           in: header
-          required: true
         - name: content
           required: true
           in: body
@@ -149,13 +151,13 @@ paths:
             $ref: "#/definitions/error"
     post:
       parameters:
+        - name: X-Token
+          required: true
+          type: string
+          in: header
         - name: id
           required: true
           in: path
-          type: string
-        - name: token
-          in: header
-          required: true
           type: string
         - name: comment
           in: body
@@ -236,6 +238,10 @@ paths:
     post:
       operationId: postTag
       parameters:
+        - name: X-Token
+          required: true
+          type: string
+          in: header
         - name: tag
           in: body
           required: true

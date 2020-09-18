@@ -10,7 +10,7 @@ import (
 func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 	offset := p.Offset
 	limit := p.Limit
-	fmt.Printf("offset: %s, limit: %s", offset, limit)
+	fmt.Printf("Post /comment offset: %s, limit: %s\n", offset, limit)
 
 	schema := make([]*models.Comment, 0)
 	result := &models.Comment{
@@ -32,6 +32,6 @@ func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 
 func PostCommentById(p scenepicks.PostCommentByIDParams) middleware.Responder {
 	comment := p.Comment
-	fmt.Printf("comment: %s", comment)
+	fmt.Printf("POST /comment comment: %s, token: %s\n", comment, p.XToken)
 	return scenepicks.NewPostCommentByIDOK().WithPayload("success")
 }

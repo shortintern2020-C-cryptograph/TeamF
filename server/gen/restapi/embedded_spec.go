@@ -18,6 +18,9 @@ var (
 
 func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
   "swagger": "2.0",
   "info": {
     "title": "Secen Pick Server",
@@ -107,7 +110,7 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "name": "token",
+            "name": "X-Token",
             "in": "header",
             "required": true
           },
@@ -242,14 +245,14 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "name": "id",
-            "in": "path",
+            "name": "X-Token",
+            "in": "header",
             "required": true
           },
           {
             "type": "string",
-            "name": "token",
-            "in": "header",
+            "name": "id",
+            "in": "path",
             "required": true
           },
           {
@@ -369,6 +372,12 @@ func init() {
       "post": {
         "operationId": "postTag",
         "parameters": [
+          {
+            "type": "string",
+            "name": "X-Token",
+            "in": "header",
+            "required": true
+          },
           {
             "name": "tag",
             "in": "body",
@@ -490,6 +499,9 @@ func init() {
   }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
   "swagger": "2.0",
   "info": {
     "title": "Secen Pick Server",
@@ -579,7 +591,7 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "name": "token",
+            "name": "X-Token",
             "in": "header",
             "required": true
           },
@@ -714,14 +726,14 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "name": "id",
-            "in": "path",
+            "name": "X-Token",
+            "in": "header",
             "required": true
           },
           {
             "type": "string",
-            "name": "token",
-            "in": "header",
+            "name": "id",
+            "in": "path",
             "required": true
           },
           {
@@ -841,6 +853,12 @@ func init() {
       "post": {
         "operationId": "postTag",
         "parameters": [
+          {
+            "type": "string",
+            "name": "X-Token",
+            "in": "header",
+            "required": true
+          },
           {
             "name": "tag",
             "in": "body",

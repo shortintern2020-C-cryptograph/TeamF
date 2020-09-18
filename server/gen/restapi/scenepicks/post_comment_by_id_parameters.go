@@ -34,6 +34,11 @@ type PostCommentByIDParams struct {
 
 	/*
 	  Required: true
+	  In: header
+	*/
+	XToken string
+	/*
+	  Required: true
 	  In: body
 	*/
 	Comment PostCommentByIDBody
@@ -42,11 +47,6 @@ type PostCommentByIDParams struct {
 	  In: path
 	*/
 	ID string
-	/*
-	  Required: true
-	  In: header
-	*/
-	Token string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -57,6 +57,10 @@ func (o *PostCommentByIDParams) BindRequest(r *http.Request, route *middleware.M
 	var res []error
 
 	o.HTTPRequest = r
+
+	if err := o.bindXToken(r.Header[http.CanonicalHeaderKey("X-Token")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
@@ -85,13 +89,30 @@ func (o *PostCommentByIDParams) BindRequest(r *http.Request, route *middleware.M
 		res = append(res, err)
 	}
 
-	if err := o.bindToken(r.Header[http.CanonicalHeaderKey("token")], true, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindXToken binds and validates parameter XToken from header.
+func (o *PostCommentByIDParams) bindXToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("X-Token", "header", rawData)
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+
+	if err := validate.RequiredString("X-Token", "header", raw); err != nil {
+		return err
+	}
+
+	o.XToken = raw
+
 	return nil
 }
 
@@ -106,27 +127,6 @@ func (o *PostCommentByIDParams) bindID(rawData []string, hasKey bool, formats st
 	// Parameter is provided by construction from the route
 
 	o.ID = raw
-
-	return nil
-}
-
-// bindToken binds and validates parameter Token from header.
-func (o *PostCommentByIDParams) bindToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("token", "header", rawData)
-	}
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: true
-
-	if err := validate.RequiredString("token", "header", raw); err != nil {
-		return err
-	}
-
-	o.Token = raw
 
 	return nil
 }
