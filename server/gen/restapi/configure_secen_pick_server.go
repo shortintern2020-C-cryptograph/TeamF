@@ -4,6 +4,7 @@ package restapi
 
 import (
 	"crypto/tls"
+	"github.com/shortintern2020-C-cryptograph/TeamF/server/handler"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -47,6 +48,13 @@ func configureAPI(api *scenepicks.SecenPickServerAPI) http.Handler {
 			return middleware.NotImplemented("operation scenepicks.PostDialog has not yet been implemented")
 		})
 	}
+
+	api.GetDialogHandler = scenepicks.GetDialogHandlerFunc(handler.GetDialog)
+	api.PostDialogHandler = scenepicks.PostDialogHandlerFunc(handler.PostDialog)
+	api.GetCommentByIDHandler = scenepicks.GetCommentByIDHandlerFunc(handler.GetCommentById)
+	api.PostCommentByIDHandler = scenepicks.PostCommentByIDHandlerFunc(handler.PostCommentById)
+	api.GetTagHandler = scenepicks.GetTagHandlerFunc(handler.GetTag)
+	api.PostTagHandler = scenepicks.PostTagHandlerFunc(handler.PostTag)
 
 	api.PreServerShutdown = func() {}
 
