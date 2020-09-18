@@ -4,9 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	firebase "firebase.google.com/go"
-	"google.golang.org/api/option"
-	"firebase.google.com/go/auth"
 	"github.com/go-openapi/loads"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi"
@@ -30,18 +27,6 @@ func main() {
 
 	flag.Parse()
 	server.Port = *portFlag
-
-	opt := option.WithCredentialsFile(os.Getenv("rakuten-ec1cd-firebase-adminsdk-tzhja-b3295121a5.json"))
-	app, err := firebase.NewApp(context.Background(), nil, opt)
-	if err != nil {
-		fmt.Printf("error: %v\n", err)
-		os.Exit(1)
-	}
-	auth, err := app.Auth(context.Background())
-	if err != nil {
-		fmt.Printf("error: %v\n", err)
-		os.Exit(1)
-	}
 
 	api.GetDialogHandler = scenepicks.GetDialogHandlerFunc(
 		func(p scenepicks.GetDialogParams) middleware.Responder {
