@@ -1,0 +1,12 @@
+.container {
+  position: absolute;
+  bottom: 2%;
+  right: 2%;
+  background-color: #ccc;
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  // flex のほうがいいかも
+  // vertical align わからない
+  text-align: center;
+}
