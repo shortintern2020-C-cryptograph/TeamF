@@ -51,8 +51,8 @@ func NewSecenPickServerAPI(spec *loads.Document) *SecenPickServerAPI {
 		GetTagHandler: GetTagHandlerFunc(func(params GetTagParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetTag has not yet been implemented")
 		}),
-		PostCommentHandler: PostCommentHandlerFunc(func(params PostCommentParams) middleware.Responder {
-			return middleware.NotImplemented("operation PostComment has not yet been implemented")
+		PostCommentByIDHandler: PostCommentByIDHandlerFunc(func(params PostCommentByIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostCommentByID has not yet been implemented")
 		}),
 		PostDialogHandler: PostDialogHandlerFunc(func(params PostDialogParams) middleware.Responder {
 			return middleware.NotImplemented("operation PostDialog has not yet been implemented")
@@ -100,8 +100,8 @@ type SecenPickServerAPI struct {
 	GetDialogHandler GetDialogHandler
 	// GetTagHandler sets the operation handler for the get tag operation
 	GetTagHandler GetTagHandler
-	// PostCommentHandler sets the operation handler for the post comment operation
-	PostCommentHandler PostCommentHandler
+	// PostCommentByIDHandler sets the operation handler for the post comment by Id operation
+	PostCommentByIDHandler PostCommentByIDHandler
 	// PostDialogHandler sets the operation handler for the post dialog operation
 	PostDialogHandler PostDialogHandler
 	// PostTagHandler sets the operation handler for the post tag operation
@@ -191,8 +191,8 @@ func (o *SecenPickServerAPI) Validate() error {
 	if o.GetTagHandler == nil {
 		unregistered = append(unregistered, "GetTagHandler")
 	}
-	if o.PostCommentHandler == nil {
-		unregistered = append(unregistered, "PostCommentHandler")
+	if o.PostCommentByIDHandler == nil {
+		unregistered = append(unregistered, "PostCommentByIDHandler")
 	}
 	if o.PostDialogHandler == nil {
 		unregistered = append(unregistered, "PostDialogHandler")
@@ -303,7 +303,7 @@ func (o *SecenPickServerAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/dialog/{id}/comment"] = NewPostComment(o.context, o.PostCommentHandler)
+	o.handlers["POST"]["/dialog/{id}/comment"] = NewPostCommentByID(o.context, o.PostCommentByIDHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}

@@ -238,7 +238,7 @@ func init() {
         }
       },
       "post": {
-        "operationId": "postComment",
+        "operationId": "postCommentById",
         "parameters": [
           {
             "type": "string",
@@ -698,7 +698,7 @@ func init() {
         }
       },
       "post": {
-        "operationId": "postComment",
+        "operationId": "postCommentById",
         "parameters": [
           {
             "type": "string",
