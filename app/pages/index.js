@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { useContext } from 'react'
+import SignIn from '../components/SignIn'
 import AuthContextProvider, { AuthContext } from '../contexts/AuthContext'
 import styles from '../styles/Home.module.scss'
 
@@ -13,6 +14,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>hello nextjs</div>
+      <SignIn />
     </div>
   )
 }
