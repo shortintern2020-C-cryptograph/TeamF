@@ -14,3 +14,20 @@
 ```
 
 ## 開発flow
+
+## client直接さわりたいとき
+`make mysql/client`で入れる
+
+## migrateしたいとき
+`database/migration/schema`にmigrationファイルを書き、
+
+`make flyway/migrate`でmigrate
+
+## migration失敗してどうにもならなくなったとき
+`make flyway/clean`
+
+`make flyway/baseline`
+
+`make flyway/migrate`
+
+で大抵直る

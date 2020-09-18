@@ -11,3 +11,21 @@ services:
     image: mysql
     ports:
       - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: nexus-db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - data-volume:/var/lib/mysql
+
+  migration:
+    image: flyway/flyway
+    depends_on:
+      - db
+    container_name: nexus-migration
+    volumes:
+      - ./database/migration/schema:/flyway/sql
+
+
+volumes:
+  data-volume:
