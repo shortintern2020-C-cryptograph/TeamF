@@ -3,15 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "env-cmd -f .env next dev",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "axios": "^0.20.0",
+    "env-cmd": "^10.1.0",
+    "firebase": "^7.21.0",
+    "firebaseui": "^4.6.1",
+    "firebaseui-ja": "^1.0.0",
     "matter-js": "^0.14.2",
     "next": "9.5.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-modal": "^3.11.2",
     "sass": "^1.26.10"
   },
   "devDependencies": {
