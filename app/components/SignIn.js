@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import { AuthContext } from '../contexts/AuthContext'
+import Modal from 'react-modal'
+import styles from '../styles/Signin.module.scss'
 
 let firebaseui
 if (typeof window !== 'undefined') {
@@ -9,10 +11,10 @@ if (typeof window !== 'undefined') {
 }
 
 const SignIn = ({ isLoading }) => {
-  const [didMount, setDidMount] = useState(false)
-  const { ui, setUi, user } = useContext(AuthContext)
+  const { ui, setUi, user, signInModalOpen, setSignInModalOpen } = useContext(AuthContext)
 
   const uiStart = () => {
+    console.log('render')
     ui.start('#firebaseui-auth-container', {
       signInSuccessUrl: '/',
       signInOptions: [firebase.auth.TwitterAuthProvider.PROVIDER_ID]
@@ -22,24 +24,10 @@ const SignIn = ({ isLoading }) => {
   }
 
   useEffect(() => {
-    if (didMount && !ui) {
+    if (!ui) {
       setUi(firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()))
-    }
-  }, [isLoading])
-
-  useEffect(() => {
-    setDidMount(true)
-    if (!isLoading && !ui) {
-      setUi(firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()))
-    }
-    if (!isLoading && !!ui) {
-      uiStart()
     }
   }, [])
-
-  useEffect(() => {
-    if (didMount) uiStart()
-  }, [ui])
 
   const handleLogOut = () => {
     firebase
@@ -52,24 +40,57 @@ const SignIn = ({ isLoading }) => {
       })
   }
 
+  const closeModal = () => {
+    setSignInModalOpen(false)
+  }
+
+  const afterOpenModal = () => {
+    uiStart()
+  }
+
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      borderRadius: '4px',
+      boxShadow: '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2)'
+    },
+    overlay: {
+      backgroundColor: 'rgba(255, 255, 255, 0.75)'
+    }
+  }
+
   return (
-    <div style={{ border: '1px solid grey', padding: '2em', textAlign: 'center' }}>
-      <h3>ログイン</h3>
-      <div className="loginCard">
-        <div id="firebaseui-auth-container" />
-        {user && (
-          <p style={{ textAlign: 'center' }}>
-            ログインしているよ！
-            <button onClick={handleLogOut} type="button">
-              ログアウト
-            </button>
-            <br />
-            <br />
-            <span style={{ wordBreak: 'break-word' }}>{JSON.stringify(user.providerData[0])}</span>
-          </p>
-        )}
+    <Modal
+      // closeTimeoutMS={500}
+      isOpen={signInModalOpen}
+      onRequestClose={closeModal}
+      onAfterOpen={afterOpenModal}
+      ariaHideApp={false}
+      style={customStyles}
+      contentLabel="Example Modal">
+      <div style={{ padding: '1em 2em', textAlign: 'center' }}>
+        <h3>投稿するにはログインしーてね</h3>
+        <div className="loginCard">
+          <div id="firebaseui-auth-container" />
+          {user && (
+            <p style={{ textAlign: 'center' }}>
+              ログインしているよ！
+              <button onClick={handleLogOut} type="button">
+                ログアウト
+              </button>
+              <br />
+              <br />
+              <span style={{ wordBreak: 'break-word' }}>{JSON.stringify(user.providerData[0])}</span>
+            </p>
+          )}
+        </div>
       </div>
-    </div>
+    </Modal>
   )
 }
 
