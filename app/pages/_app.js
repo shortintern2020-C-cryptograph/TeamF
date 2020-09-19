@@ -37,7 +37,9 @@ const MyAppContainer = ({ Component, pageProps }) => {
   return (
     <ToastProvider PlacementType="bottom-center" autoDismiss={true}>
       <AuthContextProvider>
-        <MyApp pageProps={pageProps} Component={Component} />
+        <PageTransition>
+          <MyApp pageProps={pageProps} Component={Component} />
+        </PageTransition>
       </AuthContextProvider>
     </ToastProvider>
   )
