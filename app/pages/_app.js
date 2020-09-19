@@ -6,6 +6,7 @@ import '../styles/globals.scss'
 import 'firebaseui-ja/dist/firebaseui.css'
 import Splash from '../components/Splash'
 import { ToastProvider, useToasts } from 'react-toast-notifications'
+import { PageTransition } from '../components/PageTransition'
 
 const MyApp = ({ Component, pageProps }) => {
   const { addToast } = useToasts()
@@ -25,14 +26,20 @@ const MyApp = ({ Component, pageProps }) => {
   if (isLoading) {
     return <Splash />
   }
-  return <Component {...pageProps} />
+  return (
+    <PageTransition>
+      <Component {...pageProps} />
+    </PageTransition>
+  )
 }
 
 const MyAppContainer = ({ Component, pageProps }) => {
   return (
     <ToastProvider PlacementType="bottom-center" autoDismiss={true}>
       <AuthContextProvider>
-        <MyApp pageProps={pageProps} Component={Component} />
+        <PageTransition>
+          <MyApp pageProps={pageProps} Component={Component} />
+        </PageTransition>
       </AuthContextProvider>
     </ToastProvider>
   )
