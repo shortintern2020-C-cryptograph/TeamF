@@ -27,29 +27,9 @@ cd ${GOPATH}/src/github.com/shortintern2020-C-cryptograph/TeamF
 $ swagger generate server -a scenepicks --exclude-main --strict-additional-properties -t gen -f ./swagger.yml
 ```
 
-## サーバの起動
-ローカルでサーバを起動する
-```
-# 起動
-make local/run
-```
-
-dockerを利用してサーバを起動
-```
-# 起動
-make docker/run
-
-# 停止
-make docker/stop
-```
-
 ## テスト
-以下の環境変数を設定
-```
-export DBNAME=nexus_db
-export DB_SERVICE=db
-```
-環境変数設定後、コマンドを実行
+コマンドを実行
 ``` 
+cd ${GOPATH}/src/github.com/shortintern2020-C-cryptograph/TeamF/server
 make e2etest
 ```

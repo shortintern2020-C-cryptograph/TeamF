@@ -3,15 +3,62 @@ package handler
 import (
 	"fmt"
 	"github.com/go-openapi/runtime"
+	"github.com/mattn/go-shellwords"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi/scenepicks"
 	"net/http/httptest"
+	"os/exec"
 	"testing"
 )
 
+func setup() error {
+	// テーブルデータを全て空にする
+	cmds := []string{
+		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e 'set foreign_key_checks = 0;truncate table user;'",
+		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'set foreign_key_checks = 0;truncate table dialog;'",
+		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'set foreign_key_checks = 0;truncate table tag;'",
+		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'set foreign_key_checks = 0;truncate table comment;'",
+		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'set foreign_key_checks = 0;truncate table favorite;'",
+		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'set foreign_key_checks = 0;truncate table dialog_tag;'",
+	}
+	for _, cmd := range cmds {
+		fmt.Printf("cmd: %s\n", cmd)
+		c, err := shellwords.Parse(cmd)
+		if err != nil {
+			fmt.Println("cmd parse err")
+			return err
+		}
+		err = exec.Command(c[0], c[1:]...).Run()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func setupPostCommentById() error {
+	content := "test"
+	title := "test"
+	author := "test"
+	source := "test"
+	link := "http://example.com"
+	style := "test"
+	_, err := postDialog(content, title, author, source, link, style)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func TestGetCommentById(t *testing.T) {
 	err := setup() // テスト実行するとこいつが一番早く呼ばれるので、ここでテーブルのデータを綺麗にする
+
 	if err != nil {
 		fmt.Printf("setup error: %v\n", err)
+	}
+
+	err = setupPostCommentById()
+	if err != nil {
+		fmt.Printf("setup insert err: %v", err)
 	}
 	tests := []struct {
 		name    string
