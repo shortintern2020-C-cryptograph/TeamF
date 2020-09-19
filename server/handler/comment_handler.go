@@ -12,7 +12,7 @@ import (
 func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 	offset := p.Offset
 	limit := p.Limit
-	fmt.Printf("offset: %d, limit: %d", offset, limit)
+	fmt.Printf("offset: %d, limit: %d\n", offset, limit)
 
 	id := p.ID
 	schema, err := getCommentByID(id)
@@ -30,7 +30,7 @@ func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 
 func PostCommentById(p scenepicks.PostCommentByIDParams) middleware.Responder {
 	comment := p.Comment.Comment
-	fmt.Printf("comment: %s", comment)
+	fmt.Printf("comment: %s\n", comment)
 
 	// TODO: ここでfirebase認証
 

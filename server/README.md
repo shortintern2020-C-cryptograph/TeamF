@@ -42,3 +42,14 @@ make docker/run
 # 停止
 make docker/stop
 ```
+
+## テスト
+以下の環境変数を設定
+```
+export DBNAME=nexus_db
+export DB_SERVICE=db
+```
+環境変数設定後、コマンドを実行
+``` 
+make e2etest
+```

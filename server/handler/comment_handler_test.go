@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/go-openapi/runtime"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi/scenepicks"
 	"net/http/httptest"
@@ -8,6 +9,10 @@ import (
 )
 
 func TestGetCommentById(t *testing.T) {
+	err := setup() // テスト実行するとこいつが一番早く呼ばれるので、ここでテーブルのデータを綺麗にする
+	if err != nil {
+		fmt.Printf("setup error: %v\n", err)
+	}
 	tests := []struct {
 		name    string
 		params  scenepicks.GetCommentByIDParams

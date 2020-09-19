@@ -1,32 +1,57 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/swag"
+	"github.com/mattn/go-shellwords"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi/scenepicks"
 	"net/http/httptest"
+	"os/exec"
 	"testing"
 )
+
+func setup() error {
+	// テーブルデータを全て空にする
+	cmds := []string{
+		"docker-compose exec $DB_SERVICE mysql -uroot -hlocalhost -ppassword $DBNAME -e'set foreign_key_checks = 0;truncate table user;'",
+		"docker-compose exec $DB_SERVICE mysql -uroot -hlocalhost -ppassword $DBNAME -e'set foreign_key_checks = 0;truncate table dialog;'",
+		"docker-compose exec $DB_SERVICE mysql -uroot -hlocalhost -ppassword $DBNAME -e'set foreign_key_checks = 0;truncate table tag;'",
+		"docker-compose exec $DB_SERVICE mysql -uroot -hlocalhost -ppassword $DBNAME -e'set foreign_key_checks = 0;truncate table comment;'",
+		"docker-compose exec $DB_SERVICE mysql -uroot -hlocalhost -ppassword $DBNAME -e'set foreign_key_checks = 0;truncate table favorite;'",
+		"docker-compose exec $DB_SERVICE mysql -uroot -hlocalhost -ppassword $DBNAME -e'set foreign_key_checks = 0;truncate table dialog_tag;'",
+	}
+	for _, cmd := range cmds {
+		fmt.Printf("cmd: %s\n", cmd)
+		c, err := shellwords.Parse(cmd)
+		if err != nil {
+			return err
+		}
+		err = exec.Command(c[0], c[1:]...).Run()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 func TestGetDialog(t *testing.T) {
 	tests := []struct {
 		name    string
-		genre   string
-		limit   int64
-		offset  int64
-		q       string
-		sort    string
+		params  scenepicks.GetDialogParams
 		status  int
 		want    string
 		wantErr bool
 	}{
 		{
-			name:    "[正常系] リクエスト成功",
-			genre:   "anime",
-			limit:   50,
-			offset:  0,
-			q:       "",
-			sort:    "",
+			name: "[正常系] リクエスト成功",
+			params: scenepicks.GetDialogParams{
+				Genre:  "anime",
+				Limit:  50,
+				Offset: 0,
+				Q:      swag.String(""),
+				Sort:   swag.String(""),
+			},
 			status:  200,
 			want:    `{"message":"success", "schema":[]}`,
 			wantErr: false,
@@ -35,14 +60,8 @@ func TestGetDialog(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			params := scenepicks.NewGetDialogParams()
+			params := tt.params
 			params.HTTPRequest = httptest.NewRequest("GET", "http://localhost:3000", nil)
-			params.Genre = tt.genre
-			params.Offset = tt.offset
-			params.Limit = tt.limit
-			params.Q = swag.String(tt.q)
-			params.Sort = swag.String(tt.sort)
-
 			resp := GetDialog(params)
 
 			w := httptest.NewRecorder()
