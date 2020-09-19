@@ -10,22 +10,42 @@ import { PageTransition } from '../components/PageTransition'
 
 const MyApp = ({ Component, pageProps }) => {
   const { addToast } = useToasts()
-  const { setUser, setLoading, isLoading } = useContext(AuthContext)
+  const { setUser, setLoading, isLoading, storageAvailable, setSignInModalOpen, user } = useContext(AuthContext)
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
+        if (storageAvailable('sessionStorage')) {
+          let isWaiting = JSON.parse(sessionStorage.getItem('waiting_redirect'))
+          if (isWaiting == 1) {
+            sessionStorage.setItem('waiting_redirect', 2)
+          } else if (isWaiting == 2) {
+            addToast(`signed in as ${firebaseUser.providerData[0].displayName}`, { appearance: 'success' })
+            sessionStorage.removeItem('waiting_redirect')
+            setSignInModalOpen(false)
+          }
+        } else {
+          addToast(`Welcome ${firebaseUser.providerData[0].displayName}!`, { appearance: 'success' })
+        }
         setUser(firebaseUser)
-        addToast(`signed in as ${firebaseUser.providerData[0].displayName}`, { appearance: 'success' })
       } else {
         setUser(null)
         console.log('not logged in')
       }
       setLoading(false)
     })
+
+    if (storageAvailable('sessionStorage')) {
+      let isWaiting = JSON.parse(sessionStorage.getItem('waiting_redirect'))
+      if (isWaiting) {
+        setSignInModalOpen(true)
+      }
+    }
   }, [])
+
   if (isLoading) {
     return <Splash />
   }
+
   return (
     <PageTransition>
       <Component {...pageProps} />
