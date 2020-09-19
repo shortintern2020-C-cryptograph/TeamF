@@ -4,6 +4,7 @@ import 'firebase/auth'
 import { AuthContext } from '../contexts/AuthContext'
 import Modal from 'react-modal'
 import styles from '../styles/Signin.module.scss'
+import { useToasts } from 'react-toast-notifications'
 
 let firebaseui
 if (typeof window !== 'undefined') {
@@ -11,12 +12,21 @@ if (typeof window !== 'undefined') {
 }
 
 const SignIn = () => {
-  const { ui, setUi, user, signInModalOpen, setSignInModalOpen } = useContext(AuthContext)
+  const { ui, setUi, user, signInModalOpen, setSignInModalOpen, storageAvailable } = useContext(AuthContext)
+  const { addToast } = useToasts()
 
   const uiStart = () => {
     ui.start('#firebaseui-auth-container', {
+      // TODO: signinsuccessurlを、呼ばれた場所に設定する
       signInSuccessUrl: '/',
-      signInOptions: [firebase.auth.TwitterAuthProvider.PROVIDER_ID]
+      signInOptions: [firebase.auth.TwitterAuthProvider.PROVIDER_ID],
+      callbacks: {
+        uiShown: function () {
+          if (storageAvailable('sessionStorage')) {
+            sessionStorage.setItem('waiting_redirect', 1)
+          }
+        }
+      }
       // tosUrl: '<your-tos-url>',
       // privacyPolicyUrl: '/policy'
     })
@@ -32,7 +42,13 @@ const SignIn = () => {
     firebase
       .auth()
       .signOut()
-      .then(() => alert('ログアウトできたよ！'))
+      .then(() => {
+        addToast(`logged out:  ${user.providerData[0].displayName}`, { appearance: 'success' })
+        setSignInModalOpen(false)
+        if (storageAvailable('sessionStorage')) {
+          sessionStorage.removeItem('waiting_redirect')
+        }
+      })
       .catch((e) => {
         alert('ログアウトできませんでした。' + JSON.stringify(e))
         console.error(e)
@@ -41,6 +57,9 @@ const SignIn = () => {
 
   const closeModal = () => {
     setSignInModalOpen(false)
+    if (storageAvailable('sessionStorage')) {
+      sessionStorage.removeItem('waiting_redirect')
+    }
   }
 
   const afterOpenModal = () => {
@@ -76,7 +95,7 @@ const SignIn = () => {
       <div style={{ padding: '1em 2em', textAlign: 'center' }}>
         <h3>投稿するにはログインしーてね</h3>
         <div className="loginCard">
-          <div id="firebaseui-auth-container" />
+          <div id="firebaseui-auth-container" style={{ opacity: user ? 0 : 1 }} />
           {user && (
             <p style={{ textAlign: 'center' }}>
               ログインしているよ！
