@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Navbar.module.scss'
 import { AuthContext } from '../contexts/AuthContext'
-import SignIn from './SignIn'
+import SignIn from './SignInModal'
 import { useContext } from 'react'
 
 const Navbar = () => {
