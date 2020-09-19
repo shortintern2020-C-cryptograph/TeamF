@@ -110,3 +110,60 @@ func (o *PostCommentByIDBody) UnmarshalBinary(b []byte) error {
 	*o = res
 	return nil
 }
+
+// PostCommentByIDOKBody post comment by ID o k body
+//
+// swagger:model PostCommentByIDOKBody
+type PostCommentByIDOKBody struct {
+
+	// id
+	ID int64 `json:"id,omitempty"`
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// UnmarshalJSON unmarshals this object while disallowing additional properties from JSON
+func (o *PostCommentByIDOKBody) UnmarshalJSON(data []byte) error {
+	var props struct {
+
+		// id
+		ID int64 `json:"id,omitempty"`
+
+		// message
+		Message string `json:"message,omitempty"`
+	}
+
+	dec := json.NewDecoder(bytes.NewReader(data))
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&props); err != nil {
+		return err
+	}
+
+	o.ID = props.ID
+	o.Message = props.Message
+	return nil
+}
+
+// Validate validates this post comment by ID o k body
+func (o *PostCommentByIDOKBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *PostCommentByIDOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *PostCommentByIDOKBody) UnmarshalBinary(b []byte) error {
+	var res PostCommentByIDOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}

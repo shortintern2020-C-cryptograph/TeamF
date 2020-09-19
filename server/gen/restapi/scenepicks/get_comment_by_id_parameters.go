@@ -36,7 +36,7 @@ type GetCommentByIDParams struct {
 	  Required: true
 	  In: path
 	*/
-	ID string
+	ID int64
 	/*取得する記録の数
 	  Required: true
 	  In: query
@@ -91,7 +91,11 @@ func (o *GetCommentByIDParams) bindID(rawData []string, hasKey bool, formats str
 	// Required: true
 	// Parameter is provided by construction from the route
 
-	o.ID = raw
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("id", "path", "int64", raw)
+	}
+	o.ID = value
 
 	return nil
 }

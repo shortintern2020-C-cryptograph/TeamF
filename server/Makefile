@@ -1,5 +1,5 @@
 run:
-	go run main.go
+	fresh
 
 #test:
 #	go test -v .

@@ -16,7 +16,7 @@ import (
 // PostTagOKCode is the HTTP code returned for type PostTagOK
 const PostTagOKCode int = 200
 
-/*PostTagOK 取得成功
+/*PostTagOK 投稿成功
 
 swagger:response postTagOK
 */
@@ -25,7 +25,7 @@ type PostTagOK struct {
 	/*
 	  In: Body
 	*/
-	Payload string `json:"body,omitempty"`
+	Payload *PostTagOKBody `json:"body,omitempty"`
 }
 
 // NewPostTagOK creates PostTagOK with default headers values
@@ -35,13 +35,13 @@ func NewPostTagOK() *PostTagOK {
 }
 
 // WithPayload adds the payload to the post tag o k response
-func (o *PostTagOK) WithPayload(payload string) *PostTagOK {
+func (o *PostTagOK) WithPayload(payload *PostTagOKBody) *PostTagOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post tag o k response
-func (o *PostTagOK) SetPayload(payload string) {
+func (o *PostTagOK) SetPayload(payload *PostTagOKBody) {
 	o.Payload = payload
 }
 
@@ -49,9 +49,11 @@ func (o *PostTagOK) SetPayload(payload string) {
 func (o *PostTagOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

@@ -16,7 +16,7 @@ import (
 
 // GetCommentByIDURL generates an URL for the get comment by Id operation
 type GetCommentByIDURL struct {
-	ID string
+	ID int64
 
 	Limit  int64
 	Offset int64
@@ -47,7 +47,7 @@ func (o *GetCommentByIDURL) Build() (*url.URL, error) {
 
 	var _path = "/dialog/{id}/comment"
 
-	id := o.ID
+	id := swag.FormatInt64(o.ID)
 	if id != "" {
 		_path = strings.Replace(_path, "{id}", id, -1)
 	} else {

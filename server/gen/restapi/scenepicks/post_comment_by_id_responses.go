@@ -16,7 +16,7 @@ import (
 // PostCommentByIDOKCode is the HTTP code returned for type PostCommentByIDOK
 const PostCommentByIDOKCode int = 200
 
-/*PostCommentByIDOK 登録成功
+/*PostCommentByIDOK 投稿成功
 
 swagger:response postCommentByIdOK
 */
@@ -25,7 +25,7 @@ type PostCommentByIDOK struct {
 	/*
 	  In: Body
 	*/
-	Payload string `json:"body,omitempty"`
+	Payload *PostCommentByIDOKBody `json:"body,omitempty"`
 }
 
 // NewPostCommentByIDOK creates PostCommentByIDOK with default headers values
@@ -35,13 +35,13 @@ func NewPostCommentByIDOK() *PostCommentByIDOK {
 }
 
 // WithPayload adds the payload to the post comment by Id o k response
-func (o *PostCommentByIDOK) WithPayload(payload string) *PostCommentByIDOK {
+func (o *PostCommentByIDOK) WithPayload(payload *PostCommentByIDOKBody) *PostCommentByIDOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the post comment by Id o k response
-func (o *PostCommentByIDOK) SetPayload(payload string) {
+func (o *PostCommentByIDOK) SetPayload(payload *PostCommentByIDOKBody) {
 	o.Payload = payload
 }
 
@@ -49,9 +49,11 @@ func (o *PostCommentByIDOK) SetPayload(payload string) {
 func (o *PostCommentByIDOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

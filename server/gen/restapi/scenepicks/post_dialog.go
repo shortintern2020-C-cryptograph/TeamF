@@ -152,3 +152,60 @@ func (o *PostDialogBody) UnmarshalBinary(b []byte) error {
 	*o = res
 	return nil
 }
+
+// PostDialogOKBody post dialog o k body
+//
+// swagger:model PostDialogOKBody
+type PostDialogOKBody struct {
+
+	// id
+	ID int64 `json:"id,omitempty"`
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// UnmarshalJSON unmarshals this object while disallowing additional properties from JSON
+func (o *PostDialogOKBody) UnmarshalJSON(data []byte) error {
+	var props struct {
+
+		// id
+		ID int64 `json:"id,omitempty"`
+
+		// message
+		Message string `json:"message,omitempty"`
+	}
+
+	dec := json.NewDecoder(bytes.NewReader(data))
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&props); err != nil {
+		return err
+	}
+
+	o.ID = props.ID
+	o.Message = props.Message
+	return nil
+}
+
+// Validate validates this post dialog o k body
+func (o *PostDialogOKBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *PostDialogOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *PostDialogOKBody) UnmarshalBinary(b []byte) error {
+	var res PostDialogOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
