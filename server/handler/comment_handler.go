@@ -12,7 +12,7 @@ import (
 func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 	offset := p.Offset
 	limit := p.Limit
-	fmt.Printf("offset: %s, limit: %s", offset, limit)
+	fmt.Printf("offset: %d, limit: %d", offset, limit)
 
 	id := p.ID
 	schema, err := getCommentByID(id)
