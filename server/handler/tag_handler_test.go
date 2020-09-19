@@ -8,25 +8,22 @@ import (
 	"testing"
 )
 
-func TestGetDialog(t *testing.T) {
+func TestGetTag(t *testing.T) {
 	tests := []struct {
 		name    string
-		genre   string
-		limit   int64
-		offset  int64
-		q       string
-		sort    string
+		params  scenepicks.GetTagParams
 		status  int
 		want    string
 		wantErr bool
 	}{
 		{
-			name:    "[正常系] リクエスト成功",
-			genre:   "anime",
-			limit:   50,
-			offset:  0,
-			q:       "",
-			sort:    "",
+			name: "[正常系] リクエスト成功",
+			params: scenepicks.GetTagParams{
+				Genre:  "anime",
+				Limit:  50,
+				Offset: 0,
+				Sort:   swag.String(""),
+			},
 			status:  200,
 			want:    `{"message":"success", "schema":[]}`,
 			wantErr: false,
@@ -35,15 +32,9 @@ func TestGetDialog(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			params := scenepicks.NewGetDialogParams()
+			params := tt.params
 			params.HTTPRequest = httptest.NewRequest("GET", "http://localhost:3000", nil)
-			params.Genre = tt.genre
-			params.Offset = tt.offset
-			params.Limit = tt.limit
-			params.Q = swag.String(tt.q)
-			params.Sort = swag.String(tt.sort)
-
-			resp := GetDialog(params)
+			resp := GetTag(params)
 
 			w := httptest.NewRecorder()
 			resp.WriteResponse(w, runtime.JSONProducer())
@@ -59,30 +50,26 @@ func TestGetDialog(t *testing.T) {
 	}
 }
 
-func TestPostDialog(t *testing.T) {
+func TestPostTag(t *testing.T) {
 	tests := []struct {
 		name    string
-		params  scenepicks.PostDialogParams
+		params  scenepicks.PostTagParams
 		status  int
 		want    string
 		wantErr bool
 	}{
 		{
 			name: "[正常系] リクエスト成功",
-			params: scenepicks.PostDialogParams{
+			params: scenepicks.PostTagParams{
 				Token: "12345",
-				Content: scenepicks.PostDialogBody{
-					Author:  "宮崎駿",
-					Title:   "天空の城ラピュタ",
-					Content: "バルス",
-					Link:    "https://example.com",
-					Style:   "normal",
-					UserID:  1,
-					Comment: "cool",
+
+				Tag: scenepicks.PostTagBody{
+					Name: "ジブリ",
+					Type: "anime",
 				},
 			},
 			status:  200,
-			want:    `{"message":"success", "id": 6}`,
+			want:    `{"message":"success", "id": 1}`,
 			wantErr: false,
 		},
 	}
@@ -91,7 +78,7 @@ func TestPostDialog(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			params := tt.params
 			params.HTTPRequest = httptest.NewRequest("GET", "http://localhost:3000", nil)
-			resp := PostDialog(params)
+			resp := PostTag(params)
 
 			w := httptest.NewRecorder()
 			resp.WriteResponse(w, runtime.JSONProducer())

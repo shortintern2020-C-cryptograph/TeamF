@@ -22,12 +22,12 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 		log.Fatal(err)
 	}
 
-	result := &models.Tag{
-		ID:   1,
-		Name: "ハウルの動く城",
-		Type: "アニメ",
-	}
-	schema = append(schema, result)
+	//result := &models.Tag{
+	//	ID:   1,
+	//	Name: "ハウルの動く城",
+	//	Type: "アニメ",
+	//}
+	//schema = append(schema, result)
 	params := &scenepicks.GetTagOKBody{
 		Message: "success",
 		Schema:  schema,

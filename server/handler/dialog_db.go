@@ -25,7 +25,7 @@ func getDialog(genre string) ([]*models.Dialog, error) {
 
 func postDialog(content, title, author, source, link, style string) (int64, error) {
 	// DBへの書き込み
-	source = "normal"
+	source = "anime"
 	tx := sqlHandler.DB.MustBegin()
 	result, err := tx.NamedExec("INSERT INTO dialog (content, title, author, source, link, style) VALUES (:content, :title, :author, :source, :link, :style)",
 		map[string]interface{}{
