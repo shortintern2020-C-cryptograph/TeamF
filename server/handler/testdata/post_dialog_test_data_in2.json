@@ -1,0 +1,12 @@
+{
+  "token": "1234567890",
+  "content": {
+    "content": "string",
+    "title": "string",
+    "author": "string",
+    "link": "string",
+    "style": "string",
+    "user_id": 1,
+    "comment": "string"
+  }
+}
