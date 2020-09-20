@@ -1,9 +1,6 @@
 name: Golang Test
 
 on:
-  push:
-    branches:
-      - feature/automation
   pull_request:
     branches:
       - development
@@ -30,5 +27,11 @@ jobs:
       - name: Get go-shellwords
         run: go get github.com/mattn/go-shellwords
 
+      - name: Run docker-compose # テスト実行用にdockerを起動
+        run: make docker/run
+
       - name: Test code
         run: go test -v ./server/handler
+
+      - name: Stop docker-compose
+        run: make docker/stop
