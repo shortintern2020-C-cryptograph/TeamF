@@ -1,6 +1,9 @@
 name: Golang Test
 
 on:
+  push:
+    branches:
+      - feature/automation
   pull_request:
     branches:
       - development
@@ -23,6 +26,9 @@ jobs:
 
       - name: Get jsondiff
         run: go get github.com/Cside/jsondiff
+
+      - name: Get go-shellwords
+        run: go get github.com/mattn/go-shellwords
 
       - name: Test code
         run: go test -v ./server/handler
