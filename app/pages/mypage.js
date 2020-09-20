@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import styles from '../styles/MyPage.module.scss'
-import Layout from '../components/Layout'
 import { useContext, useEffect } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import firebase from 'firebase/app'
@@ -18,6 +17,7 @@ const MyPage = () => {
       setSignInModalOpen(true)
     }
   }, [])
+
   const handleLogOut = () => {
     firebase
       .auth()
@@ -42,21 +42,28 @@ const MyPage = () => {
         <title>{`${user?.providerData[0].displayName} | scecepicks`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
-        mypageやで
-        <button onClick={() => router.push('/')}>戻る</button>
+      <div className={styles.content}>
+        <div>
+          <h2 className={styles.titleHeader} onClick={() => router.push('/')}>
+            ScenePicks
+          </h2>
+        </div>
+        {user && (
+          <div style={{ position: 'relative', margin: '30px 0' }}>
+            <div className={styles.profileName}>{user?.providerData[0].displayName}</div>
+            <img src={user?.providerData[0].photoURL} alt="my profile thumbnail" className={styles.profileImage} />
+            <p style={{ textAlign: 'center', marginTop: '50px' }}>
+              <button onClick={handleLogOut} className={styles.logoutButton} type="button">
+                ログアウト
+              </button>
+            </p>
+          </div>
+        )}
       </div>
-      {user && (
-        <>
-          <p>{user?.providerData[0].displayName}</p>
-          <img src={user?.providerData[0].photoURL} alt="my profile thumbnail" className={styles.profileImage} />
-          <p>
-            <button onClick={handleLogOut} type="button">
-              ログアウト
-            </button>
-          </p>
-        </>
-      )}
+      <div>
+        <h3>ScenePicksについて</h3>
+        <p>ScenePicksについて。。。</p>
+      </div>
     </div>
   )
 }

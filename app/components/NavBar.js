@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import styles from '../styles/Navbar.module.scss'
 import { AuthContext } from '../contexts/AuthContext'
 import { useContext } from 'react'
