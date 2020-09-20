@@ -1,9 +1,23 @@
+import { useContext } from 'react'
+import { MainContext } from '../contexts/MainContext'
 import styles from '../styles/Fab.module.scss'
 
 const Fab = () => {
+  const { fabMode, nextFabMode } = useContext(MainContext)
+  const blackStyle = 'linear-gradient(120deg, #222, #555)'
+  const redStyle = 'linear-gradient(120deg, #F05353, #E9468A)'
+  const isBlackStyle = fabMode === 'home' || fabMode === 'detail'
+
   return (
-    <div className={styles.container}>
-      <span>fab</span>
+    <div className={styles.container} onClick={() => nextFabMode(fabMode)}>
+      <span
+        className={styles.icon}
+        style={{
+          background: isBlackStyle ? blackStyle : redStyle,
+          transform: isBlackStyle ? 'none' : 'rotateZ(-45deg)'
+        }}>
+        <img src={fabMode === 'detail' ? '/comment.svg' : '/cross.svg'} alt="cross" />
+      </span>
     </div>
   )
 }

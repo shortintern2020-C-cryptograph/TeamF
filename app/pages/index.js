@@ -5,12 +5,26 @@ import { useContext, useEffect } from 'react'
 import { MainContext } from '../contexts/MainContext'
 
 const Home = () => {
-  const { selectedGenre } = useContext(MainContext)
+  const { selectedGenre, fabMode, setFabMode } = useContext(MainContext)
+
+  useEffect(() => {
+    setFabMode('home')
+  }, [])
+
   useEffect(() => {
     console.log(selectedGenre + 'のジャンルが選択されました')
     // そのジャンルをfetchして
     // 色々更新する
   }, [selectedGenre])
+
+  useEffect(() => {
+    if (fabMode === 'home') {
+      // もどる
+    } else if (fabMode === 'new') {
+      // 新規投稿start
+    }
+  }, [fabMode])
+
   return (
     <Layout>
       <div className={styles.container}>
