@@ -21,8 +21,20 @@ jobs:
       - name: Get dependencies
         run: go get -v -t -d ./server
 
+      - name: Get jsondiff
+        run: go get github.com/Cside/jsondiff
+
+      - name: Get go-shellwords
+        run: go get github.com/mattn/go-shellwords
+
+      - name: Run docker-compose # テスト実行用にdockerを起動
+        run: make docker/run
+
       - name: Test code
         run: go test -v ./server/handler
+
+      - name: Stop docker-compose
+        run: make docker/stop
 
   build-and-push:
     name: Build and Push
