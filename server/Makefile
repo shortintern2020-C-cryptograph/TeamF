@@ -1,5 +1,5 @@
 run:
 	fresh
 
-#test:
-#	go test -v .
+e2etest:
+	go test -v ./handler

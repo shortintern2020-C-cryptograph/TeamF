@@ -16,18 +16,18 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 	sort := p.Sort
 	genre := p.Genre
 	//q := p.Q
-	fmt.Printf("GET /tag offset: %d, limit: %d, sort: %v, genre: %s", offset, limit, sort, genre)
+	fmt.Printf("GET /tag offset: %d, limit: %d, sort: %v, genre: %s\n", offset, limit, sort, genre)
 	schema, err := getTag()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	result := &models.Tag{
-		ID:   1,
-		Name: "ハウルの動く城",
-		Type: "アニメ",
-	}
-	schema = append(schema, result)
+	//result := &models.Tag{
+	//	ID:   1,
+	//	Name: "ハウルの動く城",
+	//	Type: "アニメ",
+	//}
+	//schema = append(schema, result)
 	params := &scenepicks.GetTagOKBody{
 		Message: "success",
 		Schema:  schema,
@@ -39,7 +39,7 @@ func PostTag(p scenepicks.PostTagParams) middleware.Responder {
 
 	name := p.Tag.Name
 	tagType := p.Tag.Type
-	fmt.Printf("name: %s, type: %s", name, tagType)
+	fmt.Printf("POST /tag name: %s, type: %s\n", name, tagType)
 
 	// TODO: ここでfirebase認証
 

@@ -14,8 +14,14 @@ import (
 
 func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 	genre := p.Genre
-	fmt.Printf("genre: %s", genre)
+	offset := p.Offset
+	limit := p.Limit
 
+	fmt.Printf("GET /dialog genre: %s, offset: %d, limit: %d\n", genre, offset, limit)
+
+	if genre != "anime" && genre != "manga" && genre != "book" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("genre is invalid")
+	}
 	schema, err := getDialog(genre)
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +31,6 @@ func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 		Message: "success",
 		Schema:  schema,
 	}
-
 	return scenepicks.NewGetDialogOK().WithPayload(params)
 }
 
@@ -53,7 +58,7 @@ func PostDialog(p scenepicks.PostDialogParams) middleware.Responder {
 	//style := p.Style
 	//comment := p.Comment
 	//tags := p.Tags
-	fmt.Printf("POST /tag content: %s, key: %s", content, p.Token)
+	fmt.Printf("POST /dialog content: %s, key: %s\n", content, p.Token)
 	title := p.Content.Title
 	author := p.Content.Author
 	source := ""
