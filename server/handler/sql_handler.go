@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"log"
+	"os"
 )
 
 var sqlHandler = NewSQLHandler()
@@ -14,7 +16,10 @@ type SQLHandler struct {
 
 func NewSQLHandler() SQLHandler {
 	// db接続
-	dburl := "root:password@tcp(localhost:3306)/nexus_db?parseTime=true"
+	dbenv := os.Getenv("DBENV")
+	dburl := fmt.Sprintf("root:password@tcp(%s:3306)/nexus_db?parseTime=true", dbenv)
+
+	fmt.Println(dburl)
 	db, err := sqlx.Connect("mysql", dburl)
 	if err != nil {
 		log.Fatal(err)
@@ -23,5 +28,6 @@ func NewSQLHandler() SQLHandler {
 	sqlHandler := SQLHandler{
 		DB: db,
 	}
+
 	return sqlHandler
 }
