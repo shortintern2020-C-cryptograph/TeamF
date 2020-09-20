@@ -14,7 +14,7 @@ type SQLHandler struct {
 
 func NewSQLHandler() SQLHandler {
 	// db接続
-	dburl := "root:password@tcp(localhost:3306)/nexus_db?parseTime=true"
+	dburl := "root:password@tcp(nexus-db:3306)/nexus_db?parseTime=true"
 	db, err := sqlx.Connect("mysql", dburl)
 	if err != nil {
 		log.Fatal(err)
