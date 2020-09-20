@@ -38,23 +38,6 @@ const SignIn = () => {
     }
   }, [])
 
-  const handleLogOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        addToast(`logged out:  ${user.providerData[0].displayName}`, { appearance: 'success' })
-        setSignInModalOpen(false)
-        if (storageAvailable('sessionStorage')) {
-          sessionStorage.removeItem('waiting_redirect')
-        }
-      })
-      .catch((e) => {
-        alert('ログアウトできませんでした。' + JSON.stringify(e))
-        console.error(e)
-      })
-  }
-
   const closeModal = () => {
     setSignInModalOpen(false)
     if (storageAvailable('sessionStorage')) {
@@ -63,6 +46,11 @@ const SignIn = () => {
   }
 
   const afterOpenModal = () => {
+    if (user) {
+      alert('既にログインしています')
+      setSignInModalOpen(false)
+      return
+    }
     uiStart()
   }
 
@@ -96,17 +84,6 @@ const SignIn = () => {
         <h3>投稿するにはログインしーてね</h3>
         <div className="loginCard">
           <div id="firebaseui-auth-container" style={{ opacity: user ? 0 : 1 }} />
-          {user && (
-            <p style={{ textAlign: 'center' }}>
-              ログインしているよ！
-              <button onClick={handleLogOut} type="button">
-                ログアウト
-              </button>
-              <br />
-              <br />
-              <span style={{ wordBreak: 'break-word' }}>{JSON.stringify(user.providerData[0])}</span>
-            </p>
-          )}
         </div>
       </div>
     </Modal>
