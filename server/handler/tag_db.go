@@ -5,13 +5,30 @@ import (
 	"log"
 )
 
-func getTag() ([]*models.Tag, error) {
+func getTag(offset int64, limit int64, sort string, genre string, q string) ([]*models.Tag, error) {
 	schema := make([]*models.Tag, 0)
 
 	// TODO: offset, limit, sortを利用した取得をできるように実装
 	//SELECTを実行
 	tags := []tag{}
-	err := sqlHandler.DB.Select(&tags, "SELECT * FROM tag")
+	var err error
+	if genre == "all" {
+		err = sqlHandler.DB.Select(&tags, `
+			SELECT * FROM tag
+			WHERE name LIKE ?
+			ORDER BY utime DESC
+			LIMIT ?
+			OFFSET ?
+		`, "%"+q+"%", limit, offset)
+	} else {
+		err = sqlHandler.DB.Select(&tags, `
+			SELECT * FROM tag
+			WHERE type = ? AND name LIKE ?
+			ORDER BY utime DESC
+			LIMIT ?
+			OFFSET ?
+		`, genre, "%"+q+"%", limit, offset)
+	}
 	if err != nil {
 		log.Println("err: ", err)
 		return nil, err
