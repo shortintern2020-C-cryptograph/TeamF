@@ -16,6 +16,10 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 	sort := p.Sort
 	genre := p.Genre
 	q := p.Q
+	if sort == nil {
+		all := "all"
+		sort = &all
+	}
 	if q == nil {
 		empty := ""
 		q = &empty

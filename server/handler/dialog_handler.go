@@ -18,6 +18,10 @@ func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 	limit := p.Limit
 	sort := p.Sort
 	q := p.Q
+	if sort == nil {
+		all := "all"
+		sort = &all
+	}
 	if q == nil {
 		empty := ""
 		q = &empty
