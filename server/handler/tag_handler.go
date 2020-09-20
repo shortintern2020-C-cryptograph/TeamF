@@ -17,8 +17,8 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 	genre := p.Genre
 	q := p.Q
 	if sort == nil {
-		all := "all"
-		sort = &all
+		empty := ""
+		sort = &empty
 	}
 	if q == nil {
 		empty := ""
@@ -30,7 +30,7 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 		return scenepicks.NewGetDialogBadRequest().WithPayload("genre is invalid")
 	}
 	// 今のとこ新しい順のみ
-	if *sort != "all" {
+	if *sort != "" {
 		return scenepicks.NewGetDialogBadRequest().WithPayload("sort key is invalid")
 	}
 

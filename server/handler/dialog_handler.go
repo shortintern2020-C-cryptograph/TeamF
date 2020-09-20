@@ -19,8 +19,8 @@ func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 	sort := p.Sort
 	q := p.Q
 	if sort == nil {
-		all := "all"
-		sort = &all
+		new := "new"
+		sort = &new
 	}
 	if q == nil {
 		empty := ""
@@ -32,7 +32,7 @@ func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 	if genre != "all" && genre != "anime" && genre != "manga" && genre != "book" {
 		return scenepicks.NewGetDialogBadRequest().WithPayload("genre is invalid")
 	}
-	if *sort != "all" && *sort != "like" && *sort != "comment" && *sort != "combined" {
+	if *sort != "new" && *sort != "like" && *sort != "comment" && *sort != "combined" {
 		return scenepicks.NewGetDialogBadRequest().WithPayload("sort key is invalid")
 	}
 	schema, err := getDialog(genre, offset, limit, *sort, *q)
