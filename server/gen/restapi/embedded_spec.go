@@ -345,6 +345,12 @@ func init() {
             "description": "デフォで新着順。",
             "name": "sort",
             "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "タグ検索用",
+            "name": "q",
+            "in": "query"
           }
         ],
         "responses": {
@@ -859,6 +865,12 @@ func init() {
             "type": "string",
             "description": "デフォで新着順。",
             "name": "sort",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "タグ検索用",
+            "name": "q",
             "in": "query"
           }
         ],

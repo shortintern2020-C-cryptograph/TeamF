@@ -15,8 +15,8 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 	limit := p.Limit
 	sort := p.Sort
 	genre := p.Genre
-	//q := p.Q
-	fmt.Printf("GET /tag offset: %d, limit: %d, sort: %v, genre: %s\n", offset, limit, sort, genre)
+	q := p.Q
+	fmt.Printf("GET /tag offset: %d, limit: %d, sort: %v, genre: %s, q: %v\n", offset, limit, sort, genre, q)
 	schema, err := getTag()
 	if err != nil {
 		log.Fatal(err)

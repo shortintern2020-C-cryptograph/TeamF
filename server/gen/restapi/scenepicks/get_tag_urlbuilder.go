@@ -18,6 +18,7 @@ type GetTagURL struct {
 	Genre  string
 	Limit  int64
 	Offset int64
+	Q      *string
 	Sort   *string
 
 	_basePath string
@@ -64,6 +65,14 @@ func (o *GetTagURL) Build() (*url.URL, error) {
 	offsetQ := swag.FormatInt64(o.Offset)
 	if offsetQ != "" {
 		qs.Set("offset", offsetQ)
+	}
+
+	var qQ string
+	if o.Q != nil {
+		qQ = *o.Q
+	}
+	if qQ != "" {
+		qs.Set("q", qQ)
 	}
 
 	var sortQ string

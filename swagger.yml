@@ -220,6 +220,11 @@ paths:
           type: string
           in: query
           description: デフォで新着順。
+        - name: q
+          required: false
+          type: string
+          in: query
+          description: "タグ検索用"
       operationId: getTag
       responses:
         200:
