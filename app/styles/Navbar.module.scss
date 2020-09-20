@@ -5,13 +5,14 @@
   background-color: white;
   height: 70px;
   max-width: 800px;
-  min-width: 360px; //iPhoneXの横幅くらいにしてみた
+  // min-width: 360px; //iPhoneXの横幅くらいにしてみた
   border-radius: 12px;
   filter: drop-shadow(0px 8px 8px rgba(0, 0, 0, 0.25));
   padding: 10px 0px 5px 10px;
   margin: 0;
   overflow: hidden;
   white-space: nowrap;
+  user-select: none;
   // border: solid 2px grey;
 }
 
@@ -25,17 +26,19 @@
   cursor: pointer;
   transition: 0.1s all;
   font-size: 30px;
+  margin-right: 20px;
 }
 
 .titleIcon {
   width: 30px;
   cursor: pointer;
   display: inline-block;
+  margin-right: 20px;
 }
 .userAvatar {
   width: 30px;
   object-fit: contain;
-  margin-left: 5px;
+  margin-left: 20px;
   margin-right: 15px;
   border-radius: 50%;
   cursor: pointer;
@@ -44,20 +47,36 @@
 
 .genreList {
   padding: 8px 10px;
-  margin: 0 20px;
-  background-color: #e1e1e1;
+  margin: 0px;
   border-radius: 15px;
   display: flex;
   position: relative;
   li {
     list-style: none;
     padding: 5px 10px;
+    cursor: pointer;
+    transition: 0.1s ease;
   }
+  li:hover {
+    background-color: rgba(100, 100, 100, 0.1);
+    border-radius: 6px;
+  }
+}
+.genreList::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 2px;
+  background-color: #e1e1e1;
+  border-radius: 12px;
+  width: 320px;
+  height: 50px;
+  z-index: -2;
 }
 
 @media only screen and (max-width: 600px) {
-  .title {
-    display: none !important;
+  .container {
+    transform: scale(0.6, 0.6) translate(-33%, -40%);
   }
 }
 @media only screen and (min-width: 601px) {

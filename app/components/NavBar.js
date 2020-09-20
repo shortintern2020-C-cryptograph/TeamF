@@ -4,6 +4,9 @@ import { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { MainContext } from '../contexts/MainContext'
 
+const lefts = [11, 60, 100, 167, 235]
+const widths = [50, 40, 65, 65, 82]
+
 const Navbar = () => {
   const { user, setSignInModalOpen } = useContext(AuthContext)
   const router = useRouter()
@@ -11,29 +14,40 @@ const Navbar = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>ScenePicks</div>
-      <img src="/miniIcon.svg" alt="scenepicks Logo" className={styles.titleIcon} />
-      <div style={{ display: 'inline-block' }}>
-        <ul className={styles.genreList}>
-          <li onClick={() => setSelectedGenre(0)}>全て</li>
-          <li onClick={() => setSelectedGenre(1)}>本</li>
-          <li onClick={() => setSelectedGenre(2)}>アニメ</li>
-          <li onClick={() => setSelectedGenre(3)}>漫画</li>
-          <li onClick={() => setSelectedGenre(4)}>YouTube</li>
-          <li
-            style={{
-              position: 'absolute',
-              width: '50px',
-              height: '30px',
-              backgroundColor: 'rgba(255,255,255,0.5)',
-              borderRadius: '6px',
-              top: '0px',
-              left: selectedGenre * 50,
-              transition: '0.2s ease'
-            }}
-          />
-        </ul>
+      <div className={styles.title} onClick={() => router.push('/')}>
+        ScenePicks
       </div>
+      {router.pathname === '/' && (
+        <div style={{ display: 'inline-block' }}>
+          <ul className={styles.genreList}>
+            {['全て', '本', 'マンガ', 'アニメ', 'YouTube'].map((item, index) => {
+              const active = selectedGenre === index
+              return (
+                <li
+                  key={index}
+                  onClick={() => setSelectedGenre(index)}
+                  style={{ color: active ? '#FFF' : '#222', fontWeight: active ? '600' : 'inherit' }}>
+                  {item}
+                </li>
+              )
+            })}
+
+            <li
+              style={{
+                position: 'absolute',
+                width: `${widths[selectedGenre]}px`,
+                height: '36px',
+                background: 'linear-gradient(120deg, #46e9c2, #5653f0)',
+                borderRadius: '6px',
+                top: '8px',
+                left: `${lefts[selectedGenre]}px`,
+                zIndex: -1,
+                transition: '0.25s ease'
+              }}
+            />
+          </ul>
+        </div>
+      )}
       {user ? (
         <img
           src={user.providerData[0].photoURL}
