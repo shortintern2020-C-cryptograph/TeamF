@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"encoding/json"
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/swag"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi/scenepicks"
+	"io/ioutil"
+	"log"
 	"net/http/httptest"
 	"testing"
 )
@@ -12,18 +14,21 @@ func TestGetTag(t *testing.T) {
 	tests := []struct {
 		name    string
 		params  scenepicks.GetTagParams
+		in      string
 		status  int
 		want    string
 		wantErr bool
 	}{
 		{
-			name: "[正常系] リクエスト成功",
-			params: scenepicks.GetTagParams{
-				Genre:  "anime",
-				Limit:  50,
-				Offset: 0,
-				Sort:   swag.String(""),
-			},
+			name:    "[正常系] 必須パラメータのみ",
+			in:      "./testdata/get_tag_test_data_in1.json",
+			status:  200,
+			want:    `{"message":"success", "schema":[]}`,
+			wantErr: false,
+		},
+		{
+			name:    "[正常系] オプションパラメータも含める",
+			in:      "./testdata/get_tag_test_data_in2.json",
 			status:  200,
 			want:    `{"message":"success", "schema":[]}`,
 			wantErr: false,
@@ -32,7 +37,14 @@ func TestGetTag(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			params := tt.params
+			bytes, err := ioutil.ReadFile(tt.in)
+			if err != nil {
+				log.Fatal(err)
+			}
+			var params scenepicks.GetTagParams
+			if err := json.Unmarshal(bytes, &params); err != nil {
+				log.Fatal(err)
+			}
 			params.HTTPRequest = httptest.NewRequest("GET", "http://localhost:3000", nil)
 			resp := GetTag(params)
 
@@ -54,20 +66,14 @@ func TestPostTag(t *testing.T) {
 	tests := []struct {
 		name    string
 		params  scenepicks.PostTagParams
+		in      string
 		status  int
 		want    string
 		wantErr bool
 	}{
 		{
-			name: "[正常系] リクエスト成功",
-			params: scenepicks.PostTagParams{
-				Token: "12345",
-
-				Tag: scenepicks.PostTagBody{
-					Name: "ジブリ",
-					Type: "anime",
-				},
-			},
+			name:    "[正常系] リクエスト成功",
+			in:      "./testdata/post_tag_test_data_in1.json",
 			status:  200,
 			want:    `{"message":"success", "id": 1}`,
 			wantErr: false,
@@ -76,8 +82,15 @@ func TestPostTag(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			params := tt.params
-			params.HTTPRequest = httptest.NewRequest("GET", "http://localhost:3000", nil)
+			bytes, err := ioutil.ReadFile(tt.in)
+			if err != nil {
+				log.Fatal(err)
+			}
+			var params scenepicks.PostTagParams
+			if err := json.Unmarshal(bytes, &params); err != nil {
+				log.Fatal(err)
+			}
+			params.HTTPRequest = httptest.NewRequest("POST", "http://localhost:3000", nil)
 			resp := PostTag(params)
 
 			w := httptest.NewRecorder()

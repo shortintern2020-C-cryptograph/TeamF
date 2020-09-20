@@ -12,7 +12,7 @@ paths:
           required: true
           type: string
           in: query
-          description: ““, “anime“, “manga“, “book“のうちのどれか
+          description: “all“, “anime“, “manga“, “book“のうちのどれか
         - name: offset
           required: true
           type: integer

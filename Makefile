@@ -15,7 +15,7 @@ local/run:
 
 docker/run:
 	docker-compose -f ./docker-compose.yml up -d
-	#$(MAKE) docker/run/server
+#	$(MAKE) docker/run/server
 #	$(MAKE) docker/run/db
 
 docker/run/server:

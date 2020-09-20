@@ -1,10 +1,14 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/Cside/jsondiff"
 	"github.com/go-openapi/runtime"
 	"github.com/mattn/go-shellwords"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi/scenepicks"
+	"io/ioutil"
+	"log"
 	"net/http/httptest"
 	"os/exec"
 	"testing"
@@ -36,6 +40,7 @@ func setup() error {
 }
 
 func setupPostCommentById() error {
+	// コメントできるように先にセリフデータを1つ追加しておく
 	content := "test"
 	title := "test"
 	author := "test"
@@ -62,18 +67,14 @@ func TestGetCommentById(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		params  scenepicks.GetCommentByIDParams
+		in      string
 		status  int
 		want    string
 		wantErr bool
 	}{
 		{
-			name: "[正常系] リクエスト成功",
-			params: scenepicks.GetCommentByIDParams{
-				ID:     1,
-				Limit:  50,
-				Offset: 0,
-			},
+			name:    "[正常系] リクエスト成功",
+			in:      "./testdata/get_comment_by_id_test_data_in1.json",
 			status:  200,
 			want:    `{"message":"success", "schema":[]}`,
 			wantErr: false,
@@ -82,7 +83,14 @@ func TestGetCommentById(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			params := tt.params
+			bytes, err := ioutil.ReadFile(tt.in)
+			if err != nil {
+				log.Fatal(err)
+			}
+			var params scenepicks.GetCommentByIDParams
+			if err := json.Unmarshal(bytes, &params); err != nil {
+				log.Fatal(err)
+			}
 			params.HTTPRequest = httptest.NewRequest("GET", "http://localhost:3000", nil)
 			resp := GetCommentById(params)
 
@@ -104,19 +112,14 @@ func TestPostCommentById(t *testing.T) {
 	tests := []struct {
 		name    string
 		params  scenepicks.PostCommentByIDParams
+		in      string
 		status  int
 		want    string
 		wantErr bool
 	}{
 		{
-			name: "[正常系] リクエスト成功",
-			params: scenepicks.PostCommentByIDParams{
-				Token: "12345",
-				ID:    1,
-				Comment: scenepicks.PostCommentByIDBody{
-					Comment: "cool",
-				},
-			},
+			name:    "[正常系] リクエスト成功",
+			in:      "./testdata/post_comment_by_id_test_data_in1.json",
 			status:  200,
 			want:    `{"message":"success", "id": 1}`,
 			wantErr: false,
@@ -125,8 +128,15 @@ func TestPostCommentById(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			params := tt.params
-			params.HTTPRequest = httptest.NewRequest("GET", "http://localhost:3000", nil)
+			bytes, err := ioutil.ReadFile(tt.in)
+			if err != nil {
+				log.Fatal(err)
+			}
+			var params scenepicks.PostCommentByIDParams
+			if err := json.Unmarshal(bytes, &params); err != nil {
+				log.Fatal(err)
+			}
+			params.HTTPRequest = httptest.NewRequest("POST", "http://localhost:3000", nil)
 			resp := PostCommentById(params)
 
 			w := httptest.NewRecorder()
@@ -136,9 +146,9 @@ func TestPostCommentById(t *testing.T) {
 				t.Errorf("status want %v got %v", tt.status, w.Result().StatusCode)
 			}
 
-			//if diff := jsondiff.Diff([]byte(tt.want), w.Body.Bytes()); diff != "" {
-			//	t.Errorf("case %v body diff:\n%s", tt.name, diff)
-			//}
+			if diff := jsondiff.Diff([]byte(tt.want), w.Body.Bytes()); diff != "" {
+				t.Errorf("case %v body diff:\n%s", tt.name, diff)
+			}
 		})
 	}
 }
