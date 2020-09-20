@@ -16,8 +16,25 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 	sort := p.Sort
 	genre := p.Genre
 	q := p.Q
+	if sort == nil {
+		empty := ""
+		sort = &empty
+	}
+	if q == nil {
+		empty := ""
+		q = &empty
+	}
 	fmt.Printf("GET /tag offset: %d, limit: %d, sort: %v, genre: %s, q: %v\n", offset, limit, sort, genre, q)
-	schema, err := getTag()
+
+	if genre != "all" && genre != "title" && genre != "author" && genre != "other" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("genre is invalid")
+	}
+	// 今のとこ新しい順のみ
+	if *sort != "" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("sort key is invalid")
+	}
+
+	schema, err := getTag(offset, limit, *sort, genre, *q)
 	if err != nil {
 		log.Fatal(err)
 	}

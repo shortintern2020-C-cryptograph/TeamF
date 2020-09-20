@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func getCommentByID(id int64) ([]*models.Comment, error) {
+func getCommentByID(id int64, offset int64, limit int64) ([]*models.Comment, error) {
 	schema := make([]*models.Comment, 0)
 
 	// TODO: 1. Joinを用いてcomment, userテーブルからレスポンスに適したデータを取得するように変更
@@ -14,7 +14,14 @@ func getCommentByID(id int64) ([]*models.Comment, error) {
 
 	// commentテーブルからselect
 	comments := []comment{}
-	err := sqlHandler.DB.Select(&comments, "SELECT * FROM comment where id=?", id)
+	err := sqlHandler.DB.Select(&comments, `
+		SELECT * FROM comment 
+		INNER JOIN user ON comment.user_id = user.id
+		WHERE dialog_id = ?
+		ORDER BY comment.utime DESC
+		LIMIT ?
+		OFFSET ?
+	`, id, limit, offset)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err

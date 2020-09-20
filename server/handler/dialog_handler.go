@@ -16,13 +16,26 @@ func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 	genre := p.Genre
 	offset := p.Offset
 	limit := p.Limit
+	sort := p.Sort
+	q := p.Q
+	if sort == nil {
+		new := "new"
+		sort = &new
+	}
+	if q == nil {
+		empty := ""
+		q = &empty
+	}
 
 	fmt.Printf("GET /dialog genre: %s, offset: %d, limit: %d\n", genre, offset, limit)
 
-	if genre != "anime" && genre != "manga" && genre != "book" {
+	if genre != "all" && genre != "anime" && genre != "manga" && genre != "book" {
 		return scenepicks.NewGetDialogBadRequest().WithPayload("genre is invalid")
 	}
-	schema, err := getDialog(genre)
+	if *sort != "new" && *sort != "like" && *sort != "comment" && *sort != "combined" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("sort key is invalid")
+	}
+	schema, err := getDialog(genre, offset, limit, *sort, *q)
 	if err != nil {
 		log.Fatal(err)
 	}

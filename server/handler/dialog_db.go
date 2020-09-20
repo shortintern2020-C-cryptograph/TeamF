@@ -5,14 +5,31 @@ import (
 	"log"
 )
 
-func getDialog(genre string) ([]*models.Dialog, error) {
+func getDialog(genre string, offset int64, limit int64, sort string, q string) ([]*models.Dialog, error) {
 
 	// TODO: 1. offset, limitを利用した取得をできるようにする
 	// TODO: 2. queryを利用した検索をできるようにする(likeを利用?)
 
 	schema := make([]*models.Dialog, 0)
 	dialogs := []dialog{}
-	err := sqlHandler.DB.Select(&dialogs, "SELECT * FROM dialog where source=?", genre)
+	var err error
+	if genre == "all" {
+		err = sqlHandler.DB.Select(&dialogs, `
+			SELECT * FROM dialog 
+			WHERE content LIKE ?
+			ORDER BY utime DESC
+			LIMIT ?
+			OFFSET ?
+		`, "%" + q + "%", limit, offset)
+	} else {
+		err = sqlHandler.DB.Select(&dialogs, `
+			SELECT * FROM dialog 
+			WHERE source = ? AND content LIKE ?
+			ORDER BY utime DESC
+			LIMIT ?
+			OFFSET ?
+		`, genre, "%" + q + "%", limit, offset)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
