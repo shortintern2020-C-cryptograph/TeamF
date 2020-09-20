@@ -1,4 +1,78 @@
+.container {
+  position: relative;
+  width: 100%;
+  padding: 1em;
+  margin: 0 auto;
+  min-height: 100vh;
+  max-width: 600px;
+  overflow: hidden;
+  // border: 2px solid grey;
+}
+
+.content {
+  width: 95%;
+  margin: 0 auto;
+}
+
+.container::before {
+  content: '';
+  height: 400px;
+  width: 700px;
+  background: linear-gradient(120deg, #46e9c2, #5653f0);
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translate(50px, -480px) rotateZ(-30deg) translateX(-60%);
+  z-index: -1;
+  border-bottom-left-radius: 70px;
+  overflow: hidden;
+}
+
+.titleHeader {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: white;
+  color: #222;
+  border-radius: 10px;
+  letter-spacing: 5px;
+  font-weight: 400;
+  // 6dp elevation
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: 0.1s all;
+}
+
+.titleHeader:hover {
+  // 12dp elevation
+  box-shadow: 0 8px 17px 2px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+}
+
+.profileName {
+  display: inline-block;
+  padding: 15px;
+  font-size: 150%;
+}
+
 .profileImage {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 20%;
   border-radius: 50%;
   object-fit: contain;
+  width: 80px;
+  border: solid 2px white;
+}
+
+.logoutButton {
+  border: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.1s all;
+}
+.logoutButton:hover {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
 }
