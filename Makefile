@@ -10,6 +10,7 @@ DOCKER_APP_BASE:=/go/src/github.com/shortintern2020-C-cryptograph/TeamF/server
 
 # ローカルでサーバを立ち上げる
 local/run:
+	docker-compose -f ./docker-compose.yml up -d db
 	cd server && make run
 	@echo 'connect server port :3000 !!!'
 
@@ -29,6 +30,9 @@ docker/stop:
 	#docker container rm $(SERVER_CONTAINER_NAME)
 
 docker/stop/server:
+	docker-compose down
+
+local/stop:
 	docker-compose down
 
 DB_SERVICE:=db

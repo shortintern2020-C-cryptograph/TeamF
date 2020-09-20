@@ -9,6 +9,7 @@ import { ToastProvider, useToasts } from 'react-toast-notifications'
 import { PageTransition } from '../components/PageTransition'
 import SignIn from '../components/SignInModal'
 import Head from 'next/head'
+import MainContextProvider from '../contexts/MainContext'
 
 const MyApp = ({ Component, pageProps }) => {
   const { addToast } = useToasts()
@@ -63,7 +64,9 @@ const MyAppContainer = ({ Component, pageProps }) => {
   return (
     <ToastProvider PlacementType="bottom-center" autoDismiss={true}>
       <AuthContextProvider>
-        <MyApp pageProps={pageProps} Component={Component} />
+        <MainContextProvider>
+          <MyApp pageProps={pageProps} Component={Component} />
+        </MainContextProvider>
       </AuthContextProvider>
     </ToastProvider>
   )

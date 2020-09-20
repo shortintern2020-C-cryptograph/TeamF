@@ -7,6 +7,8 @@ services:
       - "3000:3000"
     volumes:
       - ./server:/go/src/github.com/shortintern2020-C-cryptograph/TeamF/server/
+    environment:
+      - DBENV=nexus-db # sql_handler接続先切り替え用
   db:
     image: mysql
     ports:
@@ -17,6 +19,7 @@ services:
       MYSQL_ROOT_PASSWORD: password
     volumes:
       - data-volume:/var/lib/mysql
+      - ./database/init.d:/docker-entrypoint-initdb.d # 起動時にテーブルを作成（data-volumeが無い時だけ動く）
 
   migration:
     image: flyway/flyway
