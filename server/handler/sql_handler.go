@@ -19,7 +19,6 @@ func NewSQLHandler() SQLHandler {
 	dbenv := os.Getenv("DBENV")
 	dburl := fmt.Sprintf("root:password@tcp(%s:3306)/nexus_db?parseTime=true", dbenv)
 
-	fmt.Println(dburl)
 	db, err := sqlx.Connect("mysql", dburl)
 	if err != nil {
 		log.Fatal(err)
