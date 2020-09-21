@@ -6,6 +6,8 @@ if (typeof window !== 'undefined') {
 }
 const easing = require('easing-utils')
 
+import { createGradient, calcTextSize, wrapedText, aspectSaveImageSprite, loader } from '../lib/pixiHelpers'
+
 /**
  * 物理演算により動かしつつセリフ等のデータを表示する事を行うクラスを提供します。データを表示する本モジュールのクラス群はブラウザ環境でのみ動作します。
  * @module SPGrahic
@@ -331,10 +333,9 @@ export class Dialog extends GrahicObject {
     }
 
     // 改行しないで表示した場合の大きさを調べる
-    const dialogOriginalWidth = calcTextSize({
+    const dialogOriginalWidth = calcTextSize(this._content.dialog, {
       fontSize: dialogParam.fontSize,
       fontWeight: dialogParam.fontWeight,
-      content: this._content.dialog
     }).width
       + dialogParam.margin * 2
 
@@ -378,10 +379,10 @@ export class Dialog extends GrahicObject {
     mask.endFill()
 
     // 背景
-    const bg = createGradient(0, 0, this._width, this._height, "#FF00E5", "#BD00FF");
+    const bg = createGradient(this._width, this._height, "#FF00E5", "#BD00FF");
 
     // 引用符
-    const quotIcon = new PIXI.Sprite(PIXI.loader.resources["quotation_white"].texture);
+    const quotIcon = new PIXI.Sprite(loader.resources["quotation_white"].texture);
     quotIcon.alpha = quotIconParam.alpha;
     const heightRatio = quotIconParam.height / quotIcon.height;
     quotIcon.height = quotIconParam.height;
@@ -516,7 +517,7 @@ export class DialogDetail extends GrahicObject {
     mask.endFill()
 
     // 背景
-    const bg = createGradient(0, 0, this._width, this._height, "#FFFFFF", "#E4E4E4", "vertical");
+    const bg = createGradient(this._width, this._height, "#FFFFFF", "#E4E4E4", "vertical");
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     bg.position.set(offsetX, offsetY)
@@ -697,7 +698,7 @@ export class Comment extends GrahicObject {
     commentMask.addChild(commentMaskTri);
 
     // コメント背景
-    const commentBg = createGradient(0, 0, commentWidth + margin, commentHeight, "#FFFFFF", "#E4E4E4", "vertical");
+    const commentBg = createGradient(commentWidth + margin, commentHeight, "#FFFFFF", "#E4E4E4", "vertical");
     commentBg.mask = commentMask;
     // commentBg.filters = [new PIXI.filters.DropShadowFilter({
     //   rotation: 90,
