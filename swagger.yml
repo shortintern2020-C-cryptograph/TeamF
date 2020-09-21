@@ -138,10 +138,14 @@ paths:
             properties:
               message:
                 type: string
-              schema:
+              comments:
                 type: array
                 items:
                   $ref: "#/definitions/comment"
+              tags:
+                type: array
+                items:
+                  $ref: "#/definitions/tag"
         400:
           description: request error
           schema:
@@ -305,8 +309,6 @@ paths:
           description: generic error response
           schema:
             $ref: "#/definitions/error"
-
-
 definitions:
   dialog:
     type: object
@@ -337,6 +339,9 @@ definitions:
     properties:
       id:
         type: integer
+      firebase_uid:
+        type: string
+        description: user_idと一対一で対応するfirebase上のuid
       display_name:
         type: string
         description: ユーザ名
