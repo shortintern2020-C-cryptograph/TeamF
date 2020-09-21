@@ -1,6 +1,8 @@
 package handler
 
 import (
+	//"context"
+	//"context"
 	"fmt"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 	"log"
@@ -50,33 +52,27 @@ func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 func PostDialog(p scenepicks.PostDialogParams) middleware.Responder {
 
 	//TODO: firebase認証
-	//idToken := p.Token
-	//token, err := auth.VerifyIDToken(context.Background(), idToken)
-	//if err != nil {
-	//	fmt.Printf("error verifying ID token: %v\n", err)
-	//	return scenepicks.NewPostDialogBadRequest()
-	//}
-	//fmt.Printf("uid: %s", token.UID)
-	//userRecord, err := auth.GetUser(context.Background(), token)
-	//if err != nil {
-	//	fmt.Printf("error getting user record: %v\n", err)
-	//	return scenepicks.NewPostDialogBadRequest()
-	//}
-	// getUserWithFirebaseRecord(userRecord)
-	// =>firebaseUidを持つuserがDBに存在すれば更新、存在しなければ新たに作成
+	idToken := p.Token
+	client := NewClient(idToken)
+	if client.err != nil {
+		fmt.Printf("%v\n", client.err)
+		return scenepicks.NewPostDialogBadRequest()
+	}
+	//fmt.Printf("Twitter's information\n")
+	//fmt.Printf("id: %d\n", client.user.ID)
+	//fmt.Printf("uid: %s\n", client.user.FirebaseUID)
+	//fmt.Printf("display_name: %s\n", client.user.DisplayName)
+	//fmt.Printf("photo_url: %s\n", client.user.PhotoURL)
+	//=>firebaseUidを持つuserがDBに存在すれば更新、存在しなければ新たに作成
 	content := p.Content.Content
-	//title := p.Title
-	//author := p.Author
-	//link := p.Link
-	//style := p.Style
-	//comment := p.Comment
-	//tags := p.Tags
-	fmt.Printf("POST /dialog content: %s, key: %s\n", content, p.Token)
 	title := p.Content.Title
 	author := p.Content.Author
 	source := ""
 	link := p.Content.Link
 	style := p.Content.Style
+	//comment := p.Comment
+	//tags := p.Tags
+
 	id, err := postDialog(content, title, author, source, link, style)
 	if err != nil {
 		log.Fatal(err)
