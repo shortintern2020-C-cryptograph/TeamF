@@ -32,7 +32,7 @@ type GetDialogParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*““, “anime“, “manga“, “book“のうちのどれか
+	/*“all“, “anime“, “manga“, “book“のうちのどれか
 	  Required: true
 	  In: query
 	*/

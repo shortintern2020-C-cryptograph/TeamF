@@ -33,7 +33,7 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "““, “anime“, “manga“, “book“のうちのどれか",
+            "description": "“all“, “anime“, “manga“, “book“のうちのどれか",
             "name": "genre",
             "in": "query",
             "required": true
@@ -313,6 +313,30 @@ func init() {
         }
       }
     },
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "description": "正常に動作中",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/tag": {
       "get": {
         "operationId": "getTag",
@@ -496,9 +520,6 @@ func init() {
     "error": {
       "type": "string"
     },
-    "principal": {
-      "type": "string"
-    },
     "tag": {
       "type": "object",
       "properties": {
@@ -528,13 +549,6 @@ func init() {
           "type": "string"
         }
       }
-    }
-  },
-  "securityDefinitions": {
-    "tokenAuth": {
-      "type": "apiKey",
-      "name": "X-API-Key",
-      "in": "header"
     }
   }
 }`))
@@ -554,7 +568,7 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "““, “anime“, “manga“, “book“のうちのどれか",
+            "description": "“all“, “anime“, “manga“, “book“のうちのどれか",
             "name": "genre",
             "in": "query",
             "required": true
@@ -834,6 +848,30 @@ func init() {
         }
       }
     },
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "description": "正常に動作中",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/tag": {
       "get": {
         "operationId": "getTag",
@@ -1017,9 +1055,6 @@ func init() {
     "error": {
       "type": "string"
     },
-    "principal": {
-      "type": "string"
-    },
     "tag": {
       "type": "object",
       "properties": {
@@ -1049,13 +1084,6 @@ func init() {
           "type": "string"
         }
       }
-    }
-  },
-  "securityDefinitions": {
-    "tokenAuth": {
-      "type": "apiKey",
-      "name": "X-API-Key",
-      "in": "header"
     }
   }
 }`))

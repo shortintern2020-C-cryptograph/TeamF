@@ -51,6 +51,9 @@ func NewSecenPickServerAPI(spec *loads.Document) *SecenPickServerAPI {
 		GetTagHandler: GetTagHandlerFunc(func(params GetTagParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetTag has not yet been implemented")
 		}),
+		HealthCheckHandler: HealthCheckHandlerFunc(func(params HealthCheckParams) middleware.Responder {
+			return middleware.NotImplemented("operation HealthCheck has not yet been implemented")
+		}),
 		PostCommentByIDHandler: PostCommentByIDHandlerFunc(func(params PostCommentByIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation PostCommentByID has not yet been implemented")
 		}),
@@ -100,6 +103,8 @@ type SecenPickServerAPI struct {
 	GetDialogHandler GetDialogHandler
 	// GetTagHandler sets the operation handler for the get tag operation
 	GetTagHandler GetTagHandler
+	// HealthCheckHandler sets the operation handler for the health check operation
+	HealthCheckHandler HealthCheckHandler
 	// PostCommentByIDHandler sets the operation handler for the post comment by Id operation
 	PostCommentByIDHandler PostCommentByIDHandler
 	// PostDialogHandler sets the operation handler for the post dialog operation
@@ -190,6 +195,9 @@ func (o *SecenPickServerAPI) Validate() error {
 	}
 	if o.GetTagHandler == nil {
 		unregistered = append(unregistered, "GetTagHandler")
+	}
+	if o.HealthCheckHandler == nil {
+		unregistered = append(unregistered, "HealthCheckHandler")
 	}
 	if o.PostCommentByIDHandler == nil {
 		unregistered = append(unregistered, "PostCommentByIDHandler")
@@ -300,6 +308,10 @@ func (o *SecenPickServerAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/tag"] = NewGetTag(o.context, o.GetTagHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/health"] = NewHealthCheck(o.context, o.HealthCheckHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}

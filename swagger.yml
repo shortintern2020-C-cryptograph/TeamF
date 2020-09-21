@@ -290,6 +290,22 @@ paths:
           description: generic error response
           schema:
             $ref: "#/definitions/error"
+  /health:
+    get:
+      operationId: healthCheck
+      responses:
+        200:
+          description: 正常に動作中
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+
 
 definitions:
   dialog:
@@ -338,11 +354,3 @@ definitions:
         type: string
   error:
     type: string
-  principal:
-    type: string
-
-securityDefinitions:
-  tokenAuth:
-    type: apiKey
-    name: X-API-Key
-    in: header
