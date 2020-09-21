@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "env-cmd -f .env next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "gendoc": "jsdoc lib -p -c jsdoc.conf -d doc -t ./node_modules/docdash"
   },
   "dependencies": {
     "@pixi/filter-drop-shadow": "^3.1.1",
@@ -26,6 +27,7 @@
     "sass": "^1.26.10"
   },
   "devDependencies": {
+    "docdash": "^1.2.0",
     "eslint": "^7.9.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.11.0",
@@ -34,6 +36,8 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.1.2",
+    "jsdoc": "^3.6.6",
+    "jsdoc-external-docs": "https://github.com/cnordhougen/jsdoc-external-docs",
     "prettier": "^2.1.2"
   }
 }
