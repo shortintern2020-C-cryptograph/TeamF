@@ -309,8 +309,6 @@ paths:
           description: generic error response
           schema:
             $ref: "#/definitions/error"
-
-
 definitions:
   dialog:
     type: object
