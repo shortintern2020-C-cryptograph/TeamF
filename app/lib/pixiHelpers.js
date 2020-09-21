@@ -3,6 +3,8 @@ if (typeof window !== 'undefined') {
   PIXI = require('pixi.js')
 }
 
+export let loader = null;
+
 /**
  * Canvasへの壁画を行うライブラリであるPIXI.jsを用いるのに有用なヘルパー関数群を提供します。本モジュールの関数群はブラウザ環境でのみ動作します。
  * @module pixiHelpers
@@ -50,6 +52,7 @@ export function initPixi(element) {
     view: element
   })
   pixi.renderer.autoResize = true;
+  loader = new PIXI.Loader();
   return pixi;
 }
 
@@ -159,7 +162,7 @@ export function wrapedText(text, param) {
  * @return {PIXI.Sprite} - 生成した画像が貼り付けてあるSpriteオブジェクト
  */
 export function aspectSaveImageSprite(path, param) {
-  const image = new PIXI.Sprite(PIXI.loader.resources[path].texture);
+  const image = new PIXI.Sprite(loader.resources[path].texture);
   image.alpha = param.alpha | 1;
   if (param.height && param.width) {
     image.height = param.height;
