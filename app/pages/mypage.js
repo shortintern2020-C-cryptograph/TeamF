@@ -60,7 +60,6 @@ const MyPage = () => {
           </div>
         )}
       </div>
-      //黒岩海斗
       <div>
         
         <h3>ScenePicksについて</h3>
