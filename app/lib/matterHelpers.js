@@ -4,7 +4,7 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * オブジェクトの動作を司る物理演算を行うライブラリであるmatter.jsを用いるのに有用なヘルパー関数群を提供します。
+ * オブジェクトの動作を司る物理演算を行うライブラリであるmatter.jsを用いるのに有用なヘルパー関数群を提供します。本モジュールの関数群はブラウザ環境でのみ動作します。
  * @module matterHelpers
  * @author Ritsuki KOKUBO
  * @see {@link https://brm.io/matter-js/docs/index.html}
