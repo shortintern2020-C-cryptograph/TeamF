@@ -1,0 +1,16 @@
+{
+    "string": "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "number": "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "boolean": "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "HTMLCanvasElement": "https://developer.mozilla.org/ja/docs/Web/API/HTMLCanvasElement",
+    "Matter.Engine": "https://brm.io/matter-js/docs/classes/Engine.html",
+    "Matter.World": "https://brm.io/matter-js/docs/classes/World.html",
+    "Matter.Runner": "https://brm.io/matter-js/docs/classes/Runner.html",
+    "Matter.Render": "https://brm.io/matter-js/docs/classes/Render.html",
+    "Matter.Body": "https://brm.io/matter-js/docs/classes/Body.html",
+    "PIXI.Application": "http://pixijs.download/release/docs/PIXI.Application.html",
+    "PIXI.Container": "http://pixijs.download/release/docs/PIXI.Container.html",
+    "PIXI.Sprite": "http://pixijs.download/release/docs/PIXI.Sprite.html",
+    "PIXI.Text": "http://pixijs.download/release/docs/PIXI.Text.html",
+    "PIXI.TextStyle": "http://pixijs.download/release/docs/PIXI.TextStyle.html"
+}
