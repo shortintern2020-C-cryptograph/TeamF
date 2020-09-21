@@ -26,6 +26,7 @@ func init() {
     "title": "Secen Pick Server",
     "version": "1.0.0"
   },
+  "basePath": "/api",
   "paths": {
     "/dialog": {
       "get": {
@@ -561,6 +562,7 @@ func init() {
     "title": "Secen Pick Server",
     "version": "1.0.0"
   },
+  "basePath": "/api",
   "paths": {
     "/dialog": {
       "get": {
