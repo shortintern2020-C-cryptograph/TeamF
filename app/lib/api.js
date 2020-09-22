@@ -1,6 +1,6 @@
-import axios from "axios"
+import axios from 'axios'
 import firebase from '../config/firebase'
-import { apiConfig } from "../config/api"
+import { apiConfig } from '../config/api'
 
 /**
  * AxiosをラップしてAPIを叩きやすくする関数群を提供します。
@@ -35,10 +35,10 @@ import { apiConfig } from "../config/api"
 // axiosインスタンス
 const ax = axios.create({
   baseURL: apiConfig.fqdn
-});
+})
 
 // エンドポイント定義
-const endpoints = apiConfig.endpoints;
+const endpoints = apiConfig.endpoints
 
 /**
  * Axiosのレスポンスオブジェクトからデータを取り出します
@@ -47,9 +47,9 @@ const endpoints = apiConfig.endpoints;
  */
 const resultMapper = (res) => {
   if (res.status == 200) {
-    return res.data;
+    return res.data
   } else {
-    return {};
+    return {}
   }
 }
 
@@ -60,18 +60,18 @@ const resultMapper = (res) => {
  */
 function checkFetchParams(query) {
   if (typeof query != 'object') {
-    console.warn("api: 引数が不正です: オブジェクトでないといけません");
-    return false;
+    console.warn('api: 引数が不正です: オブジェクトでないといけません')
+    return false
   }
-  const requiredQuerys = ["genre", "offset", "limit"];
-  const ok = true;
+  const requiredQuerys = ['genre', 'offset', 'limit']
+  const ok = true
   requiredQuerys.forEach((q) => {
     if (typeof query[q] === 'undefined') {
-      console.warn(`api: 引数が不正です: ${q}が指定されていません`);
-      ok = false;
+      console.warn(`api: 引数が不正です: ${q}が指定されていません`)
+      ok = false
     }
-  });
-  return ok;
+  })
+  return ok
 }
 
 /**
@@ -80,14 +80,14 @@ function checkFetchParams(query) {
  * @returns {Object}
  */
 async function authHeader() {
-  let header = {};
+  let header = {}
   try {
-    const token = await firebase.auth().currentUser.getIdToken(/* forceRefresh */ true);
-    header[apiConfig.authHeaderName] = token;
+    const token = await firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+    header[apiConfig.authHeaderName] = token
   } catch (e) {
-    console.warn("api: authHeader: トークン取得失敗");
+    console.warn('api: authHeader: トークン取得失敗')
   }
-  return header;
+  return header
 }
 
 /**
@@ -97,11 +97,13 @@ async function authHeader() {
  */
 export async function getDialog(query) {
   if (!checkFetchParams(query)) {
-    return;
+    return
   }
-  return resultMapper(await ax.get(endpoints.getDialog(), {
-    params: query
-  }));
+  return resultMapper(
+    await ax.get(endpoints.getDialog(), {
+      params: query
+    })
+  )
 }
 
 /**
@@ -110,7 +112,7 @@ export async function getDialog(query) {
  * @param {number} dialogId - セリフのID
  */
 export async function getDialogDetail(dialogId) {
-  return resultMapper(await ax.get(endpoints.getDialogDetail(dialogId)));
+  return resultMapper(await ax.get(endpoints.getDialogDetail(dialogId)))
 }
 
 /**
@@ -121,11 +123,13 @@ export async function getDialogDetail(dialogId) {
  */
 export async function getComment(dialogId, query) {
   if (!checkFetchParams(query)) {
-    return;
+    return
   }
-  return resultMapper(await ax.get(endpoints.getDialogDetail(dialogid), {
-    params: query
-  }));
+  return resultMapper(
+    await ax.get(endpoints.getDialogDetail(dialogid), {
+      params: query
+    })
+  )
 }
 
 /**
@@ -134,11 +138,13 @@ export async function getComment(dialogId, query) {
  * @param {Dialog} dialog -　投稿するセリフ
  */
 export async function postDialog(dialog) {
-  const headers = await authHeader();
-  return resultMapper(await ax.post(endpoints.postDialog(), {
-    headers,
-    data: dialog
-  }));
+  const headers = await authHeader()
+  return resultMapper(
+    await ax.post(endpoints.postDialog(), {
+      headers,
+      data: dialog
+    })
+  )
 }
 
 /**
@@ -148,9 +154,11 @@ export async function postDialog(dialog) {
  * @param {Comment} comment - 投稿するコメント
  */
 export async function postComment(dialogId, comment) {
-  const headers = await authHeader();
-  return resultMapper(await ax.post(endpoints.postComment(dialogId), {
-    headers,
-    data: comment
-  }));
+  const headers = await authHeader()
+  return resultMapper(
+    await ax.post(endpoints.postComment(dialogId), {
+      headers,
+      data: comment
+    })
+  )
 }
