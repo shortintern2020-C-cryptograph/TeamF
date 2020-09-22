@@ -15,4 +15,5 @@ export const apiConfig = {
     postComment: (id) => '/dialog/:id/comment'
   },
   authHeaderName: 'token'
+  //確認済み
 }

@@ -74,5 +74,5 @@ const MyPage = () => {
     </div>
   )
 }
-
+//黒岩海斗作成
 export default MyPage
