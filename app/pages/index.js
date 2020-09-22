@@ -5,6 +5,8 @@ import { createRef, useContext, useEffect, useState } from 'react'
 import { MainContext } from '../contexts/MainContext'
 import { PageTransition } from '../components/PageTransition'
 
+import SPCanvas from '../components/SPCanvas'
+
 const Home = () => {
   const { selectedGenre, fabMode, setFabMode } = useContext(MainContext)
   const [inputOpen, setInputOpen] = useState(false)
@@ -51,7 +53,7 @@ const Home = () => {
           <title>Home | ScenePicks</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        {/* ここにcanvas */}
+        <SPCanvas/>
         {inputOpen && (
           <PageTransition>
             <textarea

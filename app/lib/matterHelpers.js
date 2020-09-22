@@ -29,6 +29,10 @@ export function initMatter() {
   return { engine, runner };
 }
 
+export function stopMatter(runner) {
+  Matter.Runner.stop(runner);
+}
+
 /**
  * matterのデバッグ用レンダラーオブジェクトの初期化を行います。
  * @param {HTMLCanvasElement} element - 壁画を行うCanvas要素
@@ -59,4 +63,20 @@ export function initMatterRenderer(element, engine) {
   });
   Matter.Render.run(renderer);
   return renderer;
+}
+
+
+
+export function registerUpdateCb(engine, fns) {
+  if (!fns || !engine) {
+    return;
+  }
+  Matter.Events.on(engine, 'beforeUpdate', () => {
+    if (fns == null) {
+      return;
+    }
+    fns.forEach((f) => {
+      f();
+    })
+  });
 }
