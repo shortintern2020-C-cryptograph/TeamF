@@ -4,6 +4,8 @@ import Layout from '../components/Layout'
 import { useContext, useEffect } from 'react'
 import { MainContext } from '../contexts/MainContext'
 
+import SPCanvas from '../components/SPCanvas'
+
 const Home = () => {
   const { selectedGenre, fabMode, setFabMode } = useContext(MainContext)
 
@@ -32,7 +34,7 @@ const Home = () => {
           <title>Create Next App</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        {/* ここにcanvas */}
+        <SPCanvas></SPCanvas>
       </div>
     </Layout>
   )
