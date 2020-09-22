@@ -1,20 +1,13 @@
-name: Golang Test
+name: Build and Push
 
 on:
-  pull_request:
+  push:
     branches:
-      - development
+      - staging
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    if: "! contains(github.event.head_commit.message, '[ci skip]')"
-    steps:
-      - run: echo "${{ github.event.head_commit.message }}"
-
   server-test:
     name: Server Test
-    needs: prepare
     runs-on: ubuntu-18.04
     steps:
       - name: Set up Go 1.14
@@ -42,3 +35,19 @@ jobs:
 
       - name: Stop docker-compose
         run: make docker/stop
+
+  stg-deploy:
+    name: stg-deploy
+    needs: server-test
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: chrislennon/action-aws-cli@v1.1
+
+      - name: Set AWS region
+        run: aws configure set region ap-northeast-1
+
+      - name: Run AWS CodeDeploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: aws deploy create-deployment --application-name "scenepicks-deploy-app" --deployment-group-name "scenepicks-stg-test" --github-location repository="shortintern2020-C-cryptograph/TeamF",commitId=$GITHUB_SHA
