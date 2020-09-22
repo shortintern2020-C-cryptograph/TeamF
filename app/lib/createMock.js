@@ -3,6 +3,17 @@ import { apiConfig } from "../config/api"
 
 const endpoints = apiConfig.endpointsScheme;
 
+/**
+ * APIモックを作成する関数を提供します。
+ * @module createMock
+ * @author Ritsuki KOKUBO
+ * @see {@link https://miragejs.com/api/classes/association/}
+ */
+
+/**
+ * カスタムヘッダーからトークンを取り出します
+ * @param {Mirage.Request} request - Mirageのリクエストオブジェクト
+ */
 function getToken(request) {
   if (typeof request.requestHeaders !== 'undefined' && typeof request.requestHeaders.token !== 'undefined') {
     return request.requestHeaders.token;

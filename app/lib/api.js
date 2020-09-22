@@ -2,11 +2,49 @@ import axios from "axios"
 import firebase from '../config/firebase'
 import { apiConfig } from "../config/api"
 
+/**
+ * AxiosをラップしてAPIを叩きやすくする関数群を提供します。
+ * @module api
+ * @author Ritsuki KOKUBO
+ * @see {@link https://github.com/axios/axios}
+ */
+
+/**
+ * @typedef {Object} FetchQuery
+ * @property {string} genre - ジャンル
+ * @property {number} offset - ページングオフセット
+ * @property {number} limit - 最大レコード数
+ * @property {string} [sort] - ソート
+ * @property {string} [q] - 検索クエリ
+ */
+
+/**
+ * @typedef {Object} Dialog
+ * @property {string} content - セリフ
+ * @property {string} title - 作品名
+ * @property {string} author - 著者
+ * @property {string} link - 商品リンク
+ * @property {string} style - セリフの表示スタイル
+ */
+
+/**
+ * @typedef {Object} Comment
+ * @property {string} comment - コメント
+ */
+
+// axiosインスタンス
 const ax = axios.create({
   baseURL: apiConfig.fqdn
 });
+
+// エンドポイント定義
 const endpoints = apiConfig.endpoints;
 
+/**
+ * Axiosのレスポンスオブジェクトからデータを取り出します
+ * @param {AxiosResponse} res - Axiosのレスポンスオブジェクト
+ * @returns {Object}
+ */
 const resultMapper = (res) => {
   if (res.status == 200) {
     return res.data;
@@ -15,6 +53,11 @@ const resultMapper = (res) => {
   }
 }
 
+/**
+ * ページングに関するパラメータが入っているかを確認します
+ * @param {FetchQuery} query - ページングに関するパラメータが入ったオブジェクト
+ * @returns {boolean} - 必須パラメータが入っているか
+ */
 function checkFetchParams(query) {
   if (typeof query != 'object') {
     console.warn("api: 引数が不正です: オブジェクトでないといけません");
@@ -31,6 +74,11 @@ function checkFetchParams(query) {
   return ok;
 }
 
+/**
+ * Firebase Authのトークンをカスタムヘッダーに挿入するオブジェクトを生成します
+ * @async
+ * @returns {Object}
+ */
 async function authHeader() {
   let header = {};
   try {
@@ -42,15 +90,11 @@ async function authHeader() {
   return header;
 }
 
-/*
-query = {
-  genre,
-  offset,
-  limit,
-  [sort],
-  [q]
-}
-*/
+/**
+ * セリフ取得のAPIを叩きます
+ * @async
+ * @param {FetchQuery} query - ページングに関するパラメータ
+ */
 export async function getDialog(query) {
   if (!checkFetchParams(query)) {
     return;
@@ -60,13 +104,22 @@ export async function getDialog(query) {
   }));
 }
 
-// セリフ詳細
-export async function getDialogDetail(dialogid) {
-  return resultMapper(await ax.get(endpoints.getDialogDetail(dialogid)));
+/**
+ * セリフ詳細取得のAPIを叩きます
+ * @async
+ * @param {number} dialogId - セリフのID
+ */
+export async function getDialogDetail(dialogId) {
+  return resultMapper(await ax.get(endpoints.getDialogDetail(dialogId)));
 }
 
-// コメント
-export async function getComment(dialogid, query) {
+/**
+ * コメント取得のAPIを叩きます
+ * @async
+ * @param {number} dialogId - セリフのID
+ * @param {FetchQuery} query - ページングに関するパラメータ
+ */
+export async function getComment(dialogId, query) {
   if (!checkFetchParams(query)) {
     return;
   }
@@ -75,18 +128,11 @@ export async function getComment(dialogid, query) {
   }));
 }
 
-// セリフ投稿
-/*
-dialog = {
-    "content": "string",
-    "title": "string",
-    "author": "string",
-    "link": "string",
-    "style": "string",
-    "user_id": 0,
-    "comment": "string"
-  }
-*/
+/**
+ * セリフ投稿のAPIを叩きます
+ * @async
+ * @param {Dialog} dialog -　投稿するセリフ
+ */
 export async function postDialog(dialog) {
   const headers = await authHeader();
   return resultMapper(await ax.post(endpoints.postDialog(), {
@@ -95,12 +141,12 @@ export async function postDialog(dialog) {
   }));
 }
 
-// コメント投稿
-/*
-comment = {
-  "comment": "string"
-}
-*/
+/**
+ * コメント投稿のAPIを叩きます
+ * @async
+ * @param {number} dialogId - セリフを投稿するセリフのID
+ * @param {Comment} comment - 投稿するコメント
+ */
 export async function postComment(dialogId, comment) {
   const headers = await authHeader();
   return resultMapper(await ax.post(endpoints.postComment(dialogId), {
