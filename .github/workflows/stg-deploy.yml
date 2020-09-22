@@ -3,7 +3,7 @@ name: Build and Push
 on:
   push:
     branches:
-      - release
+      - staging
 
 jobs:
   server-test:
@@ -44,10 +44,10 @@ jobs:
       - uses: chrislennon/action-aws-cli@v1.1
 
       - name: Set AWS region
-        run: aws configure set regio ap-northeast-1
+        run: aws configure set region ap-northeast-1
 
       - name: Run AWS CodeDeploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: aws deploy create-deployment --application-name "scenepicks-deploy-app" --deployment-group-name "scenepicks-stg" --github-location repository="shortintern2020-C-cryptograph/TeamF",commitId=$GITHUB_SHA
+        run: aws deploy create-deployment --application-name "scenepicks-deploy-app" --deployment-group-name "scenepicks-stg-test" --github-location repository="shortintern2020-C-cryptograph/TeamF",commitId=$GITHUB_SHA
