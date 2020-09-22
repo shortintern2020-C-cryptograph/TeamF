@@ -5,9 +5,6 @@ services:
     container_name: app
     ports:
       - "3000:3000"
-    volumes:
-      - ./app:/usr/app
-    command: /bin/sh -c "pm2-runtime 'yarn run deploy:prod'"
     restart: always
   server:
     build: ./server

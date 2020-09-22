@@ -3,6 +3,7 @@ import styles from '../styles/Home.module.scss'
 import Layout from '../components/Layout'
 import { createRef, useContext, useEffect, useState } from 'react'
 import { MainContext } from '../contexts/MainContext'
+import { PageTransition } from '../components/PageTransition'
 
 const Home = () => {
   const { selectedGenre, fabMode, setFabMode } = useContext(MainContext)
@@ -47,19 +48,21 @@ const Home = () => {
     <Layout>
       <div className={styles.container}>
         <Head>
-          <title>Create Next App</title>
+          <title>Home | ScenePicks</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
         {/* ここにcanvas */}
         {inputOpen && (
-          <textarea
-            name="newpost"
-            cols="40"
-            rows="5"
-            ref={newPostInput}
-            className={styles.newPostInput}
-            placeholder="作品名"
-          />
+          <PageTransition>
+            <textarea
+              name="newpost"
+              cols="40"
+              rows="5"
+              ref={newPostInput}
+              className={styles.newPostInput}
+              placeholder="作品名"
+            />
+          </PageTransition>
         )}
       </div>
     </Layout>
