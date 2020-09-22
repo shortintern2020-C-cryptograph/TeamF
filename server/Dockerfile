@@ -14,4 +14,4 @@ RUN go get github.com/pilu/fresh
 
 RUN go mod tidy
 
-CMD ["make", "run"]
+CMD ["go", "run", "./main.go", "--port=8080"]

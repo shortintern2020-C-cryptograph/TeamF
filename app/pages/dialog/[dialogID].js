@@ -29,7 +29,7 @@ const Dialog = () => {
   return (
     <Layout>
       <Head>
-        <title>セリフ | scenepicks</title>
+        <title>セリフ | ScenePicks</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* ここにcanvas */}
