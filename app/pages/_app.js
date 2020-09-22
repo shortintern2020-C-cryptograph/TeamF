@@ -11,12 +11,16 @@ import SignIn from '../components/SignInModal'
 import Head from 'next/head'
 import MainContextProvider from '../contexts/MainContext'
 
+console.log(process.env.ENV)
+
 const MyApp = ({ Component, pageProps }) => {
   const { addToast } = useToasts()
-  const { setUser, setLoading, isLoading, storageAvailable, setSignInModalOpen, user } = useContext(AuthContext)
+  const { setUser, setLoading, isLoading, storageAvailable, setSignInModalOpen } = useContext(AuthContext)
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
+        setUser(firebaseUser)
+        // TODO: 消す
         firebase
           .auth()
           .currentUser.getIdToken(/* forceRefresh */ true)
@@ -39,7 +43,6 @@ const MyApp = ({ Component, pageProps }) => {
         } else {
           addToast(`Welcome ${firebaseUser.providerData[0].displayName}!`, { appearance: 'success' })
         }
-        setUser(firebaseUser)
       } else {
         setUser(null)
         console.log('not logged in')
