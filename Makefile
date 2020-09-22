@@ -8,36 +8,42 @@ FLYWAY_CONF?=-url=jdbc:mysql://$(DOCKER_DNS):3306/$(DBNAME) -user=root -password
 HOST_APP_BASE:=$(shell pwd)
 DOCKER_APP_BASE:=/go/src/github.com/shortintern2020-C-cryptograph/TeamF/server
 
-# ローカルでサーバを立ち上げる
-local/run:
-	docker-compose -f ./docker-compose.yml up -d db
+
+local/run/server: # コンテナでdbだけ、サーバはローカルで起動（フロントはなにもしない）
+	$(make) docker/run/db
 	cd server && make run
 	@echo 'connect server port :3000 !!!'
 
-docker/run:
+docker/run: # 全部コンテナで起動
 	docker-compose -f ./docker-compose.yml build --no-cache
 	docker-compose -f ./docker-compose.yml up -d
 #	$(MAKE) docker/run/server
 #	$(MAKE) docker/run/db
 
-docker/run/server:
+docker/run/server: # server, dbのみをコンテナで起動
 	#docker run -d --name $(SERVER_CONTAINER_NAME) -p 1323:1323 -v $(HOST_APP_BASE):$(DOCKER_APP_BASE) $(SERVER_REPOSITORY_NAME):latest
-	docker-compose -f ./docker-compose.yml up -d server
+	docker-compose -f ./docker-compose.yml build --no-cache server db
+	docker-compose -f ./docker-compose.yml up -d server db
 	@echo 'connect server port :8080 !!!'
 
-docker/stop:
+docker/run/db: # dbのみをコンテナで起動
+	docker-compose -f ./docker-compose.yml up -d db
+
+
+docker/stop: # コンテナ全部落として、削除する
 	docker-compose down
 	#$(MAKE) docker/stop/server
 	#docker container rm $(SERVER_CONTAINER_NAME)
 
-docker/stop/server:
+docker/stop/server: # コンテナ全部落として、削除する
 	docker-compose down
 
-local/run/frontend:
+local/run/frontend: # フロントエンドを起動！
+	$(make) docker/run/server
 	cd app && yarn && yarn run dev
 	@echo 'frontend served at port 3000 !'
 
-local/stop:
+local/stop: # ローカルで動かしてたやつ以外のコンテナを削除（only db or db + server）
 	docker-compose down
 
 DB_SERVICE:=db
