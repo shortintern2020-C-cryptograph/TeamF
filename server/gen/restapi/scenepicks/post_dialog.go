@@ -78,14 +78,14 @@ type PostDialogBody struct {
 	// link
 	Link string `json:"link,omitempty"`
 
+	// source
+	Source string `json:"source,omitempty"`
+
 	// style
 	Style string `json:"style,omitempty"`
 
 	// title
 	Title string `json:"title,omitempty"`
-
-	// user id
-	UserID int64 `json:"user_id,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object while disallowing additional properties from JSON
@@ -104,14 +104,14 @@ func (o *PostDialogBody) UnmarshalJSON(data []byte) error {
 		// link
 		Link string `json:"link,omitempty"`
 
+		// source
+		Source string `json:"source,omitempty"`
+
 		// style
 		Style string `json:"style,omitempty"`
 
 		// title
 		Title string `json:"title,omitempty"`
-
-		// user id
-		UserID int64 `json:"user_id,omitempty"`
 	}
 
 	dec := json.NewDecoder(bytes.NewReader(data))
@@ -124,9 +124,9 @@ func (o *PostDialogBody) UnmarshalJSON(data []byte) error {
 	o.Comment = props.Comment
 	o.Content = props.Content
 	o.Link = props.Link
+	o.Source = props.Source
 	o.Style = props.Style
 	o.Title = props.Title
-	o.UserID = props.UserID
 	return nil
 }
 

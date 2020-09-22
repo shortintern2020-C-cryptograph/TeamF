@@ -1,4 +1,6 @@
 import React, { createContext, useState } from 'react'
+import firebase from '../config/firebase'
+import 'firebase/auth'
 
 export const AuthContext = createContext()
 
@@ -8,6 +10,7 @@ const AuthContextProvider = ({ children }) => {
   const [signInModalOpen, setSignInModalOpen] = useState(false)
   const [signInSuccessOpen, setSignInSuccessOpen] = useState(false)
   const [ui, setUi] = useState(null)
+
   const storageAvailable = (type) => {
     try {
       var storage = window[type],
@@ -27,6 +30,26 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
+  const getIdToken = async () => {
+    if (!user) {
+      return new Promise((resolve, reject) => {
+        reject('no user')
+      })
+    }
+    const token = await firebase
+      .auth()
+      .currentUser.getIdToken(/* forceRefresh */ true)
+      .then((idToken) => {
+        return idToken
+      })
+      .catch((error) => {
+        // Handle error
+        console.error(error)
+        return null
+      })
+    return token
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -40,7 +63,8 @@ const AuthContextProvider = ({ children }) => {
         setSignInSuccessOpen,
         ui,
         setUi,
-        storageAvailable
+        storageAvailable,
+        getIdToken
       }}>
       {children}
     </AuthContext.Provider>

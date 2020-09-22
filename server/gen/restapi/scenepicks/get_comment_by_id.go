@@ -37,7 +37,7 @@ func NewGetCommentByID(ctx *middleware.Context, handler GetCommentByIDHandler) *
 	return &GetCommentByID{Context: ctx, Handler: handler}
 }
 
-/*GetCommentByID swagger:route GET /dialog/{id}/comment getCommentById
+/*GetCommentByID swagger:route GET /dialog/{id} getCommentById
 
 GetCommentByID get comment by Id API
 
