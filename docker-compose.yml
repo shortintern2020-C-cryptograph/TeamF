@@ -4,7 +4,7 @@ services:
     build: ./server
 #    image: shortintern2020-C-cryptograph/TeamF/server
     ports:
-      - "3000:3000"
+      - "8080:8080"
     volumes:
       - ./server:/go/src/github.com/shortintern2020-C-cryptograph/TeamF/server/
     environment:

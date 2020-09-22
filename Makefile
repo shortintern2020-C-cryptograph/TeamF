@@ -15,6 +15,7 @@ local/run:
 	@echo 'connect server port :3000 !!!'
 
 docker/run:
+	docker-compose -f ./docker-compose.yml build --no-cache
 	docker-compose -f ./docker-compose.yml up -d
 #	$(MAKE) docker/run/server
 #	$(MAKE) docker/run/db
