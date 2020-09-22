@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "env-cmd -f .env next dev",
-    "build": "next build",
+    "dev": "env-cmd -f .env._local next dev",
+    "dev:prod": "env-cmd -f .env._prod yarn dev",
+    "build": "env-cmd -f .env._local next build",
+    "build:prod": "env-cmd -f .env._prod next build",
     "start": "next start",
+    "deploy:prod": "yarn run build:prod && yarn run start",
     "gendoc": "jsdoc lib -p -c jsdoc.conf -d doc -t ./node_modules/docdash"
   },
   "dependencies": {
