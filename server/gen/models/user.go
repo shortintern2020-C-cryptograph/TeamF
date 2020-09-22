@@ -21,6 +21,9 @@ type User struct {
 	// ユーザ名
 	DisplayName string `json:"display_name,omitempty"`
 
+	// user_idと一対一で対応するfirebase上のuid
+	FirebaseUID string `json:"firebase_uid,omitempty"`
+
 	// id
 	ID int64 `json:"id,omitempty"`
 
@@ -34,6 +37,9 @@ func (m *User) UnmarshalJSON(data []byte) error {
 
 		// ユーザ名
 		DisplayName string `json:"display_name,omitempty"`
+
+		// user_idと一対一で対応するfirebase上のuid
+		FirebaseUID string `json:"firebase_uid,omitempty"`
 
 		// id
 		ID int64 `json:"id,omitempty"`
@@ -49,6 +55,7 @@ func (m *User) UnmarshalJSON(data []byte) error {
 	}
 
 	m.DisplayName = props.DisplayName
+	m.FirebaseUID = props.FirebaseUID
 	m.ID = props.ID
 	m.PhotoURL = props.PhotoURL
 	return nil

@@ -45,7 +45,7 @@ func (o *GetCommentByIDURL) SetBasePath(bp string) {
 func (o *GetCommentByIDURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/dialog/{id}/comment"
+	var _path = "/dialog/{id}"
 
 	id := swag.FormatInt64(o.ID)
 	if id != "" {

@@ -38,6 +38,9 @@ type Dialog struct {
 
 	// title
 	Title string `json:"title,omitempty"`
+
+	// user id
+	UserID int64 `json:"user_id,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object while disallowing additional properties from JSON
@@ -64,6 +67,9 @@ func (m *Dialog) UnmarshalJSON(data []byte) error {
 
 		// title
 		Title string `json:"title,omitempty"`
+
+		// user id
+		UserID int64 `json:"user_id,omitempty"`
 	}
 
 	dec := json.NewDecoder(bytes.NewReader(data))
@@ -79,6 +85,7 @@ func (m *Dialog) UnmarshalJSON(data []byte) error {
 	m.Source = props.Source
 	m.Style = props.Style
 	m.Title = props.Title
+	m.UserID = props.UserID
 	return nil
 }
 

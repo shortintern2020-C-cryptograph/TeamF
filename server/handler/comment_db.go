@@ -58,23 +58,22 @@ func postUser(firebaseUid, displayName, photoUrl string) (int64, error) {
 	return id, nil
 }
 
-func postComment(comment string, id, dialogId int64) (int64, error) {
+func postComment(userID int64, dialogID int64, comment string) (int64, error) {
 	tx := sqlHandler.DB.MustBegin()
 	result, err := tx.NamedExec("INSERT INTO comment (content, user_id, dialog_id) VALUES (:content, :user_id, :dialog_id)",
 		map[string]interface{}{
 			"content":   comment,
-			"user_id":   id,
-			"dialog_id": dialogId,
+			"user_id":   userID,
+			"dialog_id": dialogID,
 		})
-	tx.Commit()
 	if err != nil {
 		fmt.Println("err: ", err)
 		return 0, err
 	}
-	id, _ = result.LastInsertId()
+	id, _ := result.LastInsertId()
 	if err != nil {
 		fmt.Println("err: ", err)
 		return 0, err
 	}
-	return id, nil
+	return id, tx.Commit()
 }

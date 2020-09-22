@@ -135,14 +135,14 @@ func init() {
                 "link": {
                   "type": "string"
                 },
+                "source": {
+                  "type": "string"
+                },
                 "style": {
                   "type": "string"
                 },
                 "title": {
                   "type": "string"
-                },
-                "user_id": {
-                  "type": "integer"
                 }
               }
             }
@@ -184,7 +184,7 @@ func init() {
         }
       }
     },
-    "/dialog/{id}/comment": {
+    "/dialog/{id}": {
       "get": {
         "operationId": "getCommentById",
         "parameters": [
@@ -217,13 +217,19 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "schema": {
+                "comments": {
                   "type": "array",
                   "items": {
                     "$ref": "#/definitions/comment"
+                  }
+                },
+                "message": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/tag"
                   }
                 }
               }
@@ -248,7 +254,9 @@ func init() {
             }
           }
         }
-      },
+      }
+    },
+    "/dialog/{id}/comment": {
       "post": {
         "operationId": "postCommentById",
         "parameters": [
@@ -515,6 +523,9 @@ func init() {
         },
         "title": {
           "type": "string"
+        },
+        "user_id": {
+          "type": "integer"
         }
       }
     },
@@ -540,6 +551,10 @@ func init() {
       "properties": {
         "display_name": {
           "description": "ユーザ名",
+          "type": "string"
+        },
+        "firebase_uid": {
+          "description": "user_idと一対一で対応するfirebase上のuid",
           "type": "string"
         },
         "id": {
@@ -671,14 +686,14 @@ func init() {
                 "link": {
                   "type": "string"
                 },
+                "source": {
+                  "type": "string"
+                },
                 "style": {
                   "type": "string"
                 },
                 "title": {
                   "type": "string"
-                },
-                "user_id": {
-                  "type": "integer"
                 }
               }
             }
@@ -720,7 +735,7 @@ func init() {
         }
       }
     },
-    "/dialog/{id}/comment": {
+    "/dialog/{id}": {
       "get": {
         "operationId": "getCommentById",
         "parameters": [
@@ -753,13 +768,19 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "schema": {
+                "comments": {
                   "type": "array",
                   "items": {
                     "$ref": "#/definitions/comment"
+                  }
+                },
+                "message": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/tag"
                   }
                 }
               }
@@ -784,7 +805,9 @@ func init() {
             }
           }
         }
-      },
+      }
+    },
+    "/dialog/{id}/comment": {
       "post": {
         "operationId": "postCommentById",
         "parameters": [
@@ -1051,6 +1074,9 @@ func init() {
         },
         "title": {
           "type": "string"
+        },
+        "user_id": {
+          "type": "integer"
         }
       }
     },
@@ -1076,6 +1102,10 @@ func init() {
       "properties": {
         "display_name": {
           "description": "ユーザ名",
+          "type": "string"
+        },
+        "firebase_uid": {
+          "description": "user_idと一対一で対応するfirebase上のuid",
           "type": "string"
         },
         "id": {

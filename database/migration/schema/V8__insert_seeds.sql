@@ -11,16 +11,16 @@ VALUES
   (8, "firebase08", "Zoe");
 
 INSERT INTO
-  dialog(id, content, title, author, source, link, style)
+  dialog(id, content, title, author, source, link, style, user_id)
 VALUES
-  (1, "バルス", "天空の城ラピュタ", "宮崎駿", "anime", "https://example.com", "normal"),
-  (2, "ブンブンハローYoutube", "モンスト100連ガチャやってみた", "HIKAKIN", "youtube", "https://example.com", "normal"),
-  (3, "人間はなぜこうまでして自分の似姿をつくりたがるのかしらね", "攻殻機動隊", "草薙素子", "anime", "https://example.com", "normal"),
-  (4, "真実はいつも一つ！", "名探偵コナン", "青山剛昌", "anime", "https://example.com", "normal"),
-  (5, "これはお前が始めた物語だろ", "進撃の巨人", "諫山創", "anime", "https://example.com", "normal"),
-  (6, "俺の大将は王様だが、お前のは玉だ！", "将棋", "東海オンエア", "youtube", "https://example.com", "normal"),
-  (7, "グーみたいな奴がいて、チョキみたいな奴もいて、パーみたいな奴もいる。誰が一番強いか答えを知ってる奴はいるか？", "宇宙兄弟", "小山宙哉", "manga", "https://example.com", "normal"),
-  (8, "逃亡者は1週間以内にいずれかの空港より脱出すれば勝利となる", "アメリカ全土で1週間鬼ごっこしてみた。", "だいにグループ", "youtube", "https://example.com", "normal");
+  (1, "バルス", "天空の城ラピュタ", "宮崎駿", "anime", "https://example.com", "normal", 1),
+  (2, "ブンブンハローYoutube", "モンスト100連ガチャやってみた", "HIKAKIN", "youtube", "https://example.com", "normal", 1),
+  (3, "人間はなぜこうまでして自分の似姿をつくりたがるのかしらね", "攻殻機動隊", "草薙素子", "anime", "https://example.com", "normal", 2),
+  (4, "真実はいつも一つ！", "名探偵コナン", "青山剛昌", "anime", "https://example.com", "normal", 1),
+  (5, "これはお前が始めた物語だろ", "進撃の巨人", "諫山創", "anime", "https://example.com", "normal", 3),
+  (6, "俺の大将は王様だが、お前のは玉だ！", "将棋", "東海オンエア", "youtube", "https://example.com", "normal", 4),
+  (7, "グーみたいな奴がいて、チョキみたいな奴もいて、パーみたいな奴もいる。誰が一番強いか答えを知ってる奴はいるか？", "宇宙兄弟", "小山宙哉", "manga", "https://example.com", "normal", 6),
+  (8, "逃亡者は1週間以内にいずれかの空港より脱出すれば勝利となる", "アメリカ全土で1週間鬼ごっこしてみた。", "だいにグループ", "youtube", "https://example.com", "normal", 7);
 
 INSERT INTO
   comment(id, content, user_id, dialog_id)

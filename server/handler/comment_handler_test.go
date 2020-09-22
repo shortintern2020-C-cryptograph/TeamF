@@ -23,6 +23,7 @@ func setup() error {
 		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'set foreign_key_checks = 0;truncate table comment;'",
 		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'set foreign_key_checks = 0;truncate table favorite;'",
 		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'set foreign_key_checks = 0;truncate table dialog_tag;'",
+		"docker container exec nexus-db mysql -uroot -hlocalhost -ppassword nexus_db -e'insert into user (id, display_name, photo_url, firebase_uid) values (1, \"name\", \"http://example.com\", \"0123456789\");'",
 	}
 	for _, cmd := range cmds {
 		fmt.Printf("cmd: %s\n", cmd)
@@ -47,7 +48,9 @@ func setupPostCommentById() error {
 	source := "test"
 	link := "http://example.com"
 	style := "test"
-	_, err := postDialog(content, title, author, source, link, style)
+	comment := "test"
+	userID := int64(1)
+	_, err := postDialog(content, title, author, source, link, style, comment, userID)
 	if err != nil {
 		return err
 	}
@@ -108,7 +111,31 @@ func TestGetCommentById(t *testing.T) {
 	}
 }
 
+type CommentRequest struct {
+	Token string `json:"token"`
+	ID int `json:"id"`
+	Comment struct {
+		Comment string `json:"comment"`
+	} `json:"comment"`
+}
+
 func TestPostCommentById(t *testing.T) {
+
+	idToken, err := setUpWithIDToken()
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+
+	inputData, err := ioutil.ReadFile("./testdata/post_comment_by_id_test_data_in1.json")
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+	var request CommentRequest
+	json.Unmarshal(inputData, &request)
+	request.Token = idToken
+
+	req, _ := json.Marshal(request)
+
 	tests := []struct {
 		name    string
 		params  scenepicks.PostCommentByIDParams
@@ -119,16 +146,16 @@ func TestPostCommentById(t *testing.T) {
 	}{
 		{
 			name:    "[正常系] リクエスト成功",
-			in:      "./testdata/post_comment_by_id_test_data_in1.json",
+			in:      string(req),
 			status:  200,
-			want:    `{"message":"success", "id": 1}`,
+			want:    `{"message":"success", "id": 2}`,
 			wantErr: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			bytes, err := ioutil.ReadFile(tt.in)
+			bytes := []byte(tt.in)
 			if err != nil {
 				log.Fatal(err)
 			}

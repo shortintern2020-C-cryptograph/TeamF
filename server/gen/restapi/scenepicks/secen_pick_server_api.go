@@ -299,7 +299,7 @@ func (o *SecenPickServerAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/dialog/{id}/comment"] = NewGetCommentByID(o.context, o.GetCommentByIDHandler)
+	o.handlers["GET"]["/dialog/{id}"] = NewGetCommentByID(o.context, o.GetCommentByIDHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

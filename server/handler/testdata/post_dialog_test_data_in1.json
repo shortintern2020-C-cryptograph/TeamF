@@ -6,7 +6,7 @@
     "author": "string",
     "link": "string",
     "style": "string",
-    "user_id": 1,
+    "source": "string",
     "comment": "string"
   }
 }
