@@ -20,7 +20,6 @@ const MyApp = ({ Component, pageProps }) => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser)
-
         // TODO: 消す
         firebase
           .auth()

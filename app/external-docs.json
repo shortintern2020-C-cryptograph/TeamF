@@ -12,5 +12,7 @@
     "PIXI.Container": "http://pixijs.download/release/docs/PIXI.Container.html",
     "PIXI.Sprite": "http://pixijs.download/release/docs/PIXI.Sprite.html",
     "PIXI.Text": "http://pixijs.download/release/docs/PIXI.Text.html",
-    "PIXI.TextStyle": "http://pixijs.download/release/docs/PIXI.TextStyle.html"
+    "PIXI.TextStyle": "http://pixijs.download/release/docs/PIXI.TextStyle.html",
+    "AxiosResponse": "https://github.com/axios/axios/blob/master/index.d.ts#L76",
+    "Mirage.Request": "https://github.com/miragejs/miragejs/blob/master/types/index.d.ts#L28"
 }

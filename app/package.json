@@ -42,6 +42,7 @@
     "eslint-plugin-react-hooks": "^4.1.2",
     "jsdoc": "^3.6.6",
     "jsdoc-external-docs": "https://github.com/cnordhougen/jsdoc-external-docs",
+    "miragejs": "^0.1.40",
     "prettier": "^2.1.2"
   }
 }
