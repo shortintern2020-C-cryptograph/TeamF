@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http/httptest"
 	"testing"
+	"fmt"
 )
 
 func TestGetTag(t *testing.T) {
@@ -62,7 +63,31 @@ func TestGetTag(t *testing.T) {
 	}
 }
 
+type TagRequest struct {
+	Token string `json:"token"`
+	Tag struct {
+		Name string `json:"name"`
+		Type string `json:"type"`
+	} `json:"tag"`
+}
+
 func TestPostTag(t *testing.T) {
+
+	idToken, err := setUpWithIDToken()
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+
+	inputData, err := ioutil.ReadFile("./testdata/post_tag_test_data_in1.json")
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+	var request TagRequest
+	json.Unmarshal(inputData, &request)
+	request.Token = idToken
+
+	req, _ := json.Marshal(request)
+
 	tests := []struct {
 		name    string
 		params  scenepicks.PostTagParams
@@ -73,7 +98,7 @@ func TestPostTag(t *testing.T) {
 	}{
 		{
 			name:    "[正常系] リクエスト成功",
-			in:      "./testdata/post_tag_test_data_in1.json",
+			in:      string(req),
 			status:  200,
 			want:    `{"message":"success", "id": 1}`,
 			wantErr: false,
@@ -82,7 +107,7 @@ func TestPostTag(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			bytes, err := ioutil.ReadFile(tt.in)
+			bytes := []byte(tt.in)
 			if err != nil {
 				log.Fatal(err)
 			}

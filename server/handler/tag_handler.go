@@ -58,7 +58,13 @@ func PostTag(p scenepicks.PostTagParams) middleware.Responder {
 	tagType := p.Tag.Type
 	fmt.Printf("POST /tag name: %s, type: %s\n", name, tagType)
 
-	// TODO: ここでfirebase認証
+	// TODO: ここでfirebase認証'
+	idToken := p.Token
+	client := NewClient(idToken)
+	if client.err != nil {
+		fmt.Printf("%v\n", client.err)
+		return scenepicks.NewPostDialogBadRequest()
+	}
 
 	// DBへ書き込み
 	id, err := postTag(name, tagType)

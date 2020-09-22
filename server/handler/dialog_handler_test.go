@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	//"os"
 	"testing"
 )
 
@@ -83,58 +84,54 @@ type Response struct {
 	IsNewUser bool `json:"isNewUser,omitempty"`
 }
 
+type DialogRequest struct {
+	Token string `json:"token"`
+	Dialog struct {
+		Content string `json:"content"`
+		Title string `json:"title"`
+		Author string `json:"author"`
+		Link string `json:"link"`
+		Style string `json:"style"`
+		Source string `json:"source"`
+		Comment string `json:"comment"`
+	} `json:"content"`
+}
+
 func TestPostDialog(t *testing.T) {
 	// TODO: firebase認証完成後、認証チェックもできるようにする
 
-	client := NewClientWithNoToken()
-	if client.err != nil {
-		fmt.Printf("%v\n", client.err)
-	}
-
-	customToken, err := client.auth.CustomToken(context.Background(), "S8p7iKzPyRU1JZnIOihXj4WgATW2")
-	if err != nil {
-		fmt.Printf("%v\n", err)
-	}
-	idToken, err := customTokenToIDToken(customToken)
+	idToken, err := setUpWithIDToken()
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
 
-	okJson := `{
-  		"token": "` + idToken + `",
-  		"content": {
-    		"content": "string",
-	    	"title": "string",
-			"author": "string",
-    		"link": "string",
-    		"style": "string",
-    		"user_id": 1,
-    		"comment": "string"
-  		}
-	}`
-	ngJson := `{
-		"token": "1234567890",
-		"content": {
-			"content": "string",
-			"title": "string",
-			"author": "string",
-			"link": "string",
-			"style": "string",
-			"user_id": 1,
-			"comment": "string"
-		}
-	}`
+	inputData1, err := ioutil.ReadFile("./testdata/post_dialog_test_data_in1.json")
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+	inputData2, err := ioutil.ReadFile("./testdata/post_dialog_test_data_in2.json")
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+	var request1 DialogRequest
+	var request2 DialogRequest
+	json.Unmarshal(inputData1, &request1)
+	json.Unmarshal(inputData2, &request2)
+	request1.Token = idToken
+
+	okReq, _ := json.Marshal(request1)
+	ngReq, _ := json.Marshal(request2)
 
 	tests := []struct {
 		name    string
-		in      string
+		in     string
 		status  int
 		want    string
 		wantErr bool
 	}{
 		{
 			name:    "[正常系] 必要なデータが全て揃ってる",
-			in:      okJson,
+			in:      string(okReq),
 			status:  200,
 			want:    `{"message":"success", "id": 2}`,
 			wantErr: false,
@@ -142,7 +139,7 @@ func TestPostDialog(t *testing.T) {
 		{
 			// firebase認証できてからはじけるようにしたい
 			name:    "[異常系] トークンが正しく無い",
-			in:      ngJson,
+			in:      string(ngReq),
 			status:  400,
 			want:    ``,
 			wantErr: true,
@@ -208,4 +205,22 @@ func customTokenToIDToken(customToken string) (string, error) {
 	defer resp.Body.Close()
 
 	return val.IDToken, nil
+}
+
+func setUpWithIDToken() (string, error){
+	client := NewClientWithNoToken()
+	if client.err != nil {
+		return "", client.err
+	}
+
+	customToken, err := client.auth.CustomToken(context.Background(), "S8p7iKzPyRU1JZnIOihXj4WgATW2")
+	if err != nil {
+		return "", err
+	}
+	idToken, err := customTokenToIDToken(customToken)
+	fmt.Printf("%v\n", idToken)
+	if err != nil {
+		return "", err
+	}
+	return idToken, nil
 }
