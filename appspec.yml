@@ -4,3 +4,7 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/TeamF
+hooks:
+  ApplicationStart:
+    - location: scripts/start.sh
+      runas: ec2-user
