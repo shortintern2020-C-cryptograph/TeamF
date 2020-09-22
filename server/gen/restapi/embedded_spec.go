@@ -523,6 +523,9 @@ func init() {
         },
         "title": {
           "type": "string"
+        },
+        "user_id": {
+          "type": "integer"
         }
       }
     },
@@ -1071,6 +1074,9 @@ func init() {
         },
         "title": {
           "type": "string"
+        },
+        "user_id": {
+          "type": "integer"
         }
       }
     },

@@ -329,6 +329,8 @@ definitions:
         type: string
       source:
         type: string
+      user_id:
+        type: integer
   comment:
     type: object
     properties:
