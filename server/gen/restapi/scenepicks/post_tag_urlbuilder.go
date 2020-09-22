@@ -38,6 +38,9 @@ func (o *PostTagURL) Build() (*url.URL, error) {
 	var _path = "/tag"
 
 	_basePath := o._basePath
+	if _basePath == "" {
+		_basePath = "/api"
+	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
 
 	return &_result, nil
