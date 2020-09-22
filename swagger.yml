@@ -4,6 +4,7 @@ info:
   title: Secen Pick Server
 consumes:
   - application/json
+basePath: /api
 paths:
   /dialog:
     get:

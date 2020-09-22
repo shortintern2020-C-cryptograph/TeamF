@@ -38,6 +38,9 @@ func (o *PostDialogURL) Build() (*url.URL, error) {
 	var _path = "/dialog"
 
 	_basePath := o._basePath
+	if _basePath == "" {
+		_basePath = "/api"
+	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
 
 	return &_result, nil
