@@ -64,7 +64,7 @@ const MyPage = () => {
         <h3>ScenePicksについて</h3>
         <p>新しい点に立てて、別の切り口から見れるようにする。今までと違う視点から作品を広めたり、</p>
         <p>探せたりすることが面白いという大切なことを多くの人に知って欲しいという思いで開発しました。</p>
-        <p>                      　　　　　　　　　　　　　　　　　　　　　　　　黒岩海斗</p>
+        <p>      　　　　　　　　　　　　　　　　　　　　　　　Nexusチームリーダー             　　黒岩海斗</p>
         <p>Make it a new point so that you can see it from another cut. </p>
         <p>
           It was developed with the desire that many people know that it is interesting to be able to spread and find
