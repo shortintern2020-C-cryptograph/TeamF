@@ -1,8 +1,17 @@
-version: '3.7'
+version: "3.7"
 services:
+  app:
+    build: ./app
+    container_name: app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/usr/app
+    command: /bin/sh -c "pm2-runtime 'yarn run deploy:prod'"
+    restart: always
   server:
     build: ./server
-#    image: shortintern2020-C-cryptograph/TeamF/server
+    #    image: shortintern2020-C-cryptograph/TeamF/server
     ports:
       - "8080:8080"
     volumes:
@@ -28,7 +37,6 @@ services:
     container_name: nexus-migration
     volumes:
       - ./database/migration/schema:/flyway/sql
-
 
 volumes:
   data-volume:
