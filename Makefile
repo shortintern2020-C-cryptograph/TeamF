@@ -23,7 +23,7 @@ docker/run:
 docker/run/server:
 	#docker run -d --name $(SERVER_CONTAINER_NAME) -p 1323:1323 -v $(HOST_APP_BASE):$(DOCKER_APP_BASE) $(SERVER_REPOSITORY_NAME):latest
 	docker-compose -f ./docker-compose.yml up -d server
-	@echo 'connect server port :3000 !!!'
+	@echo 'connect server port :8080 !!!'
 
 docker/stop:
 	docker-compose down
@@ -32,6 +32,10 @@ docker/stop:
 
 docker/stop/server:
 	docker-compose down
+
+local/run/frontend:
+	cd app && yarn && yarn run dev
+	@echo 'frontend served at port 3000 !'
 
 local/stop:
 	docker-compose down

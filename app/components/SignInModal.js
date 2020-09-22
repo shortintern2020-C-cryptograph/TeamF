@@ -3,7 +3,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import { AuthContext } from '../contexts/AuthContext'
 import Modal from 'react-modal'
-import styles from '../styles/Signin.module.scss'
+// import styles from '../styles/SignIn.module.scss'
 import { useToasts } from 'react-toast-notifications'
 
 let firebaseui
