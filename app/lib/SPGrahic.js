@@ -6,7 +6,7 @@ if (typeof window !== 'undefined') {
 }
 const easing = require('easing-utils')
 
-import { createGradient, calcTextSize, wrapedText, aspectSaveImageSprite, loader } from '../lib/pixiHelpers'
+import { createGradient, calcTextSize, wrapedText, aspectSaveImageSprite, loadImages, loader } from '../lib/pixiHelpers'
 
 /**
  * 物理演算により動かしつつセリフ等のデータを表示する事を行うクラスを提供します。データを表示する本モジュールのクラス群はブラウザ環境でのみ動作します。
@@ -845,4 +845,14 @@ export class GraphicMovementController {
       }
     })
   }
+}
+
+/**
+ * 必要なリソースを読み込みます
+ * @async
+ */
+export async function loadRequiredResources() {
+  await loadImages({
+    "quotation_white": "/quotation_white.png"
+  });
 }

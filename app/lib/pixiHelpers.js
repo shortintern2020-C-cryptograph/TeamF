@@ -178,3 +178,25 @@ export function aspectSaveImageSprite(path, param) {
   }
   return image;
 }
+
+/**
+ * 画像がpixiに読み込まれるまで待機するPromiseを生成します
+ * @async
+ * @param {Object[]} imagePaths - 画像のパス
+ * @example
+ * await loadImages({
+ *   userIcon1: "/icon/user1.png"
+ * })
+ */
+export function loadImages(imagePaths) {
+  const keys = Object.keys(imagePaths);
+  return new Promise((resolve, rehject) => {
+    let l = loader;
+    keys.forEach((key) => {
+      l = l.add(key, imagePaths[key]);
+    });
+    l.load(() => {
+      resolve();
+    });
+  });
+}
