@@ -135,14 +135,14 @@ func init() {
                 "link": {
                   "type": "string"
                 },
+                "source": {
+                  "type": "string"
+                },
                 "style": {
                   "type": "string"
                 },
                 "title": {
                   "type": "string"
-                },
-                "user_id": {
-                  "type": "integer"
                 }
               }
             }
@@ -184,7 +184,7 @@ func init() {
         }
       }
     },
-    "/dialog/{id}/comment": {
+    "/dialog/{id}": {
       "get": {
         "operationId": "getCommentById",
         "parameters": [
@@ -254,7 +254,9 @@ func init() {
             }
           }
         }
-      },
+      }
+    },
+    "/dialog/{id}/comment": {
       "post": {
         "operationId": "postCommentById",
         "parameters": [
@@ -681,14 +683,14 @@ func init() {
                 "link": {
                   "type": "string"
                 },
+                "source": {
+                  "type": "string"
+                },
                 "style": {
                   "type": "string"
                 },
                 "title": {
                   "type": "string"
-                },
-                "user_id": {
-                  "type": "integer"
                 }
               }
             }
@@ -730,7 +732,7 @@ func init() {
         }
       }
     },
-    "/dialog/{id}/comment": {
+    "/dialog/{id}": {
       "get": {
         "operationId": "getCommentById",
         "parameters": [
@@ -800,7 +802,9 @@ func init() {
             }
           }
         }
-      },
+      }
+    },
+    "/dialog/{id}/comment": {
       "post": {
         "operationId": "postCommentById",
         "parameters": [
