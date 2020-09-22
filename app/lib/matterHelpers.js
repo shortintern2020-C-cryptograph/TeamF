@@ -21,16 +21,16 @@ if (typeof window !== 'undefined') {
  * @return {MatterInitObject} - 初期化済みのmatterのEngineとRunnerが入ったオブジェクト
  */
 export function initMatter() {
-  const engine = Matter.Engine.create();
-  const world = engine.world;
-  world.gravity.y = 0;
-  const runner = Matter.Runner.create();
-  Matter.Runner.run(runner, engine);
-  return { engine, runner };
+  const engine = Matter.Engine.create()
+  const world = engine.world
+  world.gravity.y = 0
+  const runner = Matter.Runner.create()
+  Matter.Runner.run(runner, engine)
+  return { engine, runner }
 }
 
 export function stopMatter(runner) {
-  Matter.Runner.stop(runner);
+  Matter.Runner.stop(runner)
 }
 
 /**
@@ -40,11 +40,11 @@ export function stopMatter(runner) {
  * @return {Matter.Render} - 初期化済みのmatterのレンダラーオブジェクト
  */
 export function initMatterRenderer(element, engine) {
-  let rect = { width: 0, height: 0 };
+  let rect = { width: 0, height: 0 }
   try {
-    rect = element.getBoundingClientRect();
+    rect = element.getBoundingClientRect()
   } catch (e) {
-    throw new Error("指定されたCanvas要素の高さ・幅を取得できませんでした。");
+    throw new Error('指定されたCanvas要素の高さ・幅を取得できませんでした。')
   }
   const renderer = new Matter.Render({
     element: element,
@@ -56,27 +56,25 @@ export function initMatterRenderer(element, engine) {
       showCollisions: true,
       showVelocity: true
     }
-  });
+  })
   Matter.Render.lookAt(renderer, {
     min: { x: rect.width * 0, y: rect.height * 0 },
     max: { x: rect.width * 1, y: rect.height * 1 }
-  });
-  Matter.Render.run(renderer);
-  return renderer;
+  })
+  Matter.Render.run(renderer)
+  return renderer
 }
-
-
 
 export function registerUpdateCb(engine, fns) {
   if (!fns || !engine) {
-    return;
+    return
   }
   Matter.Events.on(engine, 'beforeUpdate', () => {
     if (fns == null) {
-      return;
+      return
     }
     fns.forEach((f) => {
-      f();
+      f()
     })
-  });
+  })
 }
