@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/Cside/jsondiff"
@@ -8,6 +10,7 @@ import (
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/restapi/scenepicks"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 )
@@ -72,8 +75,56 @@ func TestGetDialog(t *testing.T) {
 	}
 }
 
+type Response struct {
+	Kind string `json:"kind,omitempty"`
+	IDToken string `json:"idToken,omitempty"`
+	RefreshToken string `json:"refreshToken,omitempty"`
+	ExpiresIn string `json:"expiresIn,omitempty"`
+	IsNewUser bool `json:"isNewUser,omitempty"`
+}
+
 func TestPostDialog(t *testing.T) {
 	// TODO: firebase認証完成後、認証チェックもできるようにする
+
+	client := NewClientWithNoToken()
+	if client.err != nil {
+		fmt.Printf("%v\n", client.err)
+	}
+
+	customToken, err := client.auth.CustomToken(context.Background(), "S8p7iKzPyRU1JZnIOihXj4WgATW2")
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+	idToken, err := customTokenToIDToken(customToken)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+
+	okJson := `{
+  		"token": "` + idToken + `",
+  		"content": {
+    		"content": "string",
+	    	"title": "string",
+			"author": "string",
+    		"link": "string",
+    		"style": "string",
+    		"user_id": 1,
+    		"comment": "string"
+  		}
+	}`
+	ngJson := `{
+		"token": "1234567890",
+		"content": {
+			"content": "string",
+			"title": "string",
+			"author": "string",
+			"link": "string",
+			"style": "string",
+			"user_id": 1,
+			"comment": "string"
+		}
+	}`
+
 	tests := []struct {
 		name    string
 		in      string
@@ -83,25 +134,24 @@ func TestPostDialog(t *testing.T) {
 	}{
 		{
 			name:    "[正常系] 必要なデータが全て揃ってる",
-			in:      "./testdata/post_dialog_test_data_in1.json",
+			in:      okJson,
 			status:  200,
 			want:    `{"message":"success", "id": 2}`,
 			wantErr: false,
 		},
 		{
 			// firebase認証できてからはじけるようにしたい
-			// TODO: 本当は4XX系を受け取るようにしたい
 			name:    "[異常系] トークンが正しく無い",
-			in:      "./testdata/post_dialog_test_data_in2.json",
-			status:  200,
-			want:    `{"message":"success", "id": 3}`,
-			wantErr: false,
+			in:      ngJson,
+			status:  400,
+			want:    ``,
+			wantErr: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			bytes, err := ioutil.ReadFile(tt.in)
+			bytes := []byte(tt.in)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -119,6 +169,12 @@ func TestPostDialog(t *testing.T) {
 				t.Errorf("status want %v got %v", tt.status, w.Result().StatusCode)
 			}
 
+			// 異常系ならBadRequestを返していればいいはず
+			if tt.status == 400 {
+				fmt.Printf("all ok\n")
+				return
+			}
+
 			if diff := jsondiff.Diff([]byte(tt.want), w.Body.Bytes()); diff != "" {
 				t.Errorf("case %v body diff:\n%s", tt.name, diff)
 			} else {
@@ -126,4 +182,30 @@ func TestPostDialog(t *testing.T) {
 			}
 		})
 	}
+}
+
+func customTokenToIDToken(customToken string) (string, error) {
+	jsonStr := `{"token":"` + customToken + `","returnSecureToken":true}`
+
+	url := "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyDZ-zZYBZ6yjEt5OUShw9OyhnLOM92SLsc"
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(jsonStr)))
+	req.Header.Set("Content-Type", "application/json")
+	c := &http.Client{}
+	resp, err := c.Do(req)
+	if err != nil {
+		panic(err)
+		return "", err
+	}
+
+	decoder := json.NewDecoder(resp.Body)
+	val := &Response{}
+	err = decoder.Decode(val)
+	if err != nil {
+		panic(err)
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	return val.IDToken, nil
 }
