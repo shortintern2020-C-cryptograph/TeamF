@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>loading | scenepicks</title>
+        <title>loading | ScenePicks</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.text}>loading...</div>
