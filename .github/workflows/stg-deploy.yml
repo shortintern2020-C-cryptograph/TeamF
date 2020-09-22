@@ -3,7 +3,7 @@ name: Build and Push
 on:
   push:
     branches:
-      - release
+      - staging
 
 jobs:
   server-test:
