@@ -147,6 +147,21 @@ class GrahicObject {
     return this._content
   }
 
+  get x() {
+    return this._x
+  }
+  get y() {
+    return this._y
+  }
+  set x(nx) {
+    this._x = nx
+    this.normalMoveRender(this._x, this._y)
+  }
+  set y(ny) {
+    this._y = ny
+    this.normalMoveRender(this._x, this._y)
+  }
+
   /**
    * オプションの上書き更新, `options`内に存在しないプロパティについては現在の内容を保持します
    * @param {Object} options - 壁画や動作に関するオプションを保持するオブジェクト
@@ -539,7 +554,8 @@ export class DialogDetail extends GrahicObject {
     // 幅を決定
     const margin = 20
     this._width = 500
-    const marchantIconWidth = 100
+    const marchantImagePath = null
+    const marchantIconWidth = marchantImagePath ? 100 : 0
     const infoAreaWidth = this._width - marchantIconWidth - margin
     const offsetX = -(this._width / 2)
     const infoAreaX = offsetX + marchantIconWidth + margin
@@ -623,18 +639,21 @@ export class DialogDetail extends GrahicObject {
     this.presentation = container
 
     // 商品画像
-    const marchantImage = aspectSaveImageSprite('marchant', { width: marchantIconWidth })
+    console.log(marchantImagePath)
+    if (marchantImagePath) {
+      const marchantImage = aspectSaveImageSprite(marchantImagePath, { width: marchantIconWidth })
 
-    const marchantMask = new PIXI.Graphics()
-    marchantMask.beginFill(0x000000)
-    marchantMask.drawRoundedRect(0, 0, marchantImage.width, marchantImage.height, 10)
-    marchantMask.endFill()
+      const marchantMask = new PIXI.Graphics()
+      marchantMask.beginFill(0x000000)
+      marchantMask.drawRoundedRect(0, 0, marchantImage.width, marchantImage.height, 10)
+      marchantMask.endFill()
 
-    container.addChild(marchantMask)
-    container.addChild(marchantImage)
-    marchantImage.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
-    marchantMask.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
-    marchantImage.mask = marchantMask
+      container.addChild(marchantMask)
+      container.addChild(marchantImage)
+      marchantImage.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
+      marchantMask.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
+      marchantImage.mask = marchantMask
+    }
   }
 
   /**
@@ -822,6 +841,8 @@ export function moveVectorAdjust(targets) {
     const m = target.model
     const WORLD_WIDTH = window.innerWidth
     const WORLD_HEIGHT = window.innerHeight
+    const CENTER_X = WORLD_WIDTH / 2
+    const CENTER_Y = WORLD_HEIGHT / 2
     let possub
     if (!target.initFinished) {
       target.syncPosition()
@@ -837,12 +858,32 @@ export function moveVectorAdjust(targets) {
       target.options.movement.mode // "Center" | "Around" | "OutOfRange"
     ) {
       case 'Center':
-        possub = Matter.Vector.sub({ x: WORLD_WIDTH / 2 + delta / 4, y: WORLD_HEIGHT / 2 + delta }, m.position)
+        possub = Matter.Vector.sub({ x: CENTER_X + delta / 4, y: CENTER_Y + delta }, m.position)
+        break
+      case 'CenterFix':
+        const offsetX = target.options.movement.context.offsetX | 0
+        const offsetY = target.options.movement.context.offsetY | 0
+        const desiredPos = {
+          x: CENTER_X + offsetX,
+          y: CENTER_Y + offsetY
+        }
+        // const desiredPos = {
+        //   x: 0,
+        //   y: 0
+        // }
+        const possubToCenter = Matter.Vector.sub(desiredPos, m.position)
+        const switchRage = 200 //px
+        if (Math.abs(possubToCenter.x) < switchRage && Math.abs(possubToCenter.y) < switchRage) {
+          // 強制移動に切り替え
+          target.easingMoveRender(desiredPos.x, desiredPos.y)
+        } else {
+          possub = possubToCenter
+        }
         break
       case 'Around':
         let relsub = target.options.movement.context.relaub
         if (!relsub) {
-          relsub = Matter.Vector.sub({ x: WORLD_WIDTH / 2 + delta, y: WORLD_HEIGHT / 2 + delta }, m.position)
+          relsub = Matter.Vector.sub({ x: CENTER_X + delta, y: CENTER_Y + delta }, m.position)
           target.options.movement.context.relaub = relsub
         }
         if (relsub.x < 0) {
@@ -887,7 +928,8 @@ export function moveVectorAdjust(targets) {
 export async function loadRequiredResources() {
   try {
     await loadImages({
-      quotation_white: '/quotation_white.png'
+      quotation_white: '/quotation_white.png',
+      author: '/author.png'
     })
   } catch {}
 }
