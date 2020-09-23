@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { MainContext } from '../contexts/MainContext'
 import styles from '../styles/Fab.module.scss'
+import { PageTransition } from './PageTransition'
 
 /**
  * アクションボタンのコンポーネント
@@ -37,18 +38,20 @@ const Fab = () => {
   }
 
   return (
-    <div className={styles.container} onClick={() => handleChangeMode()}>
-      {(mode === 'detail' || mode === 'comment') && (
-        <span
-          className={styles.icon}
-          style={{
-            background: isBlackStyle ? blackStyle : redStyle,
-            transform: isBlackStyle ? 'none' : 'rotateZ(-45deg)'
-          }}>
-          <img src={mode === 'detail' ? '/comment.svg' : '/cross.svg'} alt="cross" />
-        </span>
-      )}
-    </div>
+    <PageTransition>
+      <div className={styles.container} onClick={() => handleChangeMode()}>
+        {(mode === 'detail' || mode === 'comment') && (
+          <span
+            className={styles.icon}
+            style={{
+              background: isBlackStyle ? blackStyle : redStyle,
+              transform: isBlackStyle ? 'none' : 'rotateZ(-45deg)'
+            }}>
+            <img src={mode === 'detail' ? '/comment.svg' : '/cross.svg'} alt="cross" />
+          </span>
+        )}
+      </div>
+    </PageTransition>
   )
 }
 

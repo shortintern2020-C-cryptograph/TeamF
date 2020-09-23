@@ -8,7 +8,8 @@ import { useRouter } from 'next/router'
 import SPCanvas from '../components/SPCanvas'
 import DokodemoInput from '../components/DokodemoInput'
 import { TwitterShareButton } from 'react-share'
-
+import { postComment } from '../lib/api'
+import { useToasts } from 'react-toast-notifications'
 /**
  * ホーム画面のコンポーネント
  * @author Takahiro Nishino
@@ -34,7 +35,9 @@ const Home = () => {
 
   const [inputContents, setInputContents] = useState({})
   const [submitting, setSubmitting] = useState(false)
+  const [comment, setComment] = useState('')
   const router = useRouter()
+  const { addToast } = useToasts()
   if (location.hash.split('#')[1]) {
     // setMode('detail')
   } else {
@@ -66,16 +69,21 @@ const Home = () => {
   }, [mode])
 
   const submitPost = () => {
-    console.log('submit!')
-    // 情報を集める
-    // submit here
     setSubmitting(true)
+    console.log('submit!')
+    console.log(comment)
+    const dialogID = location.hash.split('/')[1]
+    console.log(dialogID)
+    // submit here
+    try {
+      postComment(dialogID, comment).then((res) => console.log(res))
+    } catch (error) {
+      addToast(`サーバーと通信ができませんでした`, { appearance: 'error' })
+    }
     console.log('about to post')
-    console.log(inputContents)
-    setInputContents({})
     setInputOpen(false)
-    setMode('home')
     setSubmitting(false)
+    setComment('')
   }
 
   const updateInputContent = (type, text) => {
@@ -111,14 +119,22 @@ const Home = () => {
           <div>
             {
               <>
-                <DokodemoInput {...initialValue} updateInputContent={updateInputContent} submitting={submitting} />
-                <button
-                  className={styles.submitButton}
-                  onClick={submitPost}
-                  type="button"
-                  style={{ bottom: `40px`, left: `calc(50%)`, transform: 'translateX(-50%)' }}>
-                  送信
-                </button>
+                <PageTransition>
+                  <DokodemoInput
+                    comment={comment}
+                    setComment={setComment}
+                    {...initialValue}
+                    updateInputContent={updateInputContent}
+                    submitting={submitting}
+                  />
+                  <button
+                    className={styles.submitButton}
+                    onClick={submitPost}
+                    type="button"
+                    style={{ bottom: `40px`, left: `calc(50%)`, transform: 'translateX(-50%)' }}>
+                    送信
+                  </button>
+                </PageTransition>
               </>
             }
           </div>
@@ -126,14 +142,16 @@ const Home = () => {
         {/* </PageTransition> */}
       </div>
       {mode === 'detail' && (
-        <TwitterShareButton
-          url={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api${router.asPath}`} // TODO: 自分自身
-          className={styles.shareContainer}
-          title="scenepicksでセリフをシェア！    " // TODO: dialog の本文など
-          hashtags={['scenepicks']} // 考える
-        >
-          <img src="/twitter.svg" alt="twitter icon" className={styles.twitterIcon} />
-        </TwitterShareButton>
+        <PageTransition>
+          <TwitterShareButton
+            url={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api${router.asPath}`} // TODO: 自分自身
+            className={styles.shareContainer}
+            title="scenepicksでセリフをシェア！    " // TODO: dialog の本文など
+            hashtags={['scenepicks']} // 考える
+          >
+            <img src="/twitter.svg" alt="twitter icon" className={styles.twitterIcon} />
+          </TwitterShareButton>
+        </PageTransition>
       )}
     </Layout>
   )

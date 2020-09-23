@@ -82,14 +82,14 @@ function checkFetchParams(query) {
  * @returns {Object}
  */
 async function authHeader() {
-  let header = {}
+  let headers = {}
   try {
     const token = await firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
-    header[apiConfig.authHeaderName] = token
+    headers[apiConfig.authHeaderName] = token
   } catch (e) {
     console.warn('api: authHeader: トークン取得失敗')
   }
-  return header
+  return headers
 }
 
 /**
@@ -152,10 +152,18 @@ export async function postDialog(dialog) {
  */
 export async function postComment(dialogId, comment) {
   const headers = await authHeader()
-  return resultMapper(
-    await ax.post(endpoints.postComment(dialogId), {
-      headers,
-      data: comment
-    })
-  )
+  console.log(headers)
+  try {
+    return resultMapper(
+      await ax.post(
+        endpoints.postComment(dialogId),
+        {
+          comment: comment
+        },
+        { headers: headers }
+      )
+    )
+  } catch (error) {
+    console.error(error)
+  }
 }
