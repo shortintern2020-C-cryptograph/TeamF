@@ -31,7 +31,11 @@ func GetDialog(p scenepicks.GetDialogParams) middleware.Responder {
 
 	fmt.Printf("GET /dialog genre: %s, offset: %d, limit: %d\n", genre, offset, limit)
 
-	if genre != "all" && genre != "anime" && genre != "manga" && genre != "book" {
+	if offset < 0 || limit <= 0 {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("parameter value is invalid")
+	}
+
+	if genre != "all" && genre != "anime" && genre != "manga" && genre != "book" && genre != "youtube" {
 		return scenepicks.NewGetDialogBadRequest().WithPayload("genre is invalid")
 	}
 	if *sort != "new" && *sort != "like" && *sort != "comment" && *sort != "combined" {
@@ -73,6 +77,13 @@ func PostDialog(p scenepicks.PostDialogParams) middleware.Responder {
 	style := p.Content.Style
 	comment := p.Content.Comment
 	//tags := p.Tags
+
+	if content == "" || title == "" || author == "" || link == "" || style == "" || comment == "" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("vacant parameter is invalid")
+	}
+	if source != "anime" && source != "manga" && source != "book" && source != "youtube" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("got unknown source")
+	}
 
 	id, err := postDialog(content, title, author, source, link, style, comment, userID)
 	if err != nil {

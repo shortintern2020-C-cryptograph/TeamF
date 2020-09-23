@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 	"log"
 )
@@ -102,5 +103,12 @@ func postComment(userID int64, dialogID int64, comment string) (int64, error) {
 		fmt.Println("err: ", err)
 		return 0, err
 	}
+	defer func() {
+		if err != nil {
+			if re := tx.Rollback(); re != nil {
+				err = errors.Wrap(err, re.Error())
+			}
+		}
+	}()
 	return id, tx.Commit()
 }
