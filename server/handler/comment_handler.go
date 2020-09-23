@@ -10,23 +10,26 @@ import (
 	"time"
 )
 
+
 func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 	offset := p.Offset
 	limit := p.Limit
 	fmt.Printf("GET /comment offset: %d, limit: %d\n", offset, limit)
 
 	id := p.ID
-	schema, err := getCommentByID(id, offset, limit)
+	resDialog, resComments, resTags, err := getCommentByID(id, offset, limit)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	params := &scenepicks.GetCommentOKBody{
+	params := &scenepicks.GetCommentByIDOKBody{
 		Message: "success",
-		Schema:  schema,
+		Dialog: resDialog,
+		Comments: resComments,
+		Tags: resTags,
 	}
 
-	return scenepicks.NewGetCommentOK().WithPayload(params)
+	return scenepicks.NewGetCommentByIDOK().WithPayload(params)
 }
 
 func PostCommentById(p scenepicks.PostCommentByIDParams) middleware.Responder {

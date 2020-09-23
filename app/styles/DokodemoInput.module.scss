@@ -1,0 +1,16 @@
+.container {
+  position: absolute;
+  border: 2px solid grey;
+  background-color: transparent;
+  z-index: 30;
+  outline: none;
+  // TODO: 消す
+  margin: 0;
+  padding: 0;
+  resize: none;
+  caret-color: grey;
+  transition: 0.3s all;
+  overflow: visible;
+  // font-weight: 600;
+  font-family: 'Noto Sans JP', sans-serif;
+}

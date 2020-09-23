@@ -73,6 +73,9 @@ type GetCommentByIDOKBody struct {
 	// comments
 	Comments []*models.Comment `json:"comments"`
 
+	// dialog
+	Dialog *models.Dialog `json:"dialog,omitempty"`
+
 	// message
 	Message string `json:"message,omitempty"`
 
@@ -86,6 +89,9 @@ func (o *GetCommentByIDOKBody) UnmarshalJSON(data []byte) error {
 
 		// comments
 		Comments []*models.Comment `json:"comments"`
+
+		// dialog
+		Dialog *models.Dialog `json:"dialog,omitempty"`
 
 		// message
 		Message string `json:"message,omitempty"`
@@ -101,6 +107,7 @@ func (o *GetCommentByIDOKBody) UnmarshalJSON(data []byte) error {
 	}
 
 	o.Comments = props.Comments
+	o.Dialog = props.Dialog
 	o.Message = props.Message
 	o.Tags = props.Tags
 	return nil
@@ -111,6 +118,10 @@ func (o *GetCommentByIDOKBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := o.validateComments(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDialog(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -144,6 +155,24 @@ func (o *GetCommentByIDOKBody) validateComments(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (o *GetCommentByIDOKBody) validateDialog(formats strfmt.Registry) error {
+
+	if swag.IsZero(o.Dialog) { // not required
+		return nil
+	}
+
+	if o.Dialog != nil {
+		if err := o.Dialog.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getCommentByIdOK" + "." + "dialog")
+			}
+			return err
+		}
 	}
 
 	return nil
