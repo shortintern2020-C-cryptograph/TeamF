@@ -31,7 +31,9 @@ class SPCanvas extends Component {
 
   componentDidMount() {
     const self = this
-    this.mock = createMock()
+    if (process.env.NEXT_PUBLIC_ENV === 'MOCK') {
+      this.mock = createMock()
+    }
 
     if (typeof window === 'undefined') {
       return
@@ -58,7 +60,9 @@ class SPCanvas extends Component {
   }
 
   componentWillUnmount() {
-    this.mock.shutdown()
+    if (process.env.NEXT_PUBLIC_ENV === 'MOCK') {
+      this.mock.shutdown()
+    }
     for (let i = 0; i < this.dialogs.length; i++) {
       this.dialogs[i].normalRemoveRender(this.pixi, this.matter.engine.world)
       this.dialogs[i] = null

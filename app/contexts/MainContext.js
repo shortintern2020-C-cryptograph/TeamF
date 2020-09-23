@@ -2,6 +2,11 @@ import React, { createContext, useState } from 'react'
 
 export const MainContext = createContext()
 
+/**
+ * global state management
+ * @param {*} children
+ * @author Takahiro Nishino
+ */
 const MainContextProvider = ({ children }) => {
   const [selectedGenre, setSelectedGenre] = useState(0)
   // one of 'home', 'new', 'comment', 'detail'

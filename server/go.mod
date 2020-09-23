@@ -22,6 +22,8 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-shellwords v1.0.10
+	github.com/pkg/errors v0.8.1
+	github.com/rs/cors v1.7.0
 	github.com/sergi/go-diff v1.1.0 // indirect
 	golang.org/x/net v0.0.0-20200822124328-c89045814202
 	google.golang.org/api v0.32.0

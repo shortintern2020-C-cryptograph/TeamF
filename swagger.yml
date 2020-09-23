@@ -84,8 +84,8 @@ paths:
                 type: string
               style:
                 type: string
-              user_id:
-                type: integer
+              source:
+                type: string
               comment:
                 type: string
       operationId: postDialog
@@ -111,7 +111,7 @@ paths:
           description: generic error response
           schema:
             $ref: "#/definitions/error"
-  /dialog/{id}/comment:
+  /dialog/{id}:
     get:
       parameters:
         - name: id
@@ -139,10 +139,16 @@ paths:
             properties:
               message:
                 type: string
-              schema:
+              dialog:
+                $ref: "#/definitions/dialog"
+              comments:
                 type: array
                 items:
                   $ref: "#/definitions/comment"
+              tags:
+                type: array
+                items:
+                  $ref: "#/definitions/tag"
         400:
           description: request error
           schema:
@@ -155,6 +161,7 @@ paths:
           description: generic error response
           schema:
             $ref: "#/definitions/error"
+  /dialog/{id}/comment:
     post:
       parameters:
         - name: token
@@ -306,8 +313,6 @@ paths:
           description: generic error response
           schema:
             $ref: "#/definitions/error"
-
-
 definitions:
   dialog:
     type: object
@@ -326,6 +331,8 @@ definitions:
         type: string
       source:
         type: string
+      user_id:
+        type: integer
   comment:
     type: object
     properties:
@@ -338,6 +345,9 @@ definitions:
     properties:
       id:
         type: integer
+      firebase_uid:
+        type: string
+        description: user_idと一対一で対応するfirebase上のuid
       display_name:
         type: string
         description: ユーザ名

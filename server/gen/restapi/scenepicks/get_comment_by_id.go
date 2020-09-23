@@ -37,7 +37,7 @@ func NewGetCommentByID(ctx *middleware.Context, handler GetCommentByIDHandler) *
 	return &GetCommentByID{Context: ctx, Handler: handler}
 }
 
-/*GetCommentByID swagger:route GET /dialog/{id}/comment getCommentById
+/*GetCommentByID swagger:route GET /dialog/{id} getCommentById
 
 GetCommentByID get comment by Id API
 
@@ -70,22 +70,34 @@ func (o *GetCommentByID) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 // swagger:model GetCommentByIDOKBody
 type GetCommentByIDOKBody struct {
 
+	// comments
+	Comments []*models.Comment `json:"comments"`
+
+	// dialog
+	Dialog *models.Dialog `json:"dialog,omitempty"`
+
 	// message
 	Message string `json:"message,omitempty"`
 
-	// schema
-	Schema []*models.Comment `json:"schema"`
+	// tags
+	Tags []*models.Tag `json:"tags"`
 }
 
 // UnmarshalJSON unmarshals this object while disallowing additional properties from JSON
 func (o *GetCommentByIDOKBody) UnmarshalJSON(data []byte) error {
 	var props struct {
 
+		// comments
+		Comments []*models.Comment `json:"comments"`
+
+		// dialog
+		Dialog *models.Dialog `json:"dialog,omitempty"`
+
 		// message
 		Message string `json:"message,omitempty"`
 
-		// schema
-		Schema []*models.Comment `json:"schema"`
+		// tags
+		Tags []*models.Tag `json:"tags"`
 	}
 
 	dec := json.NewDecoder(bytes.NewReader(data))
@@ -94,8 +106,10 @@ func (o *GetCommentByIDOKBody) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
+	o.Comments = props.Comments
+	o.Dialog = props.Dialog
 	o.Message = props.Message
-	o.Schema = props.Schema
+	o.Tags = props.Tags
 	return nil
 }
 
@@ -103,7 +117,15 @@ func (o *GetCommentByIDOKBody) UnmarshalJSON(data []byte) error {
 func (o *GetCommentByIDOKBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := o.validateSchema(formats); err != nil {
+	if err := o.validateComments(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDialog(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateTags(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -113,21 +135,64 @@ func (o *GetCommentByIDOKBody) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (o *GetCommentByIDOKBody) validateSchema(formats strfmt.Registry) error {
+func (o *GetCommentByIDOKBody) validateComments(formats strfmt.Registry) error {
 
-	if swag.IsZero(o.Schema) { // not required
+	if swag.IsZero(o.Comments) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(o.Schema); i++ {
-		if swag.IsZero(o.Schema[i]) { // not required
+	for i := 0; i < len(o.Comments); i++ {
+		if swag.IsZero(o.Comments[i]) { // not required
 			continue
 		}
 
-		if o.Schema[i] != nil {
-			if err := o.Schema[i].Validate(formats); err != nil {
+		if o.Comments[i] != nil {
+			if err := o.Comments[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("getCommentByIdOK" + "." + "schema" + "." + strconv.Itoa(i))
+					return ve.ValidateName("getCommentByIdOK" + "." + "comments" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *GetCommentByIDOKBody) validateDialog(formats strfmt.Registry) error {
+
+	if swag.IsZero(o.Dialog) { // not required
+		return nil
+	}
+
+	if o.Dialog != nil {
+		if err := o.Dialog.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getCommentByIdOK" + "." + "dialog")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *GetCommentByIDOKBody) validateTags(formats strfmt.Registry) error {
+
+	if swag.IsZero(o.Tags) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Tags); i++ {
+		if swag.IsZero(o.Tags[i]) { // not required
+			continue
+		}
+
+		if o.Tags[i] != nil {
+			if err := o.Tags[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("getCommentByIdOK" + "." + "tags" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

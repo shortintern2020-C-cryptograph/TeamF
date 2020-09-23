@@ -75,6 +75,16 @@
   z-index: -2;
 }
 
+.menuList {
+  z-index: -1;
+  transition: 0.25s ease;
+  position: absolute;
+  height: 36px;
+  background: linear-gradient(120deg, #46e9c2, #5653f0);
+  border-radius: 6px;
+  top: 8px;
+}
+
 @media only screen and (max-width: 600px) {
   .container {
     transform: scale(0.6, 0.6) translate(-33%, -40%);
