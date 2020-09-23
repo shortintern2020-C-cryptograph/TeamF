@@ -1,7 +1,11 @@
 import Head from 'next/head'
 import styles from '../styles/Splash.module.scss'
 
-const Home = () => {
+/**
+ * loading画面
+ * @author Takahiro Nishino
+ */
+const Splash = () => {
   return (
     <div className={styles.container}>
       <Head>
@@ -13,4 +17,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Splash

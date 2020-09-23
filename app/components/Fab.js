@@ -3,6 +3,10 @@ import { AuthContext } from '../contexts/AuthContext'
 import { MainContext } from '../contexts/MainContext'
 import styles from '../styles/Fab.module.scss'
 
+/**
+ * アクションボタンのコンポーネント
+ * @author Takahiro Nishino
+ */
 const Fab = () => {
   const { fabMode, nextFabMode } = useContext(MainContext)
   const { user, setSignInModalOpen } = useContext(AuthContext)
