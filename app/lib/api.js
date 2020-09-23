@@ -126,7 +126,7 @@ export async function getComment(dialogId, query) {
     return
   }
   return resultMapper(
-    await ax.get(endpoints.getDialogDetail(dialogid), {
+    await ax.get(endpoints.getDialogDetail(dialogId), {
       params: query
     })
   )
