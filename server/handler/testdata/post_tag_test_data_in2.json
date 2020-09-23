@@ -1,7 +1,6 @@
 {
   "token": "tag1234567890",
   "tag": {
-    "name": "string",
-    "type": "author"
+    "name": "string"
   }
 }

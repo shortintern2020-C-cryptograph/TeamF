@@ -33,7 +33,7 @@ docker/run/db: # dbのみをコンテナで起動
 docker/stop: # コンテナ全部落として、削除する
 	docker-compose down
 	#docker container rm $(docker container ls -a -q)
-	docker image rm $(docker image ls -q)
+	#docker image rm $(docker image ls -q)
 	#$(MAKE) docker/stop/server
 	#docker container rm $(SERVER_CONTAINER_NAME)
 

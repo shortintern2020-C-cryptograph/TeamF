@@ -3,7 +3,7 @@ if (typeof window !== 'undefined') {
   PIXI = require('pixi.js')
 }
 
-export let loader = null;
+export let loader = null
 
 /**
  * Canvasへの壁画を行うライブラリであるPIXI.jsを用いるのに有用なヘルパー関数群を提供します。本モジュールの関数群はブラウザ環境でのみ動作します。
@@ -12,23 +12,23 @@ export let loader = null;
  */
 
 /**
-* @typedef {Object} TextParam
-* @property {number} fontSize - フォントサイズ
-* @property {number} fontWeight - フォントの太さ
-* @property {boolean} wrap - 改行するか
-*/
+ * @typedef {Object} TextParam
+ * @property {number} fontSize - フォントサイズ
+ * @property {number} fontWeight - フォントの太さ
+ * @property {boolean} wrap - 改行するか
+ */
 
 /**
-* @typedef {Object} ImageParam
-* @property {number} [alpha] - 透明度
-* @property {number} [width] - 幅
-* @property {number} [height] - 高さ
-*/
+ * @typedef {Object} ImageParam
+ * @property {number} [alpha] - 透明度
+ * @property {number} [width] - 幅
+ * @property {number} [height] - 高さ
+ */
 
 /**
  * @typedef {Object} Size
  * @property {number} width
- * @property {number} height 
+ * @property {number} height
  */
 
 /**
@@ -37,11 +37,11 @@ export let loader = null;
  * @return {PIXI.Application} - 初期化済みのPIXI.Applicationオブジェクト
  */
 export function initPixi(element) {
-  let rect = { width: 0, height: 0 };
+  let rect = { width: 0, height: 0 }
   try {
-    rect = element.getBoundingClientRect();
+    rect = element.getBoundingClientRect()
   } catch (e) {
-    throw new Error("指定されたCanvas要素の高さ・幅を取得できませんでした。");
+    throw new Error('指定されたCanvas要素の高さ・幅を取得できませんでした。')
   }
   const pixi = new PIXI.Application({
     width: rect.width,
@@ -51,9 +51,10 @@ export function initPixi(element) {
     resolution: 1,
     view: element
   })
-  pixi.renderer.autoResize = true;
-  loader = new PIXI.Loader();
-  return pixi;
+  pixi.renderer.autoResize = true
+  pixi.stage.interactive = true
+  loader = new PIXI.Loader()
+  return pixi
 }
 
 /**
@@ -66,39 +67,39 @@ export function initPixi(element) {
  * @return {PIXI.Sprite} - 生成したSprite
  */
 export function createGradient(width, height, colorFrom, colorTo, direction) {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  let grx = 0;
-  let gry = 0;
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  let grx = 0
+  let gry = 0
   switch (direction) {
     case 'horizontal':
-      grx = width;
-      gry = 0;
-      break;
+      grx = width
+      gry = 0
+      break
     case 'vertical':
-      grx = 0;
-      gry = height;
-      break;
+      grx = 0
+      gry = height
+      break
     case 'diagonal':
-      grx = width;
-      gry = height;
-      break;
+      grx = width
+      gry = height
+      break
     default:
-      grx = width;
-      gry = 0;
-      break;
+      grx = width
+      gry = 0
+      break
   }
   const gradient = ctx.createLinearGradient(0, 0, grx, gry)
-  canvas.setAttribute('width', width);
-  canvas.setAttribute('height', height);
-  gradient.addColorStop(0, colorFrom);
-  gradient.addColorStop(1, colorTo);
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, width, height);
-  const sprite = PIXI.Sprite.from(canvas);
-  sprite.x = 0;
-  sprite.y = 0;
-  return sprite;
+  canvas.setAttribute('width', width)
+  canvas.setAttribute('height', height)
+  gradient.addColorStop(0, colorFrom)
+  gradient.addColorStop(1, colorTo)
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, width, height)
+  const sprite = PIXI.Sprite.from(canvas)
+  sprite.x = 0
+  sprite.y = 0
+  return sprite
 }
 
 /**
@@ -116,67 +117,70 @@ export function calcTextSize(text, param) {
   }
   let testTextStyle = {
     fontSize: param.fontSize,
-    fontWeight: param.fontWeight,
-  };
+    fontWeight: param.fontWeight
+  }
   if (param.wrap) {
     if (!Number.isInteger(param.width)) {
-      throw new Error("折り返しを有効にするテキストのサイズの計算には幅の指定が必要です。");
+      throw new Error('折り返しを有効にするテキストのサイズの計算には幅の指定が必要です。')
     }
     Object.assign(testTextStyle, {
       wordWrap: true,
       wordWrapWidth: param.width,
-      breakWords: true,
-    });
+      breakWords: true
+    })
   }
-  const testText = new PIXI.Text(text, testTextStyle);
+  const testText = new PIXI.Text(text, testTextStyle)
   return {
     width: testText.width,
     height: testText.height
-  };
+  }
 }
 
 /**
  * 改行を有効にしたPIXIのTextオブジェクトを生成します
- * 
+ *
  * `param` はPIXI.TextStyleオブジェクトですが、一行の幅( `wordWrapWidth` )は `width` プロパティにしてあります。
- * @param {string} text - 壁画するテキスト 
+ * @param {string} text - 壁画するテキスト
  * @param {PIXI.TextStyle} param - テキスト壁画のPIXIのパラメータ
  * @return {PIXI.Text} - 生成したTextオブジェクト
  */
 export function wrapedText(text, param) {
-  return new PIXI.Text(text, Object.assign(param, {
-    wordWrap: true,
-    wordWrapWidth: param.width,
-    breakWords: true,
-  }));
+  return new PIXI.Text(
+    text,
+    Object.assign(param, {
+      wordWrap: true,
+      wordWrapWidth: param.width,
+      breakWords: true
+    })
+  )
 }
 
 /**
  * アスペクト比を保存するように大きさを調整した画像のSpriteを生成します
  * @param {string} path - 壁画する画像のパス
- * 
+ *
  * 画像は予めPIXI.Loaderにより読み込まれている必要があります
  * @param {ImageParam} param - 画像のプロパティ
- * 
+ *
  * 高さ( `height` )または幅( `width` )どちらかのみを指定した場合、アスペクト比を保存するように指定していない方の値を決定します
  * @return {PIXI.Sprite} - 生成した画像が貼り付けてあるSpriteオブジェクト
  */
 export function aspectSaveImageSprite(path, param) {
-  const image = new PIXI.Sprite(loader.resources[path].texture);
-  image.alpha = param.alpha | 1;
+  const image = new PIXI.Sprite(loader.resources[path].texture)
+  image.alpha = param.alpha | 1
   if (param.height && param.width) {
-    image.height = param.height;
-    image.width = param.width;
+    image.height = param.height
+    image.width = param.width
   } else if (param.height) {
-    const heightRatio = param.height / image.height;
-    image.height = param.height;
-    image.width = image.width * heightRatio;
+    const heightRatio = param.height / image.height
+    image.height = param.height
+    image.width = image.width * heightRatio
   } else if (param.width) {
-    const widthRatio = param.width / image.width;
-    image.width = param.width;
-    image.height = image.height * widthRatio;
+    const widthRatio = param.width / image.width
+    image.width = param.width
+    image.height = image.height * widthRatio
   }
-  return image;
+  return image
 }
 
 /**
@@ -189,14 +193,14 @@ export function aspectSaveImageSprite(path, param) {
  * })
  */
 export function loadImages(imagePaths) {
-  const keys = Object.keys(imagePaths);
+  const keys = Object.keys(imagePaths)
   return new Promise((resolve, rehject) => {
-    let l = loader;
+    let l = loader
     keys.forEach((key) => {
-      l = l.add(key, imagePaths[key]);
-    });
+      l = l.add(key, imagePaths[key])
+    })
     l.load(() => {
-      resolve();
-    });
-  });
+      resolve()
+    })
+  })
 }

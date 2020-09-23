@@ -1,6 +1,6 @@
 {
   "genre": "anime",
-  "offset": -5,
+  "offset": 0,
   "limit": 30,
   "sort": "new",
   "q": "ジブリ"
