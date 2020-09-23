@@ -1,27 +1,9 @@
 .container {
   // min-height: 100vh;
   // padding: 0 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: center;
+  // align-items: center;
   position: relative;
-}
-
-.newPostInput {
-  position: absolute;
-  top: 0;
-  left: 0;
-  // TODO: 消す
-  border: 2px solid blue;
-  outline: none;
-  margin: 0;
-  padding: 0;
-  resize: none;
-  caret-color: #222;
-  transition: 0.3s all;
-  background: transparent;
-  overflow: visible;
-  font-weight: 600;
-  font-family: 'Noto Sans JP', sans-serif;
 }

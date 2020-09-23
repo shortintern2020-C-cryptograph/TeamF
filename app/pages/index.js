@@ -6,6 +6,7 @@ import { MainContext } from '../contexts/MainContext'
 import { PageTransition } from '../components/PageTransition'
 
 import SPCanvas from '../components/SPCanvas'
+import DokodemoInput from '../components/DokodemoInput'
 
 /**
  * ホーム画面のコンポーネント
@@ -14,10 +15,16 @@ import SPCanvas from '../components/SPCanvas'
 const Home = () => {
   const { selectedGenre, fabMode, setFabMode } = useContext(MainContext)
   const [inputOpen, setInputOpen] = useState(false)
-  const [inputPlace, setInputPlace] = useState({ top: 0, left: 0 })
-  const [inputStyle, setInputStyle] = useState({ fontSize: 21, width: 300, height: 200 })
-  // const [inputs, setInputs] = useState([{ top: 10, left: 10, fontSize: 15, width: 100, height: 80 }, {}])
-  const newPostInput = createRef()
+
+  /**
+   *
+   * @type {Array.<{multipleLines: boolean,top:number, left:number, fontSize:number, width:number, height:number, placeholder:string}>} inputVars
+   */
+  const initialValue = [
+    { multipleLines: true, top: 0, left: 10, fontSize: 14, width: 100, height: 190, placeholder: 'ccc' },
+    { multipleLines: true, top: 30, left: 177, fontSize: 14, width: 310, height: 230, placeholder: 'aaa' }
+  ]
+  const [inputVars, setInputVars] = useState(initialValue)
 
   useEffect(() => {
     setFabMode('home')
@@ -40,17 +47,6 @@ const Home = () => {
     }
   }, [fabMode])
 
-  useEffect(() => {
-    if (newPostInput && newPostInput.current) {
-      console.log(inputPlace)
-      newPostInput.current.style.top = `${inputPlace.top}px`
-      newPostInput.current.style.left = `${inputPlace.left}px`
-      newPostInput.current.style.width = `${inputStyle.width}px`
-      newPostInput.current.style.height = `${inputStyle.height}px`
-      newPostInput.current.style.fontSize = `${inputStyle.fontSize}px`
-    }
-  }, [inputPlace, inputOpen])
-
   return (
     <Layout>
       <div className={styles.container}>
@@ -58,17 +54,24 @@ const Home = () => {
           <title>Home | ScenePicks</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <SPCanvas />
+        <SPCanvas setInputVars={setInputVars} />
         {inputOpen && (
           <PageTransition>
-            <textarea
+            <div>
+              {inputVars.length
+                ? inputVars.map((inputVar, i) => {
+                    return <DokodemoInput key={i} {...inputVar} />
+                  })
+                : null}
+              {/* <textarea
               name="newpost"
               cols="40"
               rows="5"
               ref={newPostInput}
               className={styles.newPostInput}
               placeholder="作品名"
-            />
+            /> */}
+            </div>
           </PageTransition>
         )}
       </div>
