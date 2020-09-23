@@ -6,17 +6,36 @@ import { MainContext } from '../contexts/MainContext'
 import { PageTransition } from '../components/PageTransition'
 
 import SPCanvas from '../components/SPCanvas'
+import DokodemoInput from '../components/DokodemoInput'
 
+/**
+ * ホーム画面のコンポーネント
+ * @author Takahiro Nishino
+ */
 const Home = () => {
   const { selectedGenre, fabMode, setFabMode } = useContext(MainContext)
   const [inputOpen, setInputOpen] = useState(false)
-  const [inputPlace, setInputPlace] = useState({ top: 0, left: 0 })
-  const [inputStyle, setInputStyle] = useState({ fontSize: 21, width: 300, height: 200 })
-  const newPostInput = createRef()
+  const [inputContents, setInputContents] = useState({})
+  const [submitting, setSubmitting] = useState(false)
+
+  /**
+   *
+   * @type {Array.<{multipleLines: boolean, top: number, left: number, fontSize: number, width: number, height: number, type: string}>} inputVars
+   */
+  const initialValue = [
+    { multipleLines: true, top: 0, left: 10, fontSize: 14, width: 100, height: 190, type: 'ccc' },
+    { multipleLines: true, top: 30, left: 177, fontSize: 14, width: 310, height: 230, type: 'aaa' }
+  ]
+  const [inputVars, setInputVars] = useState(initialValue)
+
+  /**
+   * @type {top: number, left: number}
+   */
+  const initialSubmitButtonPlace = { top: 100, left: 100 }
+  const [submitButtonPlace, setSubmitButtonPlace] = useState(initialSubmitButtonPlace)
 
   useEffect(() => {
     setFabMode('home')
-    // setInputPlace({ top: Math.random() * 200, left: Math.random() * 200 })
   }, [])
 
   useEffect(() => {
@@ -35,16 +54,24 @@ const Home = () => {
     }
   }, [fabMode])
 
-  useEffect(() => {
-    if (newPostInput && newPostInput.current) {
-      console.log(inputPlace)
-      newPostInput.current.style.top = `${inputPlace.top}px`
-      newPostInput.current.style.left = `${inputPlace.left}px`
-      newPostInput.current.style.width = `${inputStyle.width}px`
-      newPostInput.current.style.height = `${inputStyle.height}px`
-      newPostInput.current.style.fontSize = `${inputStyle.fontSize}px`
-    }
-  }, [inputPlace, inputOpen])
+  const submitPost = () => {
+    console.log('submit!')
+    // 情報を集める
+    // submit here
+    setSubmitting(true)
+    console.log('about to post')
+    console.log(inputContents)
+    setInputContents({})
+    setInputOpen(false)
+    setFabMode('home')
+    setSubmitting(false)
+  }
+
+  const updateInputContent = (type, text) => {
+    let old = { ...inputContents }
+    old[type] = text
+    setInputContents(old)
+  }
 
   return (
     <Layout>
@@ -53,17 +80,30 @@ const Home = () => {
           <title>Home | ScenePicks</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <SPCanvas/>
+        <SPCanvas setInputVars={setInputVars} />
         {inputOpen && (
           <PageTransition>
-            <textarea
-              name="newpost"
-              cols="40"
-              rows="5"
-              ref={newPostInput}
-              className={styles.newPostInput}
-              placeholder="作品名"
-            />
+            <div>
+              {inputVars.length
+                ? inputVars.map((inputVar, i) => {
+                    return (
+                      <DokodemoInput
+                        key={i}
+                        {...inputVar}
+                        updateInputContent={updateInputContent}
+                        submitting={submitting}
+                      />
+                    )
+                  })
+                : null}
+              <button
+                className={styles.submitButton}
+                onClick={submitPost}
+                type="button"
+                style={{ top: `${submitButtonPlace.top}px`, left: `${submitButtonPlace.left}px` }}>
+                送信
+              </button>
+            </div>
           </PageTransition>
         )}
       </div>
