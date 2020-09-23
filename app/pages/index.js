@@ -42,12 +42,6 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    console.log(selectedGenre + 'のジャンルが選択されました')
-    // そのジャンルをfetchして
-    // 色々更新する
-  }, [selectedGenre])
-
-  useEffect(() => {
     if (fabMode === 'home') {
       // もどる
       setInputOpen(false)
@@ -83,7 +77,7 @@ const Home = () => {
           <title>Home | ScenePicks</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <SPCanvas setInputVars={setInputVars} />
+        <SPCanvas setInputVars={setInputVars} selectedGenre={selectedGenre} />
         {inputOpen && (
           <PageTransition>
             <div>

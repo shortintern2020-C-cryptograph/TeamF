@@ -77,7 +77,6 @@ const MyApp = ({ Component, pageProps }) => {
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet" />
       </Head>
       <Component {...pageProps} />
-
       <SignIn />
     </>
   )

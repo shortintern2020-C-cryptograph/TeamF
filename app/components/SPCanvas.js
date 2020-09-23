@@ -4,6 +4,7 @@ import { initMatter, stopMatter, registerUpdateCb, initMatterRenderer, unregiste
 import { Dialog, DialogDetail, Comment, Spacer, moveAdjust, loadRequiredResources } from '../lib/SPGrahic'
 import { getDialog, getDialogDetail } from '../lib/api'
 import { createMock } from '../lib/createMock'
+import { Observer } from '../lib/observer'
 
 class SPCanvas extends Component {
   dialogs
@@ -77,6 +78,11 @@ class SPCanvas extends Component {
     this.mock = null
   }
 
+  /**
+   * 更新するやつ
+   * @param {*} viewMode - one of listDialog, detailDialog
+   * @param {*} context - 中心に表示したいやつ
+   */
   async changeView(viewMode, context) {
     const self = this
     const CENTER_X = window.innerWidth / 2
@@ -185,15 +191,8 @@ class SPCanvas extends Component {
               }
             }
           )
-          self.dialogDetail.x =
-            CENTER_X + (self.dialogDetail.width - targetDialog.width) / 2 - targetDialog.width / 2 + 10
-          self.dialogDetail.y =
-            CENTER_Y +
-            (self.dialogDetail.height - targetDialog.height) / 2 +
-            targetDialog.height -
-            targetDialog.height / 2 -
-            (self.dialogDetail.height - targetDialog.height - 10) / 2 -
-            10
+          self.dialogDetail.x = CENTER_X
+          self.dialogDetail.y = CENTER_Y
           self.dialogDetail.easingInitRender(self.pixi, self.matter.engine.world)
         }
 
@@ -214,7 +213,6 @@ class SPCanvas extends Component {
           self.centerSpacer.normalInitRender(this.pixi, this.matter.engine.world)
         }
 
-        // コメント
         const makeComments = () => {
           if (self.comments && self.comments.length > 0) {
             self.comments.forEach((comment) => {
@@ -242,13 +240,17 @@ class SPCanvas extends Component {
               movement: {
                 mode: 'CenterFix',
                 context: {
-                  offsetX: -dialog.width / 2,
-                  offsetY: -dialog.height / 2,
+                  offsetX: 0,
+                  offsetY: 0,
                   callback: () => {
                     makeDialogDetail()
                     makeCenterSpacer(
-                      Math.max(targetDialog.width, self.dialogDetail.width) + 100,
-                      targetDialog.height + self.dialogDetail.height + 100
+                      Math.max(targetDialog.width, self.dialogDetail.width),
+                      targetDialog.height + self.dialogDetail.height
+                    )
+                    dialog.easingMoveRender(
+                      window.innerWidth / 2,
+                      window.innerHeight / 2 - (targetDialog.height + self.dialogDetail.height) / 2
                     )
                     makeComments()
                   }
@@ -268,6 +270,9 @@ class SPCanvas extends Component {
     }
   }
 
+  /**
+   * 詳細から元のリストに戻す
+   */
   async back() {
     switch (this.currentViewMode) {
       case 'detailDialog':
@@ -281,6 +286,7 @@ class SPCanvas extends Component {
   render() {
     return (
       <>
+        <Observer value={this.props.selectedGenre} cb={() => {}} />
         <div
           id="spDebugCanvas"
           style={{
