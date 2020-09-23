@@ -7,11 +7,16 @@ import { PageTransition } from '../components/PageTransition'
 
 import SPCanvas from '../components/SPCanvas'
 
+/**
+ * ホーム画面のコンポーネント
+ * @author Takahiro Nishino
+ */
 const Home = () => {
   const { selectedGenre, fabMode, setFabMode } = useContext(MainContext)
   const [inputOpen, setInputOpen] = useState(false)
   const [inputPlace, setInputPlace] = useState({ top: 0, left: 0 })
   const [inputStyle, setInputStyle] = useState({ fontSize: 21, width: 300, height: 200 })
+  // const [inputs, setInputs] = useState([{ top: 10, left: 10, fontSize: 15, width: 100, height: 80 }, {}])
   const newPostInput = createRef()
 
   useEffect(() => {
@@ -53,7 +58,7 @@ const Home = () => {
           <title>Home | ScenePicks</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <SPCanvas/>
+        <SPCanvas />
         {inputOpen && (
           <PageTransition>
             <textarea
