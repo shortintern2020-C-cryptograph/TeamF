@@ -7,11 +7,11 @@ import styles from '../styles/DokodemoInput.module.scss'
  */
 const DokodemoInput = (props) => {
   const [value, setValue] = useState('')
-  const { top, left, fontSize, width, height, type, multipleLines, submitting, updateInputContent } = props
+  const { bottom, left, fontSize, width, height, type, multipleLines, submitting, updateInputContent } = props
 
   const dynamicStyles = {
-    top: `${top}px`,
-    left: `${left}px`,
+    bottom: `${bottom}px`,
+    left: left,
     fontSize: `${fontSize}px`,
     width: `${width}px`,
     height: `${height}px`

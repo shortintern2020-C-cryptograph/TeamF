@@ -26,11 +26,12 @@ const Home = () => {
     setDialog,
     setSelectedGenre,
     cameBack,
-    setCameBack
+    setCameBack,
+    inputOpen,
+    setInputOpen
   } = useContext(MainContext)
   // setInterval(() => console.log(mode), 1000)
 
-  const [inputOpen, setInputOpen] = useState(false)
   const [inputContents, setInputContents] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
@@ -44,21 +45,15 @@ const Home = () => {
    *
    * @type {Array.<{multipleLines: boolean, top: number, left: number, fontSize: number, width: number, height: number, type: string}>} inputVars
    */
-  const initialValue = [
-    { multipleLines: true, top: '50vh', left: '50vw', fontSize: 14, width: 100, height: 190, type: 'ccc' }
-  ]
-  const [inputVars, setInputVars] = useState(initialValue)
-
-  /**
-   * @type {top: number, left: number}
-   */
-  // const initialSubmitButtonPlace = { top: 100, left: 100 }
-  // const [submitButtonPlace, setSubmitButtonPlace] = useState(initialSubmitButtonPlace)
-  useEffect(() => {
-    console.log(router, location)
-    const mode = router.asPath === '/' || router.asPath === '/#' ? 'home' : 'detail'
-    // setMode(mode)
-  }, [])
+  const initialValue = {
+    multipleLines: true,
+    bottom: 100,
+    left: '50%',
+    fontSize: 14,
+    width: 370,
+    height: 100,
+    type: 'コメントを投稿しよう！'
+  }
 
   useEffect(() => {
     if (mode === 'home') {
@@ -97,7 +92,6 @@ const Home = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <SPCanvas
-          setInputVars={setInputVars}
           selectedGenre={selectedGenre}
           shouldUpdate={shouldUpdate}
           setShouldUpdate={setShouldUpdate}
@@ -115,26 +109,18 @@ const Home = () => {
         {/* <PageTransition> */}
         {inputOpen && (
           <div>
-            {inputVars.length
-              ? inputVars.map((inputVar, i) => {
-                  return (
-                    <DokodemoInput
-                      key={i}
-                      {...inputVar}
-                      updateInputContent={updateInputContent}
-                      submitting={submitting}
-                    />
-                  )
-                })
-              : null}
-            <button
-              className={styles.submitButton}
-              onClick={submitPost}
-              type="button"
-              // style={{ top: `${submitButtonPlace.top}px`, left: `${submitButtonPlace.left}px` }}>
-              style={{ top: `80%`, left: `50%` }}>
-              送信
-            </button>
+            {
+              <>
+                <DokodemoInput {...initialValue} updateInputContent={updateInputContent} submitting={submitting} />
+                <button
+                  className={styles.submitButton}
+                  onClick={submitPost}
+                  type="button"
+                  style={{ bottom: `40px`, left: `calc(50%)`, transform: 'translateX(-50%)' }}>
+                  送信
+                </button>
+              </>
+            }
           </div>
         )}
         {/* </PageTransition> */}
