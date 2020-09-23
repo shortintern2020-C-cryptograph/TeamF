@@ -149,7 +149,7 @@ class SPCanvas extends Component {
           const dialog = new Dialog(Math.random() * 0.8 * CENTER_X * 1.1, Math.random() * 0.8 * CENTER_Y * 1.1, {
             dialog: s.content
           })
-          dialog.presentation.on('click', () => {
+          dialog.presentation.on('pointerdown', () => {
             // self.context = {
             // this.context = {
             //   targetDialog: dialog,
