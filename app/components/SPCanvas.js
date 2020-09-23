@@ -139,6 +139,19 @@ class SPCanvas extends Component {
             this.comments = []
           }
 
+          if (this.newDialog) {
+            this.newDialog.normalRemoveRender(this.pixi, this.matter.engine.world)
+            this.newDialog = null
+          }
+
+          this.setState({
+            dDialogInputProps: {
+              top: -1000,
+              left: -1000,
+              setComment: () => {}
+            }
+          })
+
           // return
         }
         // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
