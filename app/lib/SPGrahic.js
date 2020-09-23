@@ -341,7 +341,9 @@ class GrahicObject {
     const m = this.model
     const p = this.presentation
     app.stage.removeChild(p)
-    Matter.World.remove(world, m)
+    if (m) {
+      Matter.World.remove(world, m)
+    }
     this.model = null
     this.presentation = null
   }
@@ -592,14 +594,11 @@ export class Dialog extends GrahicObject {
     return [
       {
         type: 'dialog',
-        position: {
-          x: dialog.position.x,
-          y: dialog.position.y
-        },
-        size: {
-          width: dialog.width,
-          height: dialog.height
-        }
+        top: this.presentation.position.y + dialog.position.y,
+        left: this.presentation.position.x + this._width / 2 + dialog.position.x - 20,
+        width: dialog.width,
+        height: dialog.height,
+        fontSize: 30
       }
     ]
   }

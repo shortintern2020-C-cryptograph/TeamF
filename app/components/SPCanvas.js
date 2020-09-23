@@ -8,18 +8,21 @@ import Observer from '../lib/observer'
 import MainContextProvider from '../contexts/MainContext'
 import { MainContext } from '../contexts/MainContext'
 import { withToast } from '../lib/withToast'
+import DokodemoInput from '../components/DokodemoInput'
 
 class SPCanvas extends Component {
   dialogs
   dialogDetail
   centerSpacer
   comments
+  newDialog
   pixi
   matter
   matterRender
   mock
   currentViewMode
   context
+  dDialogInputProps
 
   constructor(props) {
     super(props)
@@ -27,12 +30,17 @@ class SPCanvas extends Component {
     this.dialogDetail = null
     this.centerSpacer = null
     this.comments = []
+    const newDialog = null
     this.pixi = null
     this.matter = null
     this.matterRender = null
     this.mock = null
     this.currentViewMode = 'empty'
     this.context = {}
+    this.state = {
+      dDialogInputProps: {}
+    }
+    this.t = true
   }
 
   componentDidMount() {
@@ -91,8 +99,8 @@ class SPCanvas extends Component {
    * @param {*} viewMode - one of listDialog, detailDialog
    */
   async changeView(viewMode, id, dialog, genre = 'all', offset = 0, limit = 20) {
-    // console.log('changeView')
-    // console.log(viewMode)
+    console.log('changeView')
+    console.log(viewMode)
     const self = this
     const CENTER_X = window.innerWidth / 2
     const CENTER_Y = window.innerHeight / 2
@@ -323,10 +331,73 @@ class SPCanvas extends Component {
             }
           })
         })
+        if (this.newDialog) {
+          return
+        }
+        this.newDialog = new Dialog(
+          CENTER_X,
+          CENTER_Y,
+          {
+            dialog: 'セリフ',
+            cite: ''
+          },
+          {
+            movement: {
+              mode: 'None'
+            }
+          }
+        )
+        this.newDialog.easingInitRender(this.pixi, this.matter.engine.world).then(() => {
+          this.newDialog.unmountModel(this.matter.engine.world)
+        })
+        const objProp = this.newDialog.calcTextAreas()
+        objProp[0]['setComment'] = (txt) => {
+          self.updateInputView(0, {
+            dialog: {
+              dialog: txt,
+              cite: ''
+            }
+          })
+        }
+        this.setState({
+          dDialogInputProps: objProp[0]
+        })
         break
       default:
         break
     }
+  }
+
+  updateInputView(i, inputs) {
+    const self = this
+    const CENTER_X = window.innerWidth / 2
+    const CENTER_Y = window.innerHeight / 2
+    const p = this.pixi
+    const w = this.matter.engine.world
+    const dialogInput = inputs.dialog
+    const updatedNewDialog = new Dialog(CENTER_X, CENTER_Y, dialogInput, {
+      movement: {
+        mode: 'None'
+      }
+    })
+    if (this.newDialog) {
+      this.newDialog.normalRemoveRender(p, w)
+    }
+    updatedNewDialog.normalInitRender(p, w)
+    const objProp = updatedNewDialog.calcTextAreas()
+    objProp[0]['setComment'] = (txt) => {
+      this.updateInputView(0, {
+        dialog: {
+          dialog: txt,
+          cite: ''
+        }
+      })
+    }
+    objProp[0]['setComment'] = objProp[0]['setComment'].bind(self)
+    console.log('a')
+    this.setState({
+      dDialogInputProps: objProp[0]
+    })
   }
 
   /**
@@ -343,6 +414,7 @@ class SPCanvas extends Component {
   }
 
   render() {
+    console.log('render')
     return (
       <>
         <MainContextProvider>
@@ -359,6 +431,7 @@ class SPCanvas extends Component {
             setCameBack={this.props.setCameBack}
           />
         </MainContextProvider>
+        <DokodemoInput t={this.t} {...this.state.dDialogInputProps}></DokodemoInput>
         <div
           id="spDebugCanvas"
           style={{

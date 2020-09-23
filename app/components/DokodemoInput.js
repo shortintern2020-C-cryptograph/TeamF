@@ -7,7 +7,7 @@ import styles from '../styles/DokodemoInput.module.scss'
  */
 const DokodemoInput = (props) => {
   const {
-    bottom,
+    top,
     left,
     fontSize,
     width,
@@ -17,11 +17,12 @@ const DokodemoInput = (props) => {
     submitting,
     updateInputContent,
     comment,
-    setComment
+    setComment,
+    t
   } = props
 
   const dynamicStyles = {
-    bottom: `${bottom}px`,
+    top: `${top}px`,
     left: left,
     fontSize: `${fontSize}px`,
     width: `${width}px`,
@@ -30,7 +31,7 @@ const DokodemoInput = (props) => {
 
   let placeholder
   switch (type) {
-    case 'content':
+    case 'dialog':
       placeholder = 'セリフ'
       break
     case 'title':

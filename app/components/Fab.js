@@ -15,13 +15,16 @@ const Fab = () => {
   const redStyle = 'linear-gradient(120deg, #F05353, #E9468A)'
   const isBlackStyle = mode === 'home' || mode === 'detail'
 
-  // console.log(mode)
+  console.log(mode)
   const handleChangeMode = () => {
     if (!user) {
       setSignInModalOpen(true)
       return
     }
     switch (mode) {
+      case 'home':
+        setMode('new')
+        break
       case 'detail':
         setInputOpen(true)
         setMode('comment')
