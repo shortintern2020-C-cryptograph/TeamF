@@ -4,7 +4,7 @@ import Layout from '../components/Layout'
 import { createRef, useContext, useEffect, useState } from 'react'
 import { MainContext } from '../contexts/MainContext'
 import { PageTransition } from '../components/PageTransition'
-
+import { useRouter } from 'next/router'
 import SPCanvas from '../components/SPCanvas'
 import DokodemoInput from '../components/DokodemoInput'
 
@@ -17,6 +17,7 @@ const Home = () => {
   const [inputOpen, setInputOpen] = useState(false)
   const [inputContents, setInputContents] = useState({})
   const [submitting, setSubmitting] = useState(false)
+  const router = useRouter()
 
   /**
    *
@@ -35,7 +36,9 @@ const Home = () => {
   const [submitButtonPlace, setSubmitButtonPlace] = useState(initialSubmitButtonPlace)
 
   useEffect(() => {
-    setFabMode('home')
+    const mode = router.asPath === '/' ? 'home' : 'detail'
+    setFabMode(mode)
+    console.log(router.asPath)
   }, [])
 
   useEffect(() => {

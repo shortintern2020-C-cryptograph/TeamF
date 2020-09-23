@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from '../styles/DokodemoInput.module.scss'
 
+/**
+ *
+ * @param {*} props
+ */
 const DokodemoInput = (props) => {
   const [value, setValue] = useState('')
   const { top, left, fontSize, width, height, type, multipleLines, submitting, updateInputContent } = props
