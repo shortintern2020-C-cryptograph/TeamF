@@ -43,7 +43,6 @@ func getDialog(genre string, offset int64, limit int64, sort string, q string) (
 
 func postDialog(content string, title string, author string, source string, link string, style string, comment string, userID int64) (int64, error) {
 	// DBへの書き込み
-	source = "anime"
 	tx := sqlHandler.DB.MustBegin()
 	result, err := tx.NamedExec("INSERT INTO dialog (content, title, author, source, link, style, user_id) VALUES (:content, :title, :author, :source, :link, :style, :user_id)",
 		map[string]interface{}{

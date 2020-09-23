@@ -7,17 +7,26 @@ import { MainContext } from '../contexts/MainContext'
 const lefts = [11, 60, 100, 167, 235]
 const widths = [50, 40, 65, 65, 82]
 
+/**
+ * ナビゲーションバーのコンポーネント
+ * @author Takahiro Nishino
+ */
 const Navbar = () => {
   const { user, setSignInModalOpen } = useContext(AuthContext)
   const router = useRouter()
-  const { selectedGenre, setSelectedGenre } = useContext(MainContext)
+  const { selectedGenre, setSelectedGenre, setFabMode } = useContext(MainContext)
 
   return (
     <div className={styles.container}>
-      <div className={styles.title} onClick={() => router.push('/')}>
+      <div
+        className={styles.title}
+        onClick={() => {
+          router.push('/', undefined, { shallow: true })
+          setFabMode('home')
+        }}>
         ScenePicks
       </div>
-      {router.pathname === '/' && (
+      {router.asPath === '/' && (
         <div style={{ display: 'inline-block' }}>
           <ul className={styles.genreList}>
             {['全て', '本', 'マンガ', 'アニメ', 'YouTube'].map((item, index) => {
@@ -34,16 +43,10 @@ const Navbar = () => {
 
             <li
               style={{
-                position: 'absolute',
                 width: `${widths[selectedGenre]}px`,
-                height: '36px',
-                background: 'linear-gradient(120deg, #46e9c2, #5653f0)',
-                borderRadius: '6px',
-                top: '8px',
-                left: `${lefts[selectedGenre]}px`,
-                zIndex: -1,
-                transition: '0.25s ease'
+                left: `${lefts[selectedGenre]}px`
               }}
+              className={styles.menuList}
             />
           </ul>
         </div>

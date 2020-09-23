@@ -96,6 +96,10 @@ class GrahicObject {
    * @type {boolean}
    */
   initFinished
+  /**
+   * 物理演算が有効になっているか
+   */
+  mounted
 
   /**
    * コンストラクタ,
@@ -138,6 +142,28 @@ class GrahicObject {
    */
   get options() {
     return this._options
+  }
+  /**
+   *
+   * @param {Object} options
+   */
+  get content() {
+    return this._content
+  }
+
+  get x() {
+    return this._x
+  }
+  get y() {
+    return this._y
+  }
+  set x(nx) {
+    this._x = nx
+    this.normalMoveRender(this._x, this._y)
+  }
+  set y(ny) {
+    this._y = ny
+    this.normalMoveRender(this._x, this._y)
   }
 
   /**
@@ -187,12 +213,22 @@ class GrahicObject {
    * 物理演算モデルの位置と壁画オブジェクトの位置を同期します,
    * 物理演算エンジンの計算処理終了後のフックメソッド内で呼ばれることを想定しています,
    * この関数が呼ばれない限り物理演算エンジンによりモデルの位置が移動しても壁画には反映されません
+   * @param {boolean} presentationToModel - 表示オブジェクトの位置 -> 物理モデルに反映（デフォルトは逆） @default false
    */
-  syncPosition() {
+  syncPosition(presentationToModel = false) {
     const m = this.model
     const p = this.presentation
-    if (p) {
-      p.position.set(m.position.x, m.position.y)
+    if (presentationToModel) {
+      if (m) {
+        Matter.Body.setPosition(m, {
+          x: p.position.x,
+          y: p.position.y
+        })
+      }
+    } else {
+      if (p) {
+        p.position.set(m.position.x, m.position.y)
+      }
     }
   }
 
@@ -203,42 +239,46 @@ class GrahicObject {
    */
   normalInitRender(app, world) {
     app.stage.addChild(this.presentation)
-    Matter.World.add(world, this.model)
+    this.mountModel(world)
     this.initFinished = true
   }
 
   /**
    * 壁画・物理演算モデルを追加し、滑らかにスケールインするようなアニメーションを付けます
+   * @async
    * @param {PIXI.Application} app - 壁画オブジェクトを追加するPIXIのApplicationオブジェクト
    * @param {Matter.World} world  - 物理演算モデルを追加するmatterのWorldオブジェクト
    */
   easingInitRender(app, world) {
-    const m = this.model
-    const p = this.presentation
-    p.scale.set(0, 0)
-    app.stage.addChild(p)
-    Matter.Body.scale(m, 0.00001, 0.00001)
-    Matter.World.add(world, m)
-    const startTimeMs = Date.now().valueOf()
-    const transionMs = 800
-    const transionFn = () => {
-      const currentMs = Date.now().valueOf()
-      const diffMs = currentMs - startTimeMs
-      if (diffMs > transionMs) {
-        this.initFinished = true
-        return
+    return new Promise((resolve, reject) => {
+      const m = this.model
+      const p = this.presentation
+      p.scale.set(0, 0)
+      app.stage.addChild(p)
+      Matter.Body.scale(m, 0.00001, 0.00001)
+      this.mountModel(world)
+      const startTimeMs = Date.now().valueOf()
+      const transionMs = 800
+      const transionFn = () => {
+        const currentMs = Date.now().valueOf()
+        const diffMs = currentMs - startTimeMs
+        if (diffMs > transionMs) {
+          this.initFinished = true
+          resolve()
+          return
+        }
+        let transionRatio = easing.easeOutCubic(diffMs / transionMs)
+
+        const currentArea = m.area
+        const desireArea = this._area * transionRatio
+        const relativeRatio = Math.sqrt(desireArea / currentArea)
+
+        p.scale.set(transionRatio, transionRatio)
+        Matter.Body.scale(m, relativeRatio, relativeRatio)
+        requestAnimationFrame(transionFn)
       }
-      let transionRatio = easing.easeOutCubic(diffMs / transionMs)
-
-      const currentArea = m.area
-      const desireArea = this._area * transionRatio
-      const relativeRatio = Math.sqrt(desireArea / currentArea)
-
-      p.scale.set(transionRatio, transionRatio)
-      Matter.Body.scale(m, relativeRatio, relativeRatio)
       requestAnimationFrame(transionFn)
-    }
-    requestAnimationFrame(transionFn)
+    })
   }
 
   /**
@@ -280,6 +320,98 @@ class GrahicObject {
     Matter.World.remove(world, m)
     this.model = null
     this.presentation = null
+  }
+
+  /**
+   * 描画オブジェクトおよび物理演算モデルを特定の位置に移動します
+   * @param {number} x - 移動先の位置(x)
+   * @param {number} y - 移動先の位置(y)
+   */
+  normalMoveRender(x, y) {
+    const m = this.model
+    const p = this.presentation
+    const desiredPosition = {
+      x: x,
+      y: y
+    }
+    p.position.set(desiredPosition.x, desiredPosition.y)
+    Matter.Body.setPosition(m, {
+      x: desiredPosition.x,
+      y: desiredPosition.y
+    })
+  }
+
+  /**
+   * 描画オブジェクトおよび物理演算モデルを特定の位置にアニメーション付きで移動します
+   * @async
+   * @param {number} x - 移動先の位置(x)
+   * @param {number} y - 移動先の位置(y)
+   */
+  easingMoveRender(x, y) {
+    return new Promise((resolve, reject) => {
+      const m = this.model
+      const p = this.presentation
+      // pixiの.positionは常に値を取得した瞬間の位置を返すので、値を保存しておくには以下のようにする必要がある
+      // NG: const originalPosition = p.position
+      const originalPosition = {
+        x: p.position.x,
+        y: p.position.y
+      }
+      const desiredPosition = {
+        x: x,
+        y: y
+      }
+      const positionDiff = {
+        x: desiredPosition.x - originalPosition.x,
+        y: desiredPosition.y - originalPosition.y
+      }
+      const startTimeMs = Date.now().valueOf()
+      const transionMs = 1000
+      const transionFn = () => {
+        const currentMs = Date.now().valueOf()
+        const diffMs = currentMs - startTimeMs
+        if (diffMs > transionMs) {
+          resolve()
+          return
+        }
+        const transionRatio = easing.easeOutCubic(diffMs / transionMs)
+        p.position.set(
+          originalPosition.x + positionDiff.x * transionRatio,
+          originalPosition.y + positionDiff.y * transionRatio
+        )
+        Matter.Body.setPosition(m, {
+          x: originalPosition.x + positionDiff.x * transionRatio,
+          y: originalPosition.y + positionDiff.y * transionRatio
+        })
+        requestAnimationFrame(transionFn)
+      }
+      requestAnimationFrame(transionFn)
+    })
+  }
+
+  /**
+   * 物理演算モデルを無効化
+   * @param {Matter.World} world - 物理演算モデルを無効化するmatterのWorldオブジェクト
+   */
+  unmountModel(world) {
+    if (!this.mounted) {
+      return
+    }
+    this.syncPosition(true)
+    Matter.World.remove(world, this.model)
+    this.mounted = false
+  }
+
+  /**
+   * 物理演算モデルを追加
+   * @param {Matter.World} world - 物理演算モデルを追加するmatterのWorldオブジェクト
+   */
+  mountModel(world) {
+    if (this.mounted) {
+      return
+    }
+    Matter.World.add(world, this.model)
+    this.mounted = true
   }
 }
 
@@ -424,6 +556,7 @@ export class Dialog extends GrahicObject {
       cite: cite
     }
     this.presentation = container
+    this.presentation.interactive = true
   }
 }
 
@@ -468,7 +601,8 @@ export class DialogDetail extends GrahicObject {
     // 幅を決定
     const margin = 20
     this._width = 500
-    const marchantIconWidth = 100
+    const marchantImagePath = null
+    const marchantIconWidth = marchantImagePath ? 100 : 0
     const infoAreaWidth = this._width - marchantIconWidth - margin
     const offsetX = -(this._width / 2)
     const infoAreaX = offsetX + marchantIconWidth + margin
@@ -552,18 +686,20 @@ export class DialogDetail extends GrahicObject {
     this.presentation = container
 
     // 商品画像
-    const marchantImage = aspectSaveImageSprite('marchant', { width: marchantIconWidth })
+    if (marchantImagePath) {
+      const marchantImage = aspectSaveImageSprite(marchantImagePath, { width: marchantIconWidth })
 
-    const marchantMask = new PIXI.Graphics()
-    marchantMask.beginFill(0x000000)
-    marchantMask.drawRoundedRect(0, 0, marchantImage.width, marchantImage.height, 10)
-    marchantMask.endFill()
+      const marchantMask = new PIXI.Graphics()
+      marchantMask.beginFill(0x000000)
+      marchantMask.drawRoundedRect(0, 0, marchantImage.width, marchantImage.height, 10)
+      marchantMask.endFill()
 
-    container.addChild(marchantMask)
-    container.addChild(marchantImage)
-    marchantImage.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
-    marchantMask.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
-    marchantImage.mask = marchantMask
+      container.addChild(marchantMask)
+      container.addChild(marchantImage)
+      marchantImage.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
+      marchantMask.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
+      marchantImage.mask = marchantMask
+    }
   }
 
   /**
@@ -738,21 +874,64 @@ export class Comment extends GrahicObject {
   }
 }
 
+export class Spacer extends GrahicObject {
+  /**
+   * コンストラクタ,
+   * オブジェクトを生成しただけでは、壁画・物理演算は行われません。
+   * @param {number} x - 横方向の初期位置
+   * @param {number} y - 縦方向の初期位置
+   * @param {module:SPGraphic~CommentContents} contents - 壁画するデータを保持するオブジェクト
+   * @param {module:SPGraphic~GraphicObjectOptions} options - 壁画や動作に関するオプションを保持するオブジェクト
+   */
+  constructor(x, y, contents, options) {
+    const defaultOptions = {
+      width: 0,
+      height: 0,
+      margin: 20,
+      movement: {
+        mode: 'Center', // "Center" | "Around" | "OutOfRange"
+        context: {}
+      }
+    }
+    const margedOptions = Object.assign(defaultOptions, options)
+    super(x, y, {}, margedOptions)
+    this._width = margedOptions.width
+    this._height = margedOptions.height
+    this._initModel()
+    Matter.Body.setStatic(this.model, true)
+  }
+  _initPresentation() {
+    this.presentation = new PIXI.Container()
+  }
+}
+
 /**
  * オブジェクトの運動の様子を制御します
+ * @param {PIXI.Application} pixi - pixiのアプリケーション
+ * @param {Object} matter - matterのEngine, Runner
  * @param {SPGrahic[]} targets
  */
-export function moveVectorAdjust(targets) {
+export function moveAdjust(pixi, matter, targets) {
   const delta = Math.sin(Date.now() * 5000) * 10
   if (!targets) {
+    return
+  }
+  if (!pixi === 'undefined' || !matter) {
+    return
+  }
+  if (!matter.engine) {
     return
   }
   targets.forEach((target) => {
     const m = target.model
     const WORLD_WIDTH = window.innerWidth
     const WORLD_HEIGHT = window.innerHeight
+    const CENTER_X = WORLD_WIDTH / 2
+    const CENTER_Y = WORLD_HEIGHT / 2
     let possub
+    let relsub
     if (!target.initFinished) {
+      target.syncPosition()
       return
     }
     if (!target.options.movement) {
@@ -765,12 +944,44 @@ export function moveVectorAdjust(targets) {
       target.options.movement.mode // "Center" | "Around" | "OutOfRange"
     ) {
       case 'Center':
-        possub = Matter.Vector.sub({ x: WORLD_WIDTH / 2 + delta / 4, y: WORLD_HEIGHT / 2 + delta }, m.position)
+        target.mountModel(matter.engine.world)
+        possub = Matter.Vector.sub({ x: CENTER_X + delta / 4, y: CENTER_Y + delta }, m.position)
+        break
+      case 'CenterFix':
+        const callback = target.options.movement.context.callback
+        const fixed = target.options.movement.context.fixed
+        const offsetX = target.options.movement.context.offsetX | 0
+        const offsetY = target.options.movement.context.offsetY | 0
+        const desiredPos = {
+          x: CENTER_X + offsetX,
+          y: CENTER_Y + offsetY
+        }
+        // const desiredPos = {
+        //   x: 0,
+        //   y: 0
+        // }
+        const possubToCenter = Matter.Vector.sub(desiredPos, m.position)
+        const switchRage = 200 //px
+        if (Math.abs(possubToCenter.x) < switchRage && Math.abs(possubToCenter.y) < switchRage) {
+          if (!fixed) {
+            target.options.movement.context.fixed = true
+            target.unmountModel(matter.engine.world)
+            // 強制移動に切り替え
+            target.easingMoveRender(desiredPos.x, desiredPos.y).then(() => {
+              if (callback && typeof callback === 'function') {
+                callback()
+              }
+            })
+          }
+        } else {
+          possub = possubToCenter
+        }
         break
       case 'Around':
-        let relsub = target.options.movement.context.relaub
+        target.mountModel(matter.engine.world)
+        relsub = target.options.movement.context.relaub
         if (!relsub) {
-          relsub = Matter.Vector.sub({ x: WORLD_WIDTH / 2 + delta, y: WORLD_HEIGHT / 2 + delta }, m.position)
+          relsub = Matter.Vector.sub({ x: CENTER_X + delta, y: CENTER_Y + delta }, m.position)
           target.options.movement.context.relaub = relsub
         }
         if (relsub.x < 0) {
@@ -793,7 +1004,30 @@ export function moveVectorAdjust(targets) {
         }
         break
       case 'OutOfRange':
-        // 未実装
+        target.mountModel(matter.engine.world)
+        relsub = target.options.movement.context.relaub
+        if (!relsub) {
+          relsub = Matter.Vector.sub({ x: CENTER_X, y: CENTER_Y }, m.position)
+          target.options.movement.context.relaub = relsub
+        }
+        if (relsub.x < 0) {
+          if (relsub.y < 0) {
+            //右下
+            possub = Matter.Vector.sub({ x: WORLD_WIDTH * 1.5, y: WORLD_HEIGHT * 1.5 }, m.position)
+          } else {
+            //右上
+            possub = Matter.Vector.sub({ x: WORLD_WIDTH * 1.5, y: -WORLD_HEIGHT * 0.5 }, m.position)
+          }
+        } else {
+          //左
+          if (relsub.y < 0) {
+            //左下
+            possub = Matter.Vector.sub({ x: -WORLD_WIDTH * 0.5, y: WORLD_HEIGHT * 1.5 }, m.position)
+          } else {
+            //左上
+            possub = Matter.Vector.sub({ x: -WORLD_WIDTH * 0.5, y: -WORLD_HEIGHT * 0.5 }, m.position)
+          }
+        }
         break
       default:
         break
@@ -804,6 +1038,7 @@ export function moveVectorAdjust(targets) {
       Matter.Body.setAngularVelocity(m, 0)
       Matter.Body.setAngle(m, 0)
     }
+    target.syncPosition()
   })
 }
 
@@ -812,7 +1047,11 @@ export function moveVectorAdjust(targets) {
  * @async
  */
 export async function loadRequiredResources() {
-  await loadImages({
-    quotation_white: '/quotation_white.png'
-  })
+  try {
+    await loadImages({
+      quotation_white: '/quotation_white.png',
+      author: '/author.png',
+      userIcon: '/author.png'
+    })
+  } catch {}
 }

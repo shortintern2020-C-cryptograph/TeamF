@@ -10,23 +10,33 @@ import (
 	"time"
 )
 
+
 func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
+	id := p.ID
 	offset := p.Offset
 	limit := p.Limit
 	fmt.Printf("GET /comment offset: %d, limit: %d\n", offset, limit)
 
-	id := p.ID
-	schema, err := getCommentByID(id, offset, limit)
+	if id < 0 {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("query id is invalid")
+	}
+	if offset < 0 || limit <= 0 {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("parameter value is invalid")
+	}
+
+	resDialog, resComments, resTags, err := getCommentByID(id, offset, limit)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	params := &scenepicks.GetCommentOKBody{
+	params := &scenepicks.GetCommentByIDOKBody{
 		Message: "success",
-		Schema:  schema,
+		Dialog: resDialog,
+		Comments: resComments,
+		Tags: resTags,
 	}
 
-	return scenepicks.NewGetCommentOK().WithPayload(params)
+	return scenepicks.NewGetCommentByIDOK().WithPayload(params)
 }
 
 func PostCommentById(p scenepicks.PostCommentByIDParams) middleware.Responder {
@@ -43,6 +53,13 @@ func PostCommentById(p scenepicks.PostCommentByIDParams) middleware.Responder {
 	userId := client.user.ID
 	dialogId := p.ID
 	comment := p.Comment.Comment
+
+	if dialogId <= 0 {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("dialog id is invalid")
+	}
+	if comment == "" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("vacant comment is invalid")
+	}
 
 	// DBへの書き込み
 	id, err := postComment(userId, dialogId, comment)
