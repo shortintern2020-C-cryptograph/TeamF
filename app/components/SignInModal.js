@@ -3,8 +3,11 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import { AuthContext } from '../contexts/AuthContext'
 import Modal from 'react-modal'
-// import styles from '../styles/SignIn.module.scss'
-import { useToasts } from 'react-toast-notifications'
+
+/**
+ * twitter連携用のモーダル
+ * @author Takahiro Nishino
+ */
 
 let firebaseui
 if (typeof window !== 'undefined') {
@@ -13,7 +16,6 @@ if (typeof window !== 'undefined') {
 
 const SignIn = () => {
   const { ui, setUi, user, signInModalOpen, setSignInModalOpen, storageAvailable } = useContext(AuthContext)
-  const { addToast } = useToasts()
 
   const uiStart = () => {
     ui.start('#firebaseui-auth-container', {
@@ -81,7 +83,7 @@ const SignIn = () => {
       style={customStyles}
       contentLabel="Example Modal">
       <div style={{ padding: '1em 2em', textAlign: 'center' }}>
-        <h3>投稿するにはログインしーてね</h3>
+        <h3>アカウント連携で全ての機能を使おう！</h3>
         <div className="loginCard">
           <div id="firebaseui-auth-container" style={{ opacity: user ? 0 : 1 }} />
         </div>

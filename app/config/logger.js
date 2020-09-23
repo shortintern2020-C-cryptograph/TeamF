@@ -10,8 +10,8 @@ const rollbar = new Rollbar({
     process.env.NEXT_PUBLIC_ENV === 'LOCAL' ? 'dev' : process.env.NEXT_PUBLIC_ENV === 'MOCK' ? 'mock' : 'prod'
 })
 
-// if (process.env.NODE_ENV === 'development') {
-//   rollbar.configure({ enabled: false })
-// }
+if (process.env.NODE_ENV === 'development') {
+  rollbar.configure({ enabled: false })
+}
 
 export { rollbar }
