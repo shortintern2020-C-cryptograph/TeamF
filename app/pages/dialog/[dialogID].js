@@ -1,7 +1,5 @@
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useLayoutEffect } from 'react'
-import Layout from '../../components/Layout'
 import { MainContext } from '../../contexts/MainContext'
 
 const Dialog = () => {

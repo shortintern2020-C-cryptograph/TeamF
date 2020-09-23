@@ -64,17 +64,22 @@ const MyApp = ({ Component, pageProps }) => {
   }, [])
 
   if (isLoading) {
-    return <Splash />
+    return (
+      <PageTransition>
+        <Splash />
+      </PageTransition>
+    )
   }
 
   return (
-    <PageTransition>
+    <>
       <Head>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet" />
       </Head>
       <Component {...pageProps} />
+
       <SignIn />
-    </PageTransition>
+    </>
   )
 }
 
