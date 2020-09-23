@@ -875,6 +875,36 @@ export class Comment extends GrahicObject {
   }
 }
 
+export class Spacer extends GrahicObject {
+  /**
+   * コンストラクタ,
+   * オブジェクトを生成しただけでは、壁画・物理演算は行われません。
+   * @param {number} x - 横方向の初期位置
+   * @param {number} y - 縦方向の初期位置
+   * @param {module:SPGraphic~CommentContents} contents - 壁画するデータを保持するオブジェクト
+   * @param {module:SPGraphic~GraphicObjectOptions} options - 壁画や動作に関するオプションを保持するオブジェクト
+   */
+  constructor(x, y, contents, options) {
+    const defaultOptions = {
+      width: 0,
+      height: 0,
+      margin: 20,
+      movement: {
+        mode: 'Center', // "Center" | "Around" | "OutOfRange"
+        context: {}
+      }
+    }
+    const margedOptions = Object.assign(defaultOptions, options)
+    super(x, y, {}, margedOptions)
+    this._width = margedOptions.width
+    this._height = margedOptions.height
+    this._initModel()
+  }
+  _initPresentation() {
+    this.presentation = new PIXI.Container()
+  }
+}
+
 /**
  * オブジェクトの運動の様子を制御します
  * @param {PIXI.Application} pixi - pixiのアプリケーション
