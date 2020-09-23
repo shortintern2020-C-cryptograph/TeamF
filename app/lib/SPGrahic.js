@@ -96,6 +96,10 @@ class GrahicObject {
    * @type {boolean}
    */
   initFinished
+  /**
+   * 物理演算が有効になっているか
+   */
+  mounted
 
   /**
    * コンストラクタ,
@@ -209,12 +213,22 @@ class GrahicObject {
    * 物理演算モデルの位置と壁画オブジェクトの位置を同期します,
    * 物理演算エンジンの計算処理終了後のフックメソッド内で呼ばれることを想定しています,
    * この関数が呼ばれない限り物理演算エンジンによりモデルの位置が移動しても壁画には反映されません
+   * @param {boolean} presentationToModel - 表示オブジェクトの位置 -> 物理モデルに反映（デフォルトは逆） @default false
    */
-  syncPosition() {
+  syncPosition(presentationToModel = false) {
     const m = this.model
     const p = this.presentation
-    if (p) {
-      p.position.set(m.position.x, m.position.y)
+    if (presentationToModel) {
+      if (m) {
+        Matter.Body.setPosition(m, {
+          x: p.position.x,
+          y: p.position.y
+        })
+      }
+    } else {
+      if (p) {
+        p.position.set(m.position.x, m.position.y)
+      }
     }
   }
 
@@ -225,7 +239,7 @@ class GrahicObject {
    */
   normalInitRender(app, world) {
     app.stage.addChild(this.presentation)
-    Matter.World.add(world, this.model)
+    this.mountModel(world)
     this.initFinished = true
   }
 
@@ -242,7 +256,7 @@ class GrahicObject {
       p.scale.set(0, 0)
       app.stage.addChild(p)
       Matter.Body.scale(m, 0.00001, 0.00001)
-      Matter.World.add(world, m)
+      this.mountModel(world)
       const startTimeMs = Date.now().valueOf()
       const transionMs = 800
       const transionFn = () => {
@@ -373,6 +387,31 @@ class GrahicObject {
       }
       requestAnimationFrame(transionFn)
     })
+  }
+
+  /**
+   * 物理演算モデルを無効化
+   * @param {Matter.World} world - 物理演算モデルを無効化するmatterのWorldオブジェクト
+   */
+  unmountModel(world) {
+    if (!this.mounted) {
+      return
+    }
+    this.syncPosition(true)
+    Matter.World.remove(world, this.model)
+    this.mounted = false
+  }
+
+  /**
+   * 物理演算モデルを追加
+   * @param {Matter.World} world - 物理演算モデルを追加するmatterのWorldオブジェクト
+   */
+  mountModel(world) {
+    if (this.mounted) {
+      return
+    }
+    Matter.World.add(world, this.model)
+    this.mounted = true
   }
 }
 
@@ -838,9 +877,11 @@ export class Comment extends GrahicObject {
 
 /**
  * オブジェクトの運動の様子を制御します
+ * @param {PIXI.Application} pixi - pixiのアプリケーション
+ * @param {Object} matter - matterのEngine, Runner
  * @param {SPGrahic[]} targets
  */
-export function moveVectorAdjust(targets) {
+export function moveAdjust(pixi, matter, targets) {
   const delta = Math.sin(Date.now() * 5000) * 10
   if (!targets) {
     return
@@ -866,10 +907,12 @@ export function moveVectorAdjust(targets) {
       target.options.movement.mode // "Center" | "Around" | "OutOfRange"
     ) {
       case 'Center':
+        target.mountModel(matter.engine.world)
         possub = Matter.Vector.sub({ x: CENTER_X + delta / 4, y: CENTER_Y + delta }, m.position)
         break
       case 'CenterFix':
         const callback = target.options.movement.context.callback
+        const fixed = target.options.movement.context.fixed
         const offsetX = target.options.movement.context.offsetX | 0
         const offsetY = target.options.movement.context.offsetY | 0
         const desiredPos = {
@@ -883,17 +926,22 @@ export function moveVectorAdjust(targets) {
         const possubToCenter = Matter.Vector.sub(desiredPos, m.position)
         const switchRage = 200 //px
         if (Math.abs(possubToCenter.x) < switchRage && Math.abs(possubToCenter.y) < switchRage) {
-          // 強制移動に切り替え
-          target.easingMoveRender(desiredPos.x, desiredPos.y).then(() => {
-            if (callback && typeof callback === 'function') {
-              callback()
-            }
-          })
+          if (!fixed) {
+            target.options.movement.context.fixed = true
+            target.unmountModel(matter.engine.world)
+            // 強制移動に切り替え
+            target.easingMoveRender(desiredPos.x, desiredPos.y).then(() => {
+              if (callback && typeof callback === 'function') {
+                callback()
+              }
+            })
+          }
         } else {
           possub = possubToCenter
         }
         break
       case 'Around':
+        target.mountModel(matter.engine.world)
         let relsub = target.options.movement.context.relaub
         if (!relsub) {
           relsub = Matter.Vector.sub({ x: CENTER_X + delta, y: CENTER_Y + delta }, m.position)
