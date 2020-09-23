@@ -13,15 +13,9 @@ const widths = [50, 40, 65, 65, 82]
  */
 const Navbar = () => {
   const { user, setSignInModalOpen } = useContext(AuthContext)
-  const [hash, setHash] = useState('')
   const router = useRouter()
-  router.events.on('hashChangeStart', (url) => console.log(url + 'wow'))
   const { selectedGenre, setSelectedGenre, setMode, setShouldUpdate, dialogID } = useContext(MainContext)
-  useEffect(() => {
-    console.log(location.hash)
-    console.log(router)
-    setHash(location.hash)
-  }, [dialogID])
+
   return (
     <div className={styles.container}>
       <div
@@ -33,7 +27,6 @@ const Navbar = () => {
         }}>
         ScenePicks
       </div>
-      {/* {!hash && ( */}
       <div style={{ display: 'inline-block' }}>
         <ul className={styles.genreList}>
           {['全て', '本', 'マンガ', 'アニメ'].map((item, index) => {
@@ -57,7 +50,6 @@ const Navbar = () => {
           />
         </ul>
       </div>
-      {/* )} */}
       {user ? (
         <img
           src={user.providerData[0].photoURL}

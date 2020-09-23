@@ -9,12 +9,12 @@ import styles from '../styles/Fab.module.scss'
  */
 const Fab = () => {
   const { mode, nextMode } = useContext(MainContext)
-  console.log(mode)
   const { user, setSignInModalOpen } = useContext(AuthContext)
   const blackStyle = 'linear-gradient(120deg, #222, #555)'
   const redStyle = 'linear-gradient(120deg, #F05353, #E9468A)'
   const isBlackStyle = mode === 'home' || mode === 'detail'
 
+  // console.log(mode)
   const handleChangeMode = () => {
     if (!user) {
       setSignInModalOpen(true)

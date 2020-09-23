@@ -60,7 +60,9 @@ const MainContextProvider = ({ children }) => {
         setShouldUpdate,
         prevMode,
         dialogID,
-        setDialogID
+        setDialogID,
+        dialog,
+        setDialog
       }}>
       {children}
     </MainContext.Provider>

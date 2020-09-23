@@ -7,16 +7,16 @@ import { PageTransition } from './PageTransition'
  * @param {*} children
  */
 const Layout = ({ children }) => {
+  // <PageTransition>
   return (
-    <PageTransition>
-      <div style={{ position: 'relative', height: '100vh', width: '100vw' }}>
-        <NavBar />
-        <Fab />
-        {children}
-        {/* 中央に戻るボタン? */}
-      </div>
-    </PageTransition>
+    <div style={{ position: 'relative', height: '100vh', width: '100vw' }}>
+      <NavBar />
+      <Fab />
+      {children}
+      {/* 中央に戻るボタン? */}
+    </div>
   )
+  // </PageTransition>
 }
 
 export default Layout

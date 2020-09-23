@@ -35,7 +35,7 @@ export function stopMatter(runner) {
 
 /**
  * matterのデバッグ用レンダラーオブジェクトの初期化を行います。
- * @param {HTMLCanvasElement} element - 壁画を行うCanvas要素
+ * @param {HTMLCanvasElement} element - 描画を行うCanvas要素
  * @param {Matter.Engine} engine - matterのエンジンオブジェクト, このエンジンオブジェクトで演算されている内容が可視化されます
  * @return {Matter.Render} - 初期化済みのmatterのレンダラーオブジェクト
  */

@@ -64,12 +64,10 @@ const MyApp = ({ Component, pageProps }) => {
   }, [])
 
   if (isLoading) {
-    return (
-      <PageTransition>
-        <Splash />
-      </PageTransition>
-    )
+    return <Splash />
   }
+  // <PageTransition>
+  // </PageTransition>
 
   return (
     <>

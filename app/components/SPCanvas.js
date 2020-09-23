@@ -36,6 +36,7 @@ class SPCanvas extends Component {
   }
 
   componentDidMount() {
+    console.log('_indexs')
     const self = this
     if (process.env.NEXT_PUBLIC_ENV === 'MOCK') {
       this.mock = createMock()
@@ -48,7 +49,7 @@ class SPCanvas extends Component {
     console.log('init spcanvas!')
     this.matter = initMatter()
     //デバッグ用レンダラー
-    this.matterRender = initMatterRenderer(document.getElementById('spDebugCanvas'), this.matter.engine)
+    // this.matterRender = initMatterRenderer(document.getElementById('spDebugCanvas'), this.matter.engine)
 
     registerUpdateCb(self.matter.engine, [
       () => {
@@ -64,7 +65,8 @@ class SPCanvas extends Component {
       }
     ])
     // TODO: 条件分岐して詳細viewもつくる
-    this.changeView('listDialog')
+    // listDialogはobserverのgenreのuseeffectでやってくれるからパスでOK
+    // this.changeView('listDialog')
   }
 
   componentWillUnmount() {
@@ -88,9 +90,9 @@ class SPCanvas extends Component {
    * 更新するやつ
    * @param {*} viewMode - one of listDialog, detailDialog
    */
-  async changeView(viewMode, genre = 'all', offset = 0, limit = 20) {
-    console.log('changeView')
-    console.log(viewMode)
+  async changeView(viewMode, context, genre = 'all', offset = 0, limit = 20) {
+    // console.log('changeView')
+    // console.log(viewMode)
     const self = this
     const CENTER_X = window.innerWidth / 2
     const CENTER_Y = window.innerHeight / 2
@@ -148,15 +150,22 @@ class SPCanvas extends Component {
             dialog: s.content
           })
           dialog.presentation.on('click', () => {
-            self.context = {
-              targetDialog: dialog,
-              targetDialogData: s
-            }
-            self.changeView('detailDialog')
+            // self.context = {
+            // this.context = {
+            //   targetDialog: dialog,
+            //   targetDialogData: s
+            // }
+            // console.log(self.context)
             // do routing here
             this.props.setDialogID(s.id)
             this.props.setDialog(s)
             location.hash = `dialog/${s.id}`
+            // window.setTimeout(() => {
+            self.changeView('detailDialog', {
+              targetDialog: dialog,
+              targetDialogData: s
+            })
+            // }, 1000)
           })
           window.setTimeout(() => {
             dialog.easingInitRender(this.pixi, this.matter.engine.world)
@@ -165,13 +174,14 @@ class SPCanvas extends Component {
         })
         break
       case 'detailDialog':
+        // console.log(this.context)
         if (typeof self.context === 'undefined') {
           return
         }
         await loadRequiredResources()
-        const targetDialog = self.context.targetDialog
-        const targetDialogData = self.context.targetDialogData
+        const { targetDialog, targetDialogData } = context
         if (typeof targetDialog === 'undefined' && typeof targetDialogData === 'undefined') {
+          // console.log('bye')
           return
         }
 
@@ -180,11 +190,12 @@ class SPCanvas extends Component {
         | 追加データフェッチ |
         `-----------------*/
         const detailRes = await getDialogDetail(targetDialogData.id, {
-          genre: 'all',
+          // genre: 'all',
           limit: 20,
           offset: 0
         })
         if (!detailRes) {
+          this.props.addToast('サーバーにアクセスできませんでした。', { appearance: 'error' })
           return
         }
         const commentDatas = detailRes.comments
@@ -297,6 +308,7 @@ class SPCanvas extends Component {
         })
         break
       case 'new':
+        console.log('about to new post')
         self.dialogs.forEach((dialog) => {
           dialog.updateOption({
             movement: {

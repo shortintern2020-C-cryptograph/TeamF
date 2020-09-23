@@ -43,10 +43,11 @@ const Home = () => {
   /**
    * @type {top: number, left: number}
    */
-  const initialSubmitButtonPlace = { top: 100, left: 100 }
-  const [submitButtonPlace, setSubmitButtonPlace] = useState(initialSubmitButtonPlace)
+  // const initialSubmitButtonPlace = { top: 100, left: 100 }
+  // const [submitButtonPlace, setSubmitButtonPlace] = useState(initialSubmitButtonPlace)
   useEffect(() => {
-    const mode = router.asPath === '/' ? 'home' : 'detail'
+    console.log(router, location)
+    const mode = router.asPath === '/' || router.asPath === '/#' ? 'home' : 'detail'
     setMode(mode)
   }, [])
 
@@ -94,45 +95,46 @@ const Home = () => {
           router={router}
           dialogID={dialogID}
           setDialogID={setDialogID}
-          selectedGenre={selectedGenre}
           mode={mode}
           dialog={dialog}
           setDialog={setDialog}
         />
+        {/* <PageTransition> */}
         {inputOpen && (
-          <PageTransition>
-            <div>
-              {inputVars.length
-                ? inputVars.map((inputVar, i) => {
-                    return (
-                      <DokodemoInput
-                        key={i}
-                        {...inputVar}
-                        updateInputContent={updateInputContent}
-                        submitting={submitting}
-                      />
-                    )
-                  })
-                : null}
-              <button
-                className={styles.submitButton}
-                onClick={submitPost}
-                type="button"
-                style={{ top: `${submitButtonPlace.top}px`, left: `${submitButtonPlace.left}px` }}>
-                送信
-              </button>
-            </div>
-          </PageTransition>
+          <div>
+            {inputVars.length
+              ? inputVars.map((inputVar, i) => {
+                  return (
+                    <DokodemoInput
+                      key={i}
+                      {...inputVar}
+                      updateInputContent={updateInputContent}
+                      submitting={submitting}
+                    />
+                  )
+                })
+              : null}
+            <button
+              className={styles.submitButton}
+              onClick={submitPost}
+              type="button"
+              // style={{ top: `${submitButtonPlace.top}px`, left: `${submitButtonPlace.left}px` }}>
+              style={{ top: `80%`, left: `50%` }}>
+              送信
+            </button>
+          </div>
         )}
+        {/* </PageTransition> */}
       </div>
       {mode === 'detail' && (
         <TwitterShareButton
-          children={<img src="/twitter.svg" alt="twitter icon" className={styles.twitterIcon} />}
           url={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api${router.asPath}`} // TODO: 自分自身
           className={styles.shareContainer}
           title="scenepicksでセリフをシェア！    " // TODO: dialog の本文など
           hashtags={['scenepicks']} // 考える
-        />
+        >
+          <img src="/twitter.svg" alt="twitter icon" className={styles.twitterIcon} />
+        </TwitterShareButton>
       )}
     </Layout>
   )

@@ -7,10 +7,12 @@ const Observer = (props) => {
 
   useEffect(() => {
     // didUpdate(value)
+    // if (selectedGenre !== 0) {
     console.log(selectedGenre + 'のジャンルが選択されました')
     cb()
     location.hash = ''
-    changeView.bind(self)('listDialog', genres[selectedGenre])
+    changeView.bind(self)('listDialog', undefined, genres[selectedGenre])
+    // }
   }, [selectedGenre])
 
   // home画面, allに戻すくん
@@ -26,8 +28,8 @@ const Observer = (props) => {
   // 投稿画面に遷移させるくん
   useEffect(() => {
     //
-    changeView.bind(self)(mode)
     if (mode === 'new') {
+      changeView.bind(self)(mode)
       console.log('新しい投稿するよ')
     }
   }, [mode])
