@@ -6,15 +6,27 @@ import (
 	"log"
 )
 
-func getCommentByID(id int64, offset int64, limit int64) ([]*models.Comment, error) {
-	schema := make([]*models.Comment, 0)
+func getCommentByID(id int64, offset int64, limit int64) (*models.Dialog, []*models.Comment, []*models.Tag, error) {
+	var resDialog models.Dialog
+	resComments := make([]*models.Comment, 0)
+	resTags := make([]*models.Tag, 0)
 
 	// TODO: 1. Joinを用いてcomment, userテーブルからレスポンスに適したデータを取得するように変更
 	// TODO: 2. offset, limitを用いた取得の実装
 
 	// commentテーブルからselect
+	var dialog dialog
 	comments := []comment{}
-	err := sqlHandler.DB.Select(&comments, `
+	tags := []tag{}
+	err := sqlHandler.DB.Get(&dialog, `
+		SELECT * FROM dialog
+		WHERE id = ? LIMIT 1
+	`, id)
+	if err != nil {
+		log.Fatal(err)
+		return &models.Dialog{}, nil, nil, err
+	}
+	err = sqlHandler.DB.Select(&comments, `
 		SELECT * FROM comment 
 		INNER JOIN user ON comment.user_id = user.id
 		WHERE dialog_id = ?
@@ -24,16 +36,31 @@ func getCommentByID(id int64, offset int64, limit int64) ([]*models.Comment, err
 	`, id, limit, offset)
 	if err != nil {
 		log.Fatal(err)
-		return nil, err
+		return &models.Dialog{}, nil, nil, err
+	}
+	err = sqlHandler.DB.Select(&tags, `
+		SELECT name, type FROM dialog_tag
+		INNER JOIN tag ON dialog_tag.tag_id = tag.id
+		WHERE dialog_id = ?
+		ORDER BY tag.utime DESC
+	`, id)
+	if err != nil {
+		log.Fatal(err)
+		return &models.Dialog{}, nil, nil, err
 	}
 
 	// commentテーブルから取得したデータからuserテーブルを叩く？Join
+	resDialog = mapDialog(dialog)
 	for _, v := range comments {
 		res := mapComment(v)
-		schema = append(schema, &res)
+		resComments = append(resComments, &res)
+	}
+	for _, v := range tags {
+		res := mapTag(v)
+		resTags = append(resTags, &res)
 	}
 
-	return schema, nil
+	return &resDialog, resComments, resTags, nil
 }
 
 func postUser(firebaseUid, displayName, photoUrl string) (int64, error) {
