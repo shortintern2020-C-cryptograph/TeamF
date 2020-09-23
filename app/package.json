@@ -16,6 +16,7 @@
   "dependencies": {
     "@pixi/filter-drop-shadow": "^3.1.1",
     "axios": "^0.20.0",
+    "canvas": "^2.6.1",
     "easing-utils": "^0.0.7",
     "env-cmd": "^10.1.0",
     "firebase": "^7.21.0",
@@ -29,8 +30,9 @@
     "react-modal": "^3.11.2",
     "react-spring": "^8.0.27",
     "react-toast-notifications": "^2.4.0",
+    "sass": "^1.26.10",
+    "urlsafe-base64": "^1.0.0"
     "rollbar": "^2.19.3",
-    "sass": "^1.26.10"
   },
   "devDependencies": {
     "docdash": "^1.2.0",
