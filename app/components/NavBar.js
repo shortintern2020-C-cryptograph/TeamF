@@ -69,5 +69,5 @@ const Navbar = () => {
     </div>
   )
 }
-
+//確認なう
 export default Navbar
