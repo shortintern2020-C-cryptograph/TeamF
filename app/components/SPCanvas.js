@@ -4,7 +4,7 @@ import { initMatter, stopMatter, registerUpdateCb, initMatterRenderer, unregiste
 import { Dialog, DialogDetail, Comment, Spacer, moveAdjust, loadRequiredResources } from '../lib/SPGrahic'
 import { getDialog, getDialogDetail } from '../lib/api'
 import { createMock } from '../lib/createMock'
-import { Observer } from '../lib/observer'
+import Observer from '../lib/observer'
 
 class SPCanvas extends Component {
   dialogs
@@ -191,9 +191,12 @@ class SPCanvas extends Component {
               }
             }
           )
-          self.dialogDetail.x = CENTER_X
-          self.dialogDetail.y = CENTER_Y
-          self.dialogDetail.easingInitRender(self.pixi, self.matter.engine.world)
+          self.dialogDetail.x = CENTER_X + 5
+          self.dialogDetail.y =
+            CENTER_Y + (targetDialog.height + self.dialogDetail.height) / 2 - self.dialogDetail.height / 2
+          self.dialogDetail.easingInitRender(self.pixi, self.matter.engine.world).then(() => {
+            self.dialogDetail.unmountModel(self.matter.engine.world)
+          })
         }
 
         // 中央スペーサー
@@ -249,8 +252,13 @@ class SPCanvas extends Component {
                       targetDialog.height + self.dialogDetail.height
                     )
                     dialog.easingMoveRender(
-                      window.innerWidth / 2,
-                      window.innerHeight / 2 - (targetDialog.height + self.dialogDetail.height) / 2
+                      window.innerWidth / 2 -
+                        Math.max(targetDialog.width, self.dialogDetail.width) / 2 +
+                        targetDialog.width / 2 -
+                        5,
+                      window.innerHeight / 2 -
+                        (targetDialog.height + self.dialogDetail.height) / 2 +
+                        targetDialog.height / 2
                     )
                     makeComments()
                   }
@@ -286,7 +294,7 @@ class SPCanvas extends Component {
   render() {
     return (
       <>
-        <Observer value={this.props.selectedGenre} cb={() => {}} />
+        <Observer value={this.props.selectedGenre} cb={() => {}} changeView={this.changeView} />
         <div
           id="spDebugCanvas"
           style={{
