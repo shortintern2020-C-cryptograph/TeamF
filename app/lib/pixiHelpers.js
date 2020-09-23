@@ -52,6 +52,7 @@ export function initPixi(element) {
     view: element
   })
   pixi.renderer.autoResize = true
+  pixi.stage.interactive = true
   loader = new PIXI.Loader()
   return pixi
 }
