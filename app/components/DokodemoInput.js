@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '../styles/DokodemoInput.module.scss'
 
 const DokodemoInput = (props) => {
-  const { top, left, fontSize, width, height, placeholder, multipleLines } = props
+  const [value, setValue] = useState('')
+  const { top, left, fontSize, width, height, type, multipleLines, submitting, updateInputContent } = props
+
   const dynamicStyles = {
     top: `${top}px`,
     left: `${left}px`,
@@ -11,11 +13,51 @@ const DokodemoInput = (props) => {
     height: `${height}px`
   }
 
-  if (multipleLines) {
-    return <textarea style={dynamicStyles} className={styles.container} placeholder={placeholder} />
+  let placeholder
+  switch (type) {
+    case 'content':
+      placeholder = 'セリフ'
+      break
+    case 'title':
+      placeholder = '作品名'
+      break
+    case 'author':
+      placeholder = '作者'
+      break
+    case 'content':
+      placeholder = '発話者'
+      break
+    default:
+      break
   }
 
-  return <input style={dynamicStyles} className={styles.container} placeholder={placeholder} />
+  if (multipleLines) {
+    return (
+      <textarea
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value)
+          updateInputContent(type, value)
+        }}
+        style={dynamicStyles}
+        className={styles.container}
+        placeholder={placeholder}
+      />
+    )
+  }
+
+  return (
+    <input
+      value={value}
+      onChange={(e) => {
+        setValue(e.target.value)
+        updateInputContent(type, value)
+      }}
+      style={dynamicStyles}
+      className={styles.container}
+      placeholder={placeholder}
+    />
+  )
 }
 
 export default DokodemoInput
