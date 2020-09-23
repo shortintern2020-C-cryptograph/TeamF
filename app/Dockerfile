@@ -14,7 +14,7 @@ COPY ./package.json ./
 COPY ./yarn.lock ./
 
 # Install dependencies
-RUN yarn install --production
+RUN yarn install
 
 # Copy all files
 COPY ./ ./
