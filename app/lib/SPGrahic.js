@@ -187,6 +187,29 @@ class GrahicObject {
   }
 
   /**
+   * テキスト入力ボックスの位置・範囲を払い出します
+   * @returns {Object[]} - 位置・範囲を持っているオブジェクト
+   * @example
+   * ```javascript
+   * [
+   *   {
+   *     type: 'dialog',
+   *     position: {
+   *       x: 0,
+   *       y: 0
+   *     },
+   *     size: {
+   *       width: 200,
+   *       height: 100
+   *     }
+   *   }
+   * ]
+   */
+  calcTextAreas() {
+    return []
+  }
+
+  /**
    * 物理演算モデルを生成します,
    * `_initPresentation()`で壁画する内容から壁画オブジェクトを生成した際に決定される幅・高さを用います,
    * そのため`_initPresentation()`が呼ばれるより前にこの関数を呼んでは**いけません**。
@@ -195,7 +218,7 @@ class GrahicObject {
   _initModel() {
     const options = {
       restitution: 0, // 弾性係数 0-1
-      density: 0.025, // 密度
+      density: 0.001, // 密度
       friction: 0 // 摩擦
     }
     const model = Matter.Bodies.rectangle(
@@ -558,6 +581,27 @@ export class Dialog extends GrahicObject {
     this.presentation = container
     this.presentation.interactive = true
   }
+
+  /**
+   * テキスト入力ボックスの位置・範囲を払い出します
+   * @returns {Object[]} - 位置・範囲を持っているオブジェクト
+   */
+  calcTextAreas() {
+    const dialog = this._presentationParts.dialog
+    return [
+      {
+        type: 'dialog',
+        position: {
+          x: dialog.position.x,
+          y: dialog.position.y
+        },
+        size: {
+          width: dialog.width,
+          height: dialog.height
+        }
+      }
+    ]
+  }
 }
 
 /**
@@ -685,6 +729,16 @@ export class DialogDetail extends GrahicObject {
 
     this.presentation = container
 
+    this._presentationParts = {
+      bg: bg,
+      mask: mask,
+      authorIcon: authorIcon,
+      author: text.author,
+      title: text.title,
+      source: text.source,
+      cite: text.cite
+    }
+
     // 商品画像
     if (marchantImagePath) {
       const marchantImage = aspectSaveImageSprite(marchantImagePath, { width: marchantIconWidth })
@@ -700,6 +754,63 @@ export class DialogDetail extends GrahicObject {
       marchantMask.position.set(offsetX + margin, offsetY + (this._height - marchantImage.height) / 2)
       marchantImage.mask = marchantMask
     }
+  }
+
+  /**
+   * テキスト入力ボックスの位置・範囲を払い出します
+   * @returns {Object[]} - 位置・範囲を持っているオブジェクト
+   */
+  calcTextAreas() {
+    const author = this._presentationParts.author
+    const title = this._presentationParts.title
+    const source = this._presentationParts.source
+    const cite = this._presentationParts.cite
+    return [
+      {
+        type: 'author',
+        position: {
+          x: author.position.x,
+          y: author.position.y
+        },
+        size: {
+          width: author.width,
+          height: author.height
+        }
+      },
+      {
+        type: 'title',
+        position: {
+          x: title.position.x,
+          y: title.position.y
+        },
+        size: {
+          width: title.width,
+          height: title.height
+        }
+      },
+      {
+        type: 'source',
+        position: {
+          x: source.position.x,
+          y: source.position.y
+        },
+        size: {
+          width: source.width,
+          height: source.height
+        }
+      },
+      {
+        type: 'cite',
+        position: {
+          x: cite.position.x,
+          y: cite.position.y
+        },
+        size: {
+          width: cite.width,
+          height: cite.height
+        }
+      }
+    ]
   }
 
   /**
@@ -859,6 +970,13 @@ export class Comment extends GrahicObject {
 
     this.presentation = container
 
+    this._presentationParts = {
+      commentBg: commentBg,
+      comment: text.comment,
+      userName: text.userName,
+      time: text.time
+    }
+
     const userIcon = aspectSaveImageSprite('userIcon', { width: userIconParam.size })
 
     const mask = new PIXI.Graphics()
@@ -871,6 +989,27 @@ export class Comment extends GrahicObject {
     userIcon.position.set(offsetX, offsetY + (this._height - userIcon.height))
     mask.position.set(offsetX, offsetY + (this._height - userIcon.height))
     userIcon.mask = mask
+  }
+
+  /**
+   * テキスト入力ボックスの位置・範囲を払い出します
+   * @returns {Object[]} - 位置・範囲を持っているオブジェクト
+   */
+  calcTextAreas() {
+    const comment = this._presentationParts.comment
+    return [
+      {
+        type: 'comment',
+        position: {
+          x: comment.position.x,
+          y: comment.position.y
+        },
+        size: {
+          width: comment.width,
+          height: comment.height
+        }
+      }
+    ]
   }
 }
 
