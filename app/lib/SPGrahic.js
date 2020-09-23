@@ -231,36 +231,40 @@ class GrahicObject {
 
   /**
    * 壁画・物理演算モデルを追加し、滑らかにスケールインするようなアニメーションを付けます
+   * @async
    * @param {PIXI.Application} app - 壁画オブジェクトを追加するPIXIのApplicationオブジェクト
    * @param {Matter.World} world  - 物理演算モデルを追加するmatterのWorldオブジェクト
    */
   easingInitRender(app, world) {
-    const m = this.model
-    const p = this.presentation
-    p.scale.set(0, 0)
-    app.stage.addChild(p)
-    Matter.Body.scale(m, 0.00001, 0.00001)
-    Matter.World.add(world, m)
-    const startTimeMs = Date.now().valueOf()
-    const transionMs = 800
-    const transionFn = () => {
-      const currentMs = Date.now().valueOf()
-      const diffMs = currentMs - startTimeMs
-      if (diffMs > transionMs) {
-        this.initFinished = true
-        return
+    return new Promise((resolve, reject) => {
+      const m = this.model
+      const p = this.presentation
+      p.scale.set(0, 0)
+      app.stage.addChild(p)
+      Matter.Body.scale(m, 0.00001, 0.00001)
+      Matter.World.add(world, m)
+      const startTimeMs = Date.now().valueOf()
+      const transionMs = 800
+      const transionFn = () => {
+        const currentMs = Date.now().valueOf()
+        const diffMs = currentMs - startTimeMs
+        if (diffMs > transionMs) {
+          this.initFinished = true
+          resolve()
+          return
+        }
+        let transionRatio = easing.easeOutCubic(diffMs / transionMs)
+
+        const currentArea = m.area
+        const desireArea = this._area * transionRatio
+        const relativeRatio = Math.sqrt(desireArea / currentArea)
+
+        p.scale.set(transionRatio, transionRatio)
+        Matter.Body.scale(m, relativeRatio, relativeRatio)
+        requestAnimationFrame(transionFn)
       }
-      let transionRatio = easing.easeOutCubic(diffMs / transionMs)
-
-      const currentArea = m.area
-      const desireArea = this._area * transionRatio
-      const relativeRatio = Math.sqrt(desireArea / currentArea)
-
-      p.scale.set(transionRatio, transionRatio)
-      Matter.Body.scale(m, relativeRatio, relativeRatio)
       requestAnimationFrame(transionFn)
-    }
-    requestAnimationFrame(transionFn)
+    })
   }
 
   /**
@@ -325,46 +329,50 @@ class GrahicObject {
 
   /**
    * 描画オブジェクトおよび物理演算モデルを特定の位置にアニメーション付きで移動します
+   * @async
    * @param {number} x - 移動先の位置(x)
    * @param {number} y - 移動先の位置(y)
    */
   easingMoveRender(x, y) {
-    const m = this.model
-    const p = this.presentation
-    // pixiの.positionは常に値を取得した瞬間の位置を返すので、値を保存しておくには以下のようにする必要がある
-    // NG: const originalPosition = p.position
-    const originalPosition = {
-      x: p.position.x,
-      y: p.position.y
-    }
-    const desiredPosition = {
-      x: x,
-      y: y
-    }
-    const positionDiff = {
-      x: desiredPosition.x - originalPosition.x,
-      y: desiredPosition.y - originalPosition.y
-    }
-    const startTimeMs = Date.now().valueOf()
-    const transionMs = 1000
-    const transionFn = () => {
-      const currentMs = Date.now().valueOf()
-      const diffMs = currentMs - startTimeMs
-      if (diffMs > transionMs) {
-        return
+    return new Promise((resolve, reject) => {
+      const m = this.model
+      const p = this.presentation
+      // pixiの.positionは常に値を取得した瞬間の位置を返すので、値を保存しておくには以下のようにする必要がある
+      // NG: const originalPosition = p.position
+      const originalPosition = {
+        x: p.position.x,
+        y: p.position.y
       }
-      const transionRatio = easing.easeOutCubic(diffMs / transionMs)
-      p.position.set(
-        originalPosition.x + positionDiff.x * transionRatio,
-        originalPosition.y + positionDiff.y * transionRatio
-      )
-      Matter.Body.setPosition(m, {
-        x: originalPosition.x + positionDiff.x * transionRatio,
-        y: originalPosition.y + positionDiff.y * transionRatio
-      })
+      const desiredPosition = {
+        x: x,
+        y: y
+      }
+      const positionDiff = {
+        x: desiredPosition.x - originalPosition.x,
+        y: desiredPosition.y - originalPosition.y
+      }
+      const startTimeMs = Date.now().valueOf()
+      const transionMs = 1000
+      const transionFn = () => {
+        const currentMs = Date.now().valueOf()
+        const diffMs = currentMs - startTimeMs
+        if (diffMs > transionMs) {
+          resolve()
+          return
+        }
+        const transionRatio = easing.easeOutCubic(diffMs / transionMs)
+        p.position.set(
+          originalPosition.x + positionDiff.x * transionRatio,
+          originalPosition.y + positionDiff.y * transionRatio
+        )
+        Matter.Body.setPosition(m, {
+          x: originalPosition.x + positionDiff.x * transionRatio,
+          y: originalPosition.y + positionDiff.y * transionRatio
+        })
+        requestAnimationFrame(transionFn)
+      }
       requestAnimationFrame(transionFn)
-    }
-    requestAnimationFrame(transionFn)
+    })
   }
 }
 
@@ -861,6 +869,7 @@ export function moveVectorAdjust(targets) {
         possub = Matter.Vector.sub({ x: CENTER_X + delta / 4, y: CENTER_Y + delta }, m.position)
         break
       case 'CenterFix':
+        const callback = target.options.movement.context.callback
         const offsetX = target.options.movement.context.offsetX | 0
         const offsetY = target.options.movement.context.offsetY | 0
         const desiredPos = {
@@ -875,7 +884,11 @@ export function moveVectorAdjust(targets) {
         const switchRage = 200 //px
         if (Math.abs(possubToCenter.x) < switchRage && Math.abs(possubToCenter.y) < switchRage) {
           // 強制移動に切り替え
-          target.easingMoveRender(desiredPos.x, desiredPos.y)
+          target.easingMoveRender(desiredPos.x, desiredPos.y).then(() => {
+            if (callback && typeof callback === 'function') {
+              callback()
+            }
+          })
         } else {
           possub = possubToCenter
         }
