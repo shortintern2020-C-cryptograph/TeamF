@@ -64,31 +64,33 @@ export function createMock() {
       // セリフ詳細
       this.get(endpoints.getDialogDetail, (_, request) => {
         const id = request.params.id
+        const offset = Number.parseInt(request.queryParams.offset)
+        const limit = Number.parseInt(request.queryParams.limit)
         const prefix = `-${id}`
-        return {
-          message: 'ok',
-          schema: [
-            {
-              id: id,
-              content: `セリフ${prefix}`,
-              title: `作品名${prefix}`,
-              author: `著者${prefix}`,
-              link: `リンク${prefix}`,
-              style: `0`,
-              source: `著作権${prefix}`
+        const comments = []
+        for (let i = 0; i < limit; i++) {
+          comments.push({
+            content: `セリフ${prefix}に対するコメント${i}`,
+            user: {
+              id: i,
+              firebase_uid: i,
+              display_name: `ユーザ${i}`,
+              photo_url: 'author.png'
             }
-          ]
+          })
         }
-      })
-
-      // コメント
-      this.get(endpoints.getComment, (_, request) => {
-        const id = request.params.id
-        const prefix = `-${id}`
-        // ...
         return {
           message: 'ok',
-          schema: []
+          dialog: {
+            id: id,
+            content: `セリフ${prefix}`,
+            title: `作品名${prefix}`,
+            author: `著者${prefix}`,
+            link: `リンク${prefix}`,
+            style: `0`,
+            source: `著作権${prefix}`
+          },
+          comments
         }
       })
 

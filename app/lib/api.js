@@ -111,22 +111,9 @@ export async function getDialog(query) {
  * @async
  * @param {number} dialogId - セリフのID
  */
-export async function getDialogDetail(dialogId) {
-  return resultMapper(await ax.get(endpoints.getDialogDetail(dialogId)))
-}
-
-/**
- * コメント取得のAPIを叩きます
- * @async
- * @param {number} dialogId - セリフのID
- * @param {FetchQuery} query - ページングに関するパラメータ
- */
-export async function getComment(dialogId, query) {
-  if (!checkFetchParams(query)) {
-    return
-  }
+export async function getDialogDetail(dialogId, query) {
   return resultMapper(
-    await ax.get(endpoints.getDialogDetail(dialogid), {
+    await ax.get(endpoints.getDialogDetail(dialogId), {
       params: query
     })
   )

@@ -4,6 +4,11 @@ import 'firebase/auth'
 
 export const AuthContext = createContext()
 
+/**
+ * global state management
+ * @param {*} children
+ * @author Takahiro Nishino
+ */
 const AuthContextProvider = ({ children }) => {
   const [isLoading, setLoading] = useState(true)
   const [user, setUser] = useState(null)

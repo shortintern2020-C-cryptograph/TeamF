@@ -5,16 +5,14 @@ export const apiConfig = {
   endpoints: {
     getDialog: () => '/dialog',
     getDialogDetail: (id) => `/dialog/${id}`,
-    getComment: (id) => `/dialog/${id}/comment`,
     postDialog: () => '/dialog',
     postComment: (id) => `/dialog/${id}/comment`
   },
   endpointsScheme: {
     getDialog: '/dialog',
     getDialogDetail: '/dialog/:id',
-    getComment: (id) => '/dialog/:id/comment',
-    postDialog: () => '/dialog',
-    postComment: (id) => '/dialog/:id/comment'
+    postDialog: '/dialog',
+    postComment: '/dialog/:id/comment'
   },
   authHeaderName: 'token'
 }
