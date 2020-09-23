@@ -195,7 +195,7 @@ class GrahicObject {
   _initModel() {
     const options = {
       restitution: 0, // 弾性係数 0-1
-      density: 0.001, // 密度
+      density: 0.025, // 密度
       friction: 0 // 摩擦
     }
     const model = Matter.Bodies.rectangle(

@@ -78,3 +78,10 @@ export function registerUpdateCb(engine, fns) {
     })
   })
 }
+
+export function unregisterUpdateCb(engine) {
+  if (!engine) {
+    return
+  }
+  Matter.Events.off(engine)
+}

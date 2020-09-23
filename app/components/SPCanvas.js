@@ -1,6 +1,6 @@
 import { Component, useContext, useEffect } from 'react'
 import { initPixi, loader } from '../lib/pixiHelpers'
-import { initMatter, stopMatter, registerUpdateCb, initMatterRenderer } from '../lib/matterHelpers'
+import { initMatter, stopMatter, registerUpdateCb, initMatterRenderer, unregisterUpdateCb } from '../lib/matterHelpers'
 import { Dialog, DialogDetail, Comment, Spacer, moveAdjust, loadRequiredResources } from '../lib/SPGrahic'
 import { getDialog, getDialogDetail } from '../lib/api'
 import { createMock } from '../lib/createMock'
@@ -39,13 +39,14 @@ class SPCanvas extends Component {
       return
     }
     this.pixi = initPixi(document.getElementById('spMainCanvas'))
+    console.log('init spcanvas!')
     this.matter = initMatter()
     //デバッグ用レンダラー
-    // this.matterRender = initMatterRenderer(document.getElementById('spDebugCanvas'), this.matter.engine)
+    this.matterRender = initMatterRenderer(document.getElementById('spDebugCanvas'), this.matter.engine)
 
     registerUpdateCb(self.matter.engine, [
       () => {
-        if (self.dialogs) {
+        if (self.dialogs.length) {
           moveAdjust(self.pixi, self.matter, self.dialogs)
         }
         if (self.dialogDetail) {
@@ -63,12 +64,14 @@ class SPCanvas extends Component {
     if (process.env.NEXT_PUBLIC_ENV === 'MOCK') {
       this.mock.shutdown()
     }
+    unregisterUpdateCb()
     for (let i = 0; i < this.dialogs.length; i++) {
       this.dialogs[i].normalRemoveRender(this.pixi, this.matter.engine.world)
       this.dialogs[i] = null
     }
-    this.dialogs = null
+    this.dialogs = []
     this.pixi = null
+    console.log('unmounted spcanvas')
     this.matter = null
     this.matterRender = null
     this.mock = null
@@ -84,7 +87,7 @@ class SPCanvas extends Component {
         await loadRequiredResources()
 
         // リセット -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-        if (this.dialogs.length > 0) {
+        if (this.dialogs?.length > 0) {
           this.dialogs.forEach((dialog) => {
             dialog.mountModel(this.matter.engine.world)
             dialog.updateOption({
@@ -296,7 +299,7 @@ class SPCanvas extends Component {
             left: 0,
             height: '100vh',
             width: '100vw',
-            zIndex: 1
+            zIndex: 0 // TODO: 吟味の余地あり
           }}></canvas>
         <button
           onClick={this.back.bind(this)}
