@@ -29,6 +29,7 @@
     "react-modal": "^3.11.2",
     "react-spring": "^8.0.27",
     "react-toast-notifications": "^2.4.0",
+    "rollbar": "^2.19.3",
     "sass": "^1.26.10"
   },
   "devDependencies": {

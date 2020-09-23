@@ -10,6 +10,7 @@ import { PageTransition } from '../components/PageTransition'
 import SignIn from '../components/SignInModal'
 import Head from 'next/head'
 import MainContextProvider from '../contexts/MainContext'
+import { rollbar } from '../config/logger'
 
 console.log(process.env.NEXT_PUBLIC_ENV)
 
