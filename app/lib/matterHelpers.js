@@ -46,7 +46,7 @@ export function initMatterRenderer(element, engine) {
   } catch (e) {
     throw new Error('指定されたCanvas要素の高さ・幅を取得できませんでした。')
   }
-  const renderer = new Matter.Render({
+  const renderer = Matter.Render.create({
     element: element,
     engine: engine,
     options: {
