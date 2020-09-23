@@ -17,6 +17,7 @@ import (
 )
 
 func TestGetDialog(t *testing.T) {
+
 	tests := []struct {
 		name    string
 		in      string
@@ -32,16 +33,23 @@ func TestGetDialog(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "[正常系] オプションのパラメータも指定",
+			name:    "[異常系] パラメータの値が異常",
 			in:      "./testdata/get_dialog_test_data_in2.json",
-			status:  200,
+			status:  400,
 			want:    `{"message":"success", "schema":[]}`,
 			wantErr: false,
 		},
 		{
-			name:    "[異常系] genreの指定が空",
+			name:    "[異常系] 必須パラメータが揃っていない",
 			in:      "./testdata/get_dialog_test_data_in3.json",
 			status:  400,
+			want:    `{"message":"success", "schema":[]}`,
+			wantErr: false,
+		},
+		{
+			name:    "[正常系] オプションパラメータも含める",
+			in:      "./testdata/get_dialog_test_data_in4.json",
+			status:  200,
 			want:    `{"message":"success", "schema":[]}`,
 			wantErr: false,
 		},
@@ -98,6 +106,7 @@ type DialogRequest struct {
 }
 
 func TestPostDialog(t *testing.T) {
+
 	// TODO: firebase認証完成後、認証チェックもできるようにする
 
 	idToken, err := setUpWithIDToken()
@@ -105,50 +114,62 @@ func TestPostDialog(t *testing.T) {
 		fmt.Printf("%v\n", err)
 	}
 
-	inputData1, err := ioutil.ReadFile("./testdata/post_dialog_test_data_in1.json")
-	if err != nil {
-		fmt.Printf("%v\n", err)
-	}
-	inputData2, err := ioutil.ReadFile("./testdata/post_dialog_test_data_in2.json")
-	if err != nil {
-		fmt.Printf("%v\n", err)
-	}
-	var request1 DialogRequest
-	var request2 DialogRequest
-	json.Unmarshal(inputData1, &request1)
-	json.Unmarshal(inputData2, &request2)
-	request1.Token = idToken
-
-	okReq, _ := json.Marshal(request1)
-	ngReq, _ := json.Marshal(request2)
-
 	tests := []struct {
 		name    string
 		in     string
 		status  int
 		want    string
 		wantErr bool
+		getToken bool
+		checkDB bool
+		increment int
 	}{
 		{
-			name:    "[正常系] 必要なデータが全て揃ってる",
-			in:      string(okReq),
+			name:    "[正常系] 必要なデータが全て揃ってる（titleとauthorが初めて登録される場合）",
+			in:      "./testdata/post_dialog_test_data_in1.json",
 			status:  200,
 			want:    `{"message":"success", "id": 2}`,
 			wantErr: false,
+			getToken: true,
+			checkDB: true,
+			increment: 2,
+		},
+		{
+			name:    "[正常系] 必要なデータが全て揃ってる（titleとauthorが既に登録されている場合）",
+			in:      "./testdata/post_dialog_test_data_in2.json",
+			status:  200,
+			want:    `{"message":"success", "id": 3}`,
+			wantErr: false,
+			getToken: true,
+			checkDB: true,
+			increment: 0,
+		},
+		{
+			name:    "[異常系] パラメータが不足している",
+			in:      "./testdata/post_dialog_test_data_in3.json",
+			status:  400,
+			want:    `{"message":"success", "id": 2}`,
+			wantErr: false,
+			getToken: true,
+			checkDB: false,
+			increment: 0,
 		},
 		{
 			// firebase認証できてからはじけるようにしたい
 			name:    "[異常系] トークンが正しく無い",
-			in:      string(ngReq),
+			in:      "./testdata/post_dialog_test_data_in4.json",
 			status:  400,
 			want:    ``,
 			wantErr: true,
+			getToken: false,
+			checkDB: false,
+			increment: 0,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			bytes := []byte(tt.in)
+			bytes, err := ioutil.ReadFile(tt.in)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -156,8 +177,25 @@ func TestPostDialog(t *testing.T) {
 			if err := json.Unmarshal(bytes, &params); err != nil {
 				log.Fatal(err)
 			}
+			if tt.getToken {
+				params.Token = idToken
+			}
 			params.HTTPRequest = httptest.NewRequest("POST", "http://localhost:3000", nil)
+
+			d0, c0, t0, r0, err := getRecordCount()
+			if err != nil {
+				log.Fatal(err)
+			}
 			resp := PostDialog(params)
+			d1, c1, t1, r1, err := getRecordCount()
+			if err != nil {
+				log.Fatal(err)
+			}
+			if tt.checkDB {
+				if d1 != d0+1 || c1 != c0+1 || r1 != r0+2 || t1 != t0+tt.increment {
+					t.Errorf("record count of db is invalid")
+				}
+			}
 
 			w := httptest.NewRecorder()
 			resp.WriteResponse(w, runtime.JSONProducer())
@@ -179,6 +217,14 @@ func TestPostDialog(t *testing.T) {
 			}
 		})
 	}
+}
+
+func getRecordCount() (int, int, int, int, error) {
+	dialogCnt, err := getDialogCount()
+	commentCnt, err := getCommentCount()
+	tagCnt, err := getTagCount()
+	relationCnt, err := getTagRelationCount()
+	return dialogCnt, commentCnt, tagCnt, relationCnt, err
 }
 
 func customTokenToIDToken(customToken string) (string, error) {

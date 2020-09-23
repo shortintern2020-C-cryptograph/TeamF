@@ -2,11 +2,11 @@
   "token": "1234567890",
   "content": {
     "content": "string",
-    "title": "title",
-    "author": "author",
+    "title": "string",
+    "author": "string",
     "link": "string",
     "style": "string",
-    "source": "youtube",
+    "source": "string",
     "comment": "string"
   }
 }

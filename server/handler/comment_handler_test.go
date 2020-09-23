@@ -43,8 +43,8 @@ func setup() error {
 func setupPostCommentById() error {
 	// コメントできるように先にセリフデータを1つ追加しておく
 	content := "test"
-	title := "test"
-	author := "test"
+	title := "testTitle"
+	author := "testAuthor"
 	source := "test"
 	link := "http://example.com"
 	style := "test"
@@ -58,6 +58,7 @@ func setupPostCommentById() error {
 }
 
 func TestGetCommentById(t *testing.T) {
+
 	err := setup() // テスト実行するとこいつが一番早く呼ばれるので、ここでテーブルのデータを綺麗にする
 
 	if err != nil {
@@ -76,9 +77,23 @@ func TestGetCommentById(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "[正常系] リクエスト成功",
+			name:    "[正常系] 必須パラメータのみ指定",
 			in:      "./testdata/get_comment_by_id_test_data_in1.json",
 			status:  200,
+			want:    `{"message":"success", "schema":[]}`,
+			wantErr: false,
+		},
+		{
+			name:    "[異常系] パラメータの値が異常",
+			in:      "./testdata/get_comment_by_id_test_data_in2.json",
+			status:  400,
+			want:    `{"message":"success", "schema":[]}`,
+			wantErr: false,
+		},
+		{
+			name:    "[異常系] 必須パラメータが揃っていない",
+			in:      "./testdata/get_comment_by_id_test_data_in3.json",
+			status:  400,
 			want:    `{"message":"success", "schema":[]}`,
 			wantErr: false,
 		},
@@ -126,16 +141,6 @@ func TestPostCommentById(t *testing.T) {
 		fmt.Printf("%v\n", err)
 	}
 
-	inputData, err := ioutil.ReadFile("./testdata/post_comment_by_id_test_data_in1.json")
-	if err != nil {
-		fmt.Printf("%v\n", err)
-	}
-	var request CommentRequest
-	json.Unmarshal(inputData, &request)
-	request.Token = idToken
-
-	req, _ := json.Marshal(request)
-
 	tests := []struct {
 		name    string
 		params  scenepicks.PostCommentByIDParams
@@ -143,19 +148,41 @@ func TestPostCommentById(t *testing.T) {
 		status  int
 		want    string
 		wantErr bool
+		getToken bool
+		checkDB bool
 	}{
 		{
-			name:    "[正常系] リクエスト成功",
-			in:      string(req),
+			name:    "[正常系] 必要なデータが全て揃ってる",
+			in:      "./testdata/post_comment_by_id_test_data_in1.json",
 			status:  200,
 			want:    `{"message":"success", "id": 2}`,
 			wantErr: false,
+			getToken: true,
+			checkDB: true,
+		},
+		{
+			name:    "[異常系] パラメータが不足している",
+			in:      "./testdata/post_comment_by_id_test_data_in2.json",
+			status:  400,
+			want:    `{"message":"success", "id": 3}`,
+			wantErr: false,
+			getToken: true,
+			checkDB: false,
+		},
+		{
+			name:    "[異常系] トークンが正しく無い",
+			in:      "./testdata/post_comment_by_id_test_data_in3.json",
+			status:  400,
+			want:    `{"message":"success", "id": 3}`,
+			wantErr: false,
+			getToken: false,
+			checkDB: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			bytes := []byte(tt.in)
+			bytes, err := ioutil.ReadFile(tt.in)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -163,14 +190,36 @@ func TestPostCommentById(t *testing.T) {
 			if err := json.Unmarshal(bytes, &params); err != nil {
 				log.Fatal(err)
 			}
+			if tt.getToken {
+				params.Token = idToken
+			}
 			params.HTTPRequest = httptest.NewRequest("POST", "http://localhost:3000", nil)
+
+			c0, err := getCommentCount()
+			if err != nil {
+				log.Fatal(err)
+			}
 			resp := PostCommentById(params)
+			c1, err := getCommentCount()
+			if err != nil {
+				log.Fatal(err)
+			}
+			if tt.checkDB {
+				if c1 != c0+1 {
+					t.Errorf("record count of db is invalid")
+				}
+			}
 
 			w := httptest.NewRecorder()
 			resp.WriteResponse(w, runtime.JSONProducer())
 
 			if w.Result().StatusCode != tt.status {
 				t.Errorf("status want %v got %v", tt.status, w.Result().StatusCode)
+			}
+
+			if tt.status == 400 {
+				fmt.Printf("all ok\n")
+				return
 			}
 
 			if diff := jsondiff.Diff([]byte(tt.want), w.Body.Bytes()); diff != "" {

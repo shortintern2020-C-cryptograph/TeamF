@@ -17,20 +17,24 @@ func GetTag(p scenepicks.GetTagParams) middleware.Responder {
 	genre := p.Genre
 	q := p.Q
 	if sort == nil {
-		empty := ""
+		empty := "new"
 		sort = &empty
 	}
 	if q == nil {
 		empty := ""
 		q = &empty
 	}
+
 	fmt.Printf("GET /tag offset: %d, limit: %d, sort: %v, genre: %s, q: %v\n", offset, limit, sort, genre, q)
 
+	if offset < 0 || limit <= 0 {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("parameter value is invalid")
+	}
 	if genre != "all" && genre != "title" && genre != "author" && genre != "other" {
 		return scenepicks.NewGetDialogBadRequest().WithPayload("genre is invalid")
 	}
 	// 今のとこ新しい順のみ
-	if *sort != "" {
+	if *sort != "new" {
 		return scenepicks.NewGetDialogBadRequest().WithPayload("sort key is invalid")
 	}
 
@@ -58,6 +62,13 @@ func PostTag(p scenepicks.PostTagParams) middleware.Responder {
 	tagType := p.Tag.Type
 	fmt.Printf("POST /tag name: %s, type: %s\n", name, tagType)
 
+	if name == "" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("vacant name is invalid")
+	}
+	if tagType != "title" && tagType != "author" && tagType != "other" {
+		return scenepicks.NewGetDialogBadRequest().WithPayload("tagType is invalid")
+	}
+
 	// TODO: ここでfirebase認証'
 	idToken := p.Token
 	client := NewClient(idToken)
@@ -83,7 +94,7 @@ type tag struct {
 	// id
 	ID int64 `json:"id,omitempty" db:"id"`
 
-	Name string `json:"id,omitempty" db:"name"`
+	Name string `json:"name,omitempty" db:"name"`
 
 	Type string `json:"type,omitempty" db:"type"`
 

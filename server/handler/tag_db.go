@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/pkg/errors"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 	"log"
 )
@@ -47,7 +48,6 @@ func postTag(name, tagType string) (int64, error) {
 			"name": name,
 			"type": tagType,
 		})
-	tx.Commit()
 	if err != nil {
 		log.Println("err: ", err)
 		return 0, err
@@ -57,5 +57,12 @@ func postTag(name, tagType string) (int64, error) {
 		log.Println("err: ", err)
 		return 0, err
 	}
-	return id, nil
+	defer func() {
+		if err != nil {
+			if re := tx.Rollback(); re != nil {
+				err = errors.Wrap(err, re.Error())
+			}
+		}
+	}()
+	return id, tx.Commit()
 }
