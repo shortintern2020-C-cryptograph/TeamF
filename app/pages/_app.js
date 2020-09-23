@@ -10,9 +10,14 @@ import { PageTransition } from '../components/PageTransition'
 import SignIn from '../components/SignInModal'
 import Head from 'next/head'
 import MainContextProvider from '../contexts/MainContext'
+import { rollbar } from '../config/logger'
 
-console.log(process.env.ENV)
+// console.log(process.env.NEXT_PUBLIC_ENV)
 
+/**
+ * 全体のラッパー
+ * @author Takahiro Nishino
+ */
 const MyApp = ({ Component, pageProps }) => {
   const { addToast } = useToasts()
   const { setUser, setLoading, isLoading, storageAvailable, setSignInModalOpen } = useContext(AuthContext)
@@ -73,6 +78,10 @@ const MyApp = ({ Component, pageProps }) => {
   )
 }
 
+/**
+ * コンテキストを使えるように、さらに全体のラッパー
+ * @author Takahiro Nishino
+ */
 const MyAppContainer = ({ Component, pageProps }) => {
   return (
     <ToastProvider PlacementType="bottom-center" autoDismiss={true}>

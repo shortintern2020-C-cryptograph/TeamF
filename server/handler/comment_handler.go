@@ -10,43 +10,45 @@ import (
 	"time"
 )
 
+
 func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 	offset := p.Offset
 	limit := p.Limit
 	fmt.Printf("GET /comment offset: %d, limit: %d\n", offset, limit)
 
 	id := p.ID
-	schema, err := getCommentByID(id, offset, limit)
+	resDialog, resComments, resTags, err := getCommentByID(id, offset, limit)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	params := &scenepicks.GetCommentOKBody{
+	params := &scenepicks.GetCommentByIDOKBody{
 		Message: "success",
-		Schema:  schema,
+		Dialog: resDialog,
+		Comments: resComments,
+		Tags: resTags,
 	}
 
-	return scenepicks.NewGetCommentOK().WithPayload(params)
+	return scenepicks.NewGetCommentByIDOK().WithPayload(params)
 }
 
 func PostCommentById(p scenepicks.PostCommentByIDParams) middleware.Responder {
-	comment := p.Comment.Comment
-	fmt.Printf("POST /comment comment: %s\n", comment)
 
 	// TODO: ここでfirebase認証
 
 	// テスト実行用に仮でユーザをDBに登録
-	firebaseUid := "12345"
-	displayName := "John Doe"
-	photoUrl := "https://example.com"
-	id, err := postUser(firebaseUid, displayName, photoUrl)
-	if err != nil {
-		log.Println(err)
+	idToken := p.Token
+	client := NewClient(idToken)
+	if client.err != nil {
+		fmt.Printf("%v\n", client.err)
+		return scenepicks.NewPostDialogBadRequest()
 	}
+	userId := client.user.ID
+	dialogId := p.ID
+	comment := p.Comment.Comment
 
 	// DBへの書き込み
-	dialogId := p.ID
-	id, err = postComment(comment, id, dialogId)
+	id, err := postComment(userId, dialogId, comment)
 	if err != nil {
 		log.Println(err)
 	}

@@ -34,7 +34,7 @@ jobs:
         run: go test -v ./server/handler
 
       - name: Stop docker-compose
-        run: make docker/stop
+        run: docker-compose down
 
   stg-deploy:
     name: stg-deploy
@@ -50,4 +50,4 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: aws deploy create-deployment --application-name "scenepicks-deploy-app" --deployment-group-name "scenepicks-stg-test" --github-location repository="shortintern2020-C-cryptograph/TeamF",commitId=$GITHUB_SHA
+        run: aws deploy create-deployment --application-name "scenepicks-stg-deploy" --deployment-group-name "scenepicks-stg" --file-exists-behavior "OVERWRITE" --github-location repository="shortintern2020-C-cryptograph/TeamF",commitId=$GITHUB_SHA

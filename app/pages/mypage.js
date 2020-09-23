@@ -7,6 +7,10 @@ import 'firebase/auth'
 import { useToasts } from 'react-toast-notifications'
 import { useRouter } from 'next/router'
 
+/**
+ * プロフィールページのコンポーネント
+ * @author Takahiro Nishino
+ */
 const MyPage = () => {
   const { user, setSignInModalOpen, storageAvailable } = useContext(AuthContext)
   const { addToast } = useToasts()

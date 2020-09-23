@@ -6,15 +6,27 @@ import (
 	"log"
 )
 
-func getCommentByID(id int64, offset int64, limit int64) ([]*models.Comment, error) {
-	schema := make([]*models.Comment, 0)
+func getCommentByID(id int64, offset int64, limit int64) (*models.Dialog, []*models.Comment, []*models.Tag, error) {
+	var resDialog models.Dialog
+	resComments := make([]*models.Comment, 0)
+	resTags := make([]*models.Tag, 0)
 
 	// TODO: 1. Joinを用いてcomment, userテーブルからレスポンスに適したデータを取得するように変更
 	// TODO: 2. offset, limitを用いた取得の実装
 
 	// commentテーブルからselect
+	var dialog dialog
 	comments := []comment{}
-	err := sqlHandler.DB.Select(&comments, `
+	tags := []tag{}
+	err := sqlHandler.DB.Get(&dialog, `
+		SELECT * FROM dialog
+		WHERE id = ? LIMIT 1
+	`, id)
+	if err != nil {
+		log.Fatal(err)
+		return &models.Dialog{}, nil, nil, err
+	}
+	err = sqlHandler.DB.Select(&comments, `
 		SELECT * FROM comment 
 		INNER JOIN user ON comment.user_id = user.id
 		WHERE dialog_id = ?
@@ -24,16 +36,31 @@ func getCommentByID(id int64, offset int64, limit int64) ([]*models.Comment, err
 	`, id, limit, offset)
 	if err != nil {
 		log.Fatal(err)
-		return nil, err
+		return &models.Dialog{}, nil, nil, err
+	}
+	err = sqlHandler.DB.Select(&tags, `
+		SELECT name, type FROM dialog_tag
+		INNER JOIN tag ON dialog_tag.tag_id = tag.id
+		WHERE dialog_id = ?
+		ORDER BY tag.utime DESC
+	`, id)
+	if err != nil {
+		log.Fatal(err)
+		return &models.Dialog{}, nil, nil, err
 	}
 
 	// commentテーブルから取得したデータからuserテーブルを叩く？Join
+	resDialog = mapDialog(dialog)
 	for _, v := range comments {
 		res := mapComment(v)
-		schema = append(schema, &res)
+		resComments = append(resComments, &res)
+	}
+	for _, v := range tags {
+		res := mapTag(v)
+		resTags = append(resTags, &res)
 	}
 
-	return schema, nil
+	return &resDialog, resComments, resTags, nil
 }
 
 func postUser(firebaseUid, displayName, photoUrl string) (int64, error) {
@@ -58,23 +85,22 @@ func postUser(firebaseUid, displayName, photoUrl string) (int64, error) {
 	return id, nil
 }
 
-func postComment(comment string, id, dialogId int64) (int64, error) {
+func postComment(userID int64, dialogID int64, comment string) (int64, error) {
 	tx := sqlHandler.DB.MustBegin()
 	result, err := tx.NamedExec("INSERT INTO comment (content, user_id, dialog_id) VALUES (:content, :user_id, :dialog_id)",
 		map[string]interface{}{
 			"content":   comment,
-			"user_id":   id,
-			"dialog_id": dialogId,
+			"user_id":   userID,
+			"dialog_id": dialogID,
 		})
-	tx.Commit()
 	if err != nil {
 		fmt.Println("err: ", err)
 		return 0, err
 	}
-	id, _ = result.LastInsertId()
+	id, _ := result.LastInsertId()
 	if err != nil {
 		fmt.Println("err: ", err)
 		return 0, err
 	}
-	return id, nil
+	return id, tx.Commit()
 }
