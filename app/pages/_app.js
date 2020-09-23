@@ -11,7 +11,7 @@ import SignIn from '../components/SignInModal'
 import Head from 'next/head'
 import MainContextProvider from '../contexts/MainContext'
 
-console.log(process.env.ENV)
+console.log(process.env.NEXT_PUBLIC_ENV)
 
 const MyApp = ({ Component, pageProps }) => {
   const { addToast } = useToasts()

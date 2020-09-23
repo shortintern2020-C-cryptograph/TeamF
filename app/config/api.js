@@ -1,5 +1,7 @@
+console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL)
+
 export const apiConfig = {
-  fqdn: 'https://test.scenepicks.tk/api',
+  fqdn: process.env.NEXT_PUBLIC_ENDPOINT_URL + '/api',
   endpoints: {
     getDialog: () => '/dialog',
     getDialogDetail: (id) => `/dialog/${id}`,
