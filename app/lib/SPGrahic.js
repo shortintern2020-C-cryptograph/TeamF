@@ -461,7 +461,8 @@ export class Dialog extends GrahicObject {
       movement: {
         mode: 'Center', // "Center" | "Around" | "OutOfRange"
         context: {}
-      }
+      },
+      hideText: false
     }
     const defaultContents = {
       dialog: 'セリフ',
@@ -569,8 +570,10 @@ export class Dialog extends GrahicObject {
     container.addChild(bg)
     container.addChild(mask)
     container.addChild(quotIcon)
-    container.addChild(dialog)
-    container.addChild(cite)
+    if (!this._options.hideText) {
+      container.addChild(dialog)
+      container.addChild(cite)
+    }
     container.mask = mask
     container.position.set(this._x, this._y)
 
@@ -623,7 +626,8 @@ export class DialogDetail extends GrahicObject {
         mode: 'Center', // "Center" | "Around" | "OutOfRange"
         context: {}
       },
-      margin: 0
+      margin: 0,
+      hideText: false
     }
     const defaultContents = {
       author: '発話者',
@@ -716,10 +720,12 @@ export class DialogDetail extends GrahicObject {
     container.addChild(bg)
     container.addChild(mask)
     container.addChild(authorIcon)
-    container.addChild(text.author)
-    container.addChild(text.title)
-    container.addChild(text.source)
-    container.addChild(text.cite)
+    if (!this._options.hideText) {
+      container.addChild(text.author)
+      container.addChild(text.title)
+      container.addChild(text.source)
+      container.addChild(text.cite)
+    }
     container.mask = mask
     // container.filters = [new PIXI.filters.DropShadowFilter({
     //   rotation: 90,
@@ -852,7 +858,8 @@ export class Comment extends GrahicObject {
       movement: {
         mode: 'Center', // "Center" | "Around" | "OutOfRange"
         context: {}
-      }
+      },
+      hideText: false
     }
     const defaultContents = {
       comment: 'コメントコメントコメントコメントコメントコメントコメントコメントコメント',
@@ -964,7 +971,9 @@ export class Comment extends GrahicObject {
     let container = new PIXI.Container()
     container.addChild(commentMask)
     container.addChild(commentBg)
-    container.addChild(text.comment)
+    if (!this._options.hideText) {
+      container.addChild(text.comment)
+    }
     container.addChild(text.userName)
     container.addChild(text.time)
 
