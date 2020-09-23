@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "env-cmd -f .env._local next dev",
-    "dev:prod": "env-cmd -f .env._prod yarn dev",
+    "dev:mock": "env-cmd -f .env._mock next dev",
+    "dev:prod": "env-cmd -f .env._prod next dev",
     "build": "env-cmd -f .env._local next build",
     "build:prod": "env-cmd -f .env._prod next build",
     "start": "env-cmd -f .env._local next start",
