@@ -223,6 +223,9 @@ func init() {
                     "$ref": "#/definitions/comment"
                   }
                 },
+                "dialog": {
+                  "$ref": "#/definitions/dialog"
+                },
                 "message": {
                   "type": "string"
                 },
@@ -773,6 +776,9 @@ func init() {
                   "items": {
                     "$ref": "#/definitions/comment"
                   }
+                },
+                "dialog": {
+                  "$ref": "#/definitions/dialog"
                 },
                 "message": {
                   "type": "string"
