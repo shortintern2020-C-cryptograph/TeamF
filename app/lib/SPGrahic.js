@@ -686,7 +686,6 @@ export class DialogDetail extends GrahicObject {
     this.presentation = container
 
     // 商品画像
-    console.log(marchantImagePath)
     if (marchantImagePath) {
       const marchantImage = aspectSaveImageSprite(marchantImagePath, { width: marchantIconWidth })
 
@@ -899,6 +898,7 @@ export class Spacer extends GrahicObject {
     this._width = margedOptions.width
     this._height = margedOptions.height
     this._initModel()
+    Matter.Body.setStatic(this.model, true)
   }
   _initPresentation() {
     this.presentation = new PIXI.Container()
@@ -916,6 +916,12 @@ export function moveAdjust(pixi, matter, targets) {
   if (!targets) {
     return
   }
+  if (!pixi === 'undefined' || !matter) {
+    return
+  }
+  if (!matter.engine) {
+    return
+  }
   targets.forEach((target) => {
     const m = target.model
     const WORLD_WIDTH = window.innerWidth
@@ -923,6 +929,7 @@ export function moveAdjust(pixi, matter, targets) {
     const CENTER_X = WORLD_WIDTH / 2
     const CENTER_Y = WORLD_HEIGHT / 2
     let possub
+    let relsub
     if (!target.initFinished) {
       target.syncPosition()
       return
@@ -972,7 +979,7 @@ export function moveAdjust(pixi, matter, targets) {
         break
       case 'Around':
         target.mountModel(matter.engine.world)
-        let relsub = target.options.movement.context.relaub
+        relsub = target.options.movement.context.relaub
         if (!relsub) {
           relsub = Matter.Vector.sub({ x: CENTER_X + delta, y: CENTER_Y + delta }, m.position)
           target.options.movement.context.relaub = relsub
@@ -997,7 +1004,30 @@ export function moveAdjust(pixi, matter, targets) {
         }
         break
       case 'OutOfRange':
-        // 未実装
+        target.mountModel(matter.engine.world)
+        relsub = target.options.movement.context.relaub
+        if (!relsub) {
+          relsub = Matter.Vector.sub({ x: CENTER_X, y: CENTER_Y }, m.position)
+          target.options.movement.context.relaub = relsub
+        }
+        if (relsub.x < 0) {
+          if (relsub.y < 0) {
+            //右下
+            possub = Matter.Vector.sub({ x: WORLD_WIDTH * 1.5, y: WORLD_HEIGHT * 1.5 }, m.position)
+          } else {
+            //右上
+            possub = Matter.Vector.sub({ x: WORLD_WIDTH * 1.5, y: -WORLD_HEIGHT * 0.5 }, m.position)
+          }
+        } else {
+          //左
+          if (relsub.y < 0) {
+            //左下
+            possub = Matter.Vector.sub({ x: -WORLD_WIDTH * 0.5, y: WORLD_HEIGHT * 1.5 }, m.position)
+          } else {
+            //左上
+            possub = Matter.Vector.sub({ x: -WORLD_WIDTH * 0.5, y: -WORLD_HEIGHT * 0.5 }, m.position)
+          }
+        }
         break
       default:
         break
@@ -1020,7 +1050,8 @@ export async function loadRequiredResources() {
   try {
     await loadImages({
       quotation_white: '/quotation_white.png',
-      author: '/author.png'
+      author: '/author.png',
+      userIcon: '/author.png'
     })
   } catch {}
 }
