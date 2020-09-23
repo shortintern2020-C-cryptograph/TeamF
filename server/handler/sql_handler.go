@@ -16,9 +16,10 @@ type SQLHandler struct {
 
 func NewSQLHandler() SQLHandler {
 	// db接続
-	dbenv := os.Getenv("DBENV")
-	dburl := fmt.Sprintf("root:password@tcp(%s:3306)/nexus_db?parseTime=true", dbenv)
-
+	dbenv := os.Getenv("DB_ENV")
+	user := os.Getenv("DB_USER")
+	pass := os.Getenv("DB_PASS")
+	dburl := fmt.Sprintf("%s:%s@tcp(%s:3306)/nexus_db?parseTime=true", user, pass, dbenv)
 	db, err := sqlx.Connect("mysql", dburl)
 	if err != nil {
 		log.Fatal(err)

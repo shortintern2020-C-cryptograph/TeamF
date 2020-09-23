@@ -18,7 +18,9 @@
 ## サーバの起動
 環境変数を設定
 ```
-export DBENV=localhost
+export DB_ENV=localhost
+export DB_USER=root
+export DB_PASS=password
 ```
 ローカルでサーバを起動する
 ```
