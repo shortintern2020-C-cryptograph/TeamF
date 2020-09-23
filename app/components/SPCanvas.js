@@ -5,6 +5,9 @@ import { Dialog, DialogDetail, Comment, Spacer, moveAdjust, loadRequiredResource
 import { getDialog, getDialogDetail } from '../lib/api'
 import { createMock } from '../lib/createMock'
 import Observer from '../lib/observer'
+import MainContextProvider from '../contexts/MainContext'
+import { MainContext } from '../contexts/MainContext'
+import { withToast } from '../lib/withToast'
 
 class SPCanvas extends Component {
   dialogs
@@ -16,6 +19,7 @@ class SPCanvas extends Component {
   matterRender
   mock
   currentViewMode
+  context
 
   constructor(props) {
     super(props)
@@ -28,6 +32,7 @@ class SPCanvas extends Component {
     this.matterRender = null
     this.mock = null
     this.currentViewMode = 'empty'
+    this.context = {}
   }
 
   componentDidMount() {
@@ -58,6 +63,7 @@ class SPCanvas extends Component {
         }
       }
     ])
+    // TODO: 条件分岐して詳細viewもつくる
     this.changeView('listDialog')
   }
 
@@ -81,9 +87,10 @@ class SPCanvas extends Component {
   /**
    * 更新するやつ
    * @param {*} viewMode - one of listDialog, detailDialog
-   * @param {*} context - 中心に表示したいやつ
    */
-  async changeView(viewMode, context) {
+  async changeView(viewMode, genre = 'all', offset = 0, limit = 20) {
+    console.log('changeView')
+    console.log(viewMode)
     const self = this
     const CENTER_X = window.innerWidth / 2
     const CENTER_Y = window.innerHeight / 2
@@ -91,17 +98,19 @@ class SPCanvas extends Component {
     switch (viewMode) {
       case 'listDialog':
         await loadRequiredResources()
-
+        console.log('updating!')
         // リセット -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-        if (this.dialogs?.length > 0) {
+        if (this.dialogs.length > 0) {
           this.dialogs.forEach((dialog) => {
-            dialog.mountModel(this.matter.engine.world)
-            dialog.updateOption({
-              movement: {
-                mode: 'Center'
-              }
-            })
+            // dialog.mountModel(this.matter.engine.world)
+            // dialog.updateOption({
+            //   movement: {
+            //     mode: 'Center'
+            //   }
+            // })
+            dialog.normalRemoveRender(this.pixi, this.matter.engine.world)
           })
+          this.dialogs = []
 
           if (this.dialogDetail) {
             this.dialogDetail.normalRemoveRender(this.pixi, this.matter.engine.world)
@@ -120,24 +129,34 @@ class SPCanvas extends Component {
             this.comments = []
           }
 
-          return
+          // return
         }
         // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
         const res = await getDialog({
-          genre: 'anime',
-          offset: 0,
-          limit: 20
+          genre: genre,
+          offset: offset,
+          limit: limit
         })
+        if (!res) {
+          this.props.addToast('サーバーにアクセスできませんでした。', { appearance: 'error' })
+          return
+        }
         res.schema.forEach((s, i) => {
+          // console.log(s)
           const dialog = new Dialog(Math.random() * 0.8 * CENTER_X * 1.1, Math.random() * 0.8 * CENTER_Y * 1.1, {
             dialog: s.content
           })
           dialog.presentation.on('click', () => {
-            self.changeView('detailDialog', {
+            self.context = {
               targetDialog: dialog,
               targetDialogData: s
-            })
+            }
+            self.changeView('detailDialog')
+            // do routing here
+            this.props.setDialogID(s.id)
+            this.props.setDialog(s)
+            location.hash = `dialog/${s.id}`
           })
           window.setTimeout(() => {
             dialog.easingInitRender(this.pixi, this.matter.engine.world)
@@ -146,12 +165,12 @@ class SPCanvas extends Component {
         })
         break
       case 'detailDialog':
-        if (typeof context === 'undefined') {
+        if (typeof self.context === 'undefined') {
           return
         }
         await loadRequiredResources()
-        const targetDialog = context.targetDialog
-        const targetDialogData = context.targetDialogData
+        const targetDialog = self.context.targetDialog
+        const targetDialogData = self.context.targetDialogData
         if (typeof targetDialog === 'undefined' && typeof targetDialogData === 'undefined') {
           return
         }
@@ -165,6 +184,9 @@ class SPCanvas extends Component {
           limit: 20,
           offset: 0
         })
+        if (!detailRes) {
+          return
+        }
         const commentDatas = detailRes.comments
 
         /*--------.
@@ -273,6 +295,16 @@ class SPCanvas extends Component {
             })
           }
         })
+        break
+      case 'new':
+        self.dialogs.forEach((dialog) => {
+          dialog.updateOption({
+            movement: {
+              mode: 'OutOfRange'
+            }
+          })
+        })
+        break
       default:
         break
     }
@@ -294,7 +326,17 @@ class SPCanvas extends Component {
   render() {
     return (
       <>
-        <Observer value={this.props.selectedGenre} cb={() => {}} changeView={this.changeView} />
+        <MainContextProvider>
+          <Observer
+            cb={() => {}}
+            changeView={this.changeView}
+            shouldUpdate={this.props.shouldUpdate}
+            setShouldUpdate={this.props.setShouldUpdate}
+            self={this}
+            selectedGenre={this.props.selectedGenre}
+            mode={this.props.mode}
+          />
+        </MainContextProvider>
         <div
           id="spDebugCanvas"
           style={{
@@ -314,21 +356,11 @@ class SPCanvas extends Component {
             height: '100vh',
             width: '100vw',
             zIndex: 0 // TODO: 吟味の余地あり
-          }}></canvas>
-        <button
-          onClick={this.back.bind(this)}
-          style={{
-            position: 'absolute',
-            bottom: 10,
-            left: 0,
-            padding: '20px',
-            zIndex: 2
-          }}>
-          戻る
-        </button>
+          }}
+        />
       </>
     )
   }
 }
 
-export default SPCanvas
+export default withToast(SPCanvas)

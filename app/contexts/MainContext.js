@@ -10,20 +10,40 @@ export const MainContext = createContext()
 const MainContextProvider = ({ children }) => {
   const [selectedGenre, setSelectedGenre] = useState(0)
   // one of 'home', 'new', 'comment', 'detail'
-  const [fabMode, setFabMode] = useState('home')
-  const nextFabMode = (current) => {
+  const [mode, setMode] = useState('home')
+  const [shouldUpdate, setShouldUpdate] = useState(false)
+  const [dialogID, setDialogID] = useState(null)
+  const [dialog, setDialog] = useState(null)
+
+  const nextMode = (current) => {
     switch (current) {
       case 'home':
-        setFabMode('new')
+        setMode('new')
         break
       case 'new':
-        setFabMode('home')
+        setMode('home')
         break
       case 'comment':
-        setFabMode('detail')
+        setMode('detail')
         break
       case 'detail':
-        setFabMode('comment')
+        setMode('comment')
+        break
+    }
+  }
+  const prevMode = (current) => {
+    switch (current) {
+      case 'home':
+        setMode('home')
+        break
+      case 'new':
+        setMode('home')
+        break
+      case 'comment':
+        setMode('detail')
+        break
+      case 'detail':
+        setMode('home')
         break
     }
   }
@@ -33,9 +53,14 @@ const MainContextProvider = ({ children }) => {
       value={{
         selectedGenre,
         setSelectedGenre,
-        fabMode,
-        setFabMode,
-        nextFabMode
+        mode,
+        setMode,
+        nextMode,
+        shouldUpdate,
+        setShouldUpdate,
+        prevMode,
+        dialogID,
+        setDialogID
       }}>
       {children}
     </MainContext.Provider>

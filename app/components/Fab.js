@@ -8,18 +8,19 @@ import styles from '../styles/Fab.module.scss'
  * @author Takahiro Nishino
  */
 const Fab = () => {
-  const { fabMode, nextFabMode } = useContext(MainContext)
+  const { mode, nextMode } = useContext(MainContext)
+  console.log(mode)
   const { user, setSignInModalOpen } = useContext(AuthContext)
   const blackStyle = 'linear-gradient(120deg, #222, #555)'
   const redStyle = 'linear-gradient(120deg, #F05353, #E9468A)'
-  const isBlackStyle = fabMode === 'home' || fabMode === 'detail'
+  const isBlackStyle = mode === 'home' || mode === 'detail'
 
   const handleChangeMode = () => {
     if (!user) {
       setSignInModalOpen(true)
       return
     }
-    nextFabMode(fabMode)
+    nextMode(mode)
   }
 
   return (
@@ -30,7 +31,7 @@ const Fab = () => {
           background: isBlackStyle ? blackStyle : redStyle,
           transform: isBlackStyle ? 'none' : 'rotateZ(-45deg)'
         }}>
-        <img src={fabMode === 'detail' ? '/comment.svg' : '/cross.svg'} alt="cross" />
+        <img src={mode === 'detail' ? '/comment.svg' : '/cross.svg'} alt="cross" />
       </span>
     </div>
   )

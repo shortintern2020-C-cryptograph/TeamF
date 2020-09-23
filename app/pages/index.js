@@ -7,13 +7,24 @@ import { PageTransition } from '../components/PageTransition'
 import { useRouter } from 'next/router'
 import SPCanvas from '../components/SPCanvas'
 import DokodemoInput from '../components/DokodemoInput'
+import { TwitterShareButton } from 'react-share'
 
 /**
  * ホーム画面のコンポーネント
  * @author Takahiro Nishino
  */
 const Home = () => {
-  const { selectedGenre, fabMode, setFabMode } = useContext(MainContext)
+  const {
+    selectedGenre,
+    mode,
+    setMode,
+    shouldUpdate,
+    setShouldUpdate,
+    dialogID,
+    setDialogID,
+    dialog,
+    setDialog
+  } = useContext(MainContext)
   const [inputOpen, setInputOpen] = useState(false)
   const [inputContents, setInputContents] = useState({})
   const [submitting, setSubmitting] = useState(false)
@@ -34,22 +45,20 @@ const Home = () => {
    */
   const initialSubmitButtonPlace = { top: 100, left: 100 }
   const [submitButtonPlace, setSubmitButtonPlace] = useState(initialSubmitButtonPlace)
-
   useEffect(() => {
     const mode = router.asPath === '/' ? 'home' : 'detail'
-    setFabMode(mode)
-    console.log(router.asPath)
+    setMode(mode)
   }, [])
 
   useEffect(() => {
-    if (fabMode === 'home') {
+    if (mode === 'home') {
       // もどる
       setInputOpen(false)
-    } else if (fabMode === 'new') {
+    } else if (mode === 'new') {
       // 新規投稿start
       setInputOpen(true)
     }
-  }, [fabMode])
+  }, [mode])
 
   const submitPost = () => {
     console.log('submit!')
@@ -60,7 +69,7 @@ const Home = () => {
     console.log(inputContents)
     setInputContents({})
     setInputOpen(false)
-    setFabMode('home')
+    setMode('home')
     setSubmitting(false)
   }
 
@@ -77,7 +86,19 @@ const Home = () => {
           <title>Home | ScenePicks</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <SPCanvas setInputVars={setInputVars} selectedGenre={selectedGenre} />
+        <SPCanvas
+          setInputVars={setInputVars}
+          selectedGenre={selectedGenre}
+          shouldUpdate={shouldUpdate}
+          setShouldUpdate={setShouldUpdate}
+          router={router}
+          dialogID={dialogID}
+          setDialogID={setDialogID}
+          selectedGenre={selectedGenre}
+          mode={mode}
+          dialog={dialog}
+          setDialog={setDialog}
+        />
         {inputOpen && (
           <PageTransition>
             <div>
@@ -104,6 +125,15 @@ const Home = () => {
           </PageTransition>
         )}
       </div>
+      {mode === 'detail' && (
+        <TwitterShareButton
+          children={<img src="/twitter.svg" alt="twitter icon" className={styles.twitterIcon} />}
+          url={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api${router.asPath}`} // TODO: 自分自身
+          className={styles.shareContainer}
+          title="scenepicksでセリフをシェア！    " // TODO: dialog の本文など
+          hashtags={['scenepicks']} // 考える
+        />
+      )}
     </Layout>
   )
 }
