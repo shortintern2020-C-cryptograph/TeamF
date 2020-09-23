@@ -2,6 +2,11 @@ import React, { useContext } from 'react'
 import { useTransition, animated } from 'react-spring'
 import { withRouter } from 'next/router'
 
+/**
+ * transition animation の HOC
+ * @author Takahiro Nishino
+ */
+
 const Context = React.createContext()
 
 const Provider = ({ router, children }) => <Context.Provider value={router}>{children}</Context.Provider>

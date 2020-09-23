@@ -11,6 +11,8 @@ const Dialog = () => {
 
   useEffect(() => {
     setFabMode('detail')
+    console.log(dialogID)
+    router.push('/', `/dialog/${dialogID}`, { shallow: true })
   }, [])
 
   useEffect(() => {
@@ -25,16 +27,7 @@ const Dialog = () => {
     console.log(dialogID)
     // 簡単なバリデーションができると良いかも
   }, [])
-
-  return (
-    <Layout>
-      <Head>
-        <title>セリフ | ScenePicks</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      {/* ここにcanvas */}
-    </Layout>
-  )
+  return null
 }
 
 export default Dialog
