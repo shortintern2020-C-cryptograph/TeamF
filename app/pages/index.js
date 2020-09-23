@@ -28,14 +28,16 @@ const Home = () => {
     cameBack,
     setCameBack
   } = useContext(MainContext)
+  // setInterval(() => console.log(mode), 1000)
 
   const [inputOpen, setInputOpen] = useState(false)
   const [inputContents, setInputContents] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
-  console.log(location.hash.split('#')[1])
   if (location.hash.split('#')[1]) {
-    setMode('detail')
+    // setMode('detail')
+  } else {
+    // setMode('home')
   }
 
   /**
@@ -43,8 +45,7 @@ const Home = () => {
    * @type {Array.<{multipleLines: boolean, top: number, left: number, fontSize: number, width: number, height: number, type: string}>} inputVars
    */
   const initialValue = [
-    { multipleLines: true, top: 0, left: 10, fontSize: 14, width: 100, height: 190, type: 'ccc' },
-    { multipleLines: true, top: 30, left: 177, fontSize: 14, width: 310, height: 230, type: 'aaa' }
+    { multipleLines: true, top: '50vh', left: '50vw', fontSize: 14, width: 100, height: 190, type: 'ccc' }
   ]
   const [inputVars, setInputVars] = useState(initialValue)
 
@@ -56,7 +57,7 @@ const Home = () => {
   useEffect(() => {
     console.log(router, location)
     const mode = router.asPath === '/' || router.asPath === '/#' ? 'home' : 'detail'
-    setMode(mode)
+    // setMode(mode)
   }, [])
 
   useEffect(() => {
@@ -109,6 +110,7 @@ const Home = () => {
           setSelectedGenre={setSelectedGenre}
           cameBack={cameBack}
           setCameBack={setCameBack}
+          setMode={setMode}
         />
         {/* <PageTransition> */}
         {inputOpen && (

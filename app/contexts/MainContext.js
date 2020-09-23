@@ -17,38 +17,38 @@ const MainContextProvider = ({ children }) => {
   const [cameBack, setCameBack] = useState(false)
 
   const nextMode = (current) => {
-    switch (current) {
-      case 'home':
-        setMode('new')
-        break
-      case 'new':
-        setCameBack(true)
-        setMode('home')
-        break
-      case 'comment':
-        setMode('detail')
-        break
-      case 'detail':
-        setMode('comment')
-        break
-    }
+    // switch (current) {
+    //   case 'home':
+    //     setMode('new')
+    //     break
+    //   case 'new':
+    //     setCameBack(true)
+    //     setMode('home')
+    //     break
+    //   case 'comment':
+    //     setMode('detail')
+    //     break
+    //   case 'detail':
+    //     setMode('comment')
+    //     break
+    // }
   }
 
   const prevMode = (current) => {
-    switch (current) {
-      case 'home':
-        setMode('home')
-        break
-      case 'new':
-        setMode('home')
-        break
-      case 'comment':
-        setMode('detail')
-        break
-      case 'detail':
-        setMode('home')
-        break
-    }
+    // switch (current) {
+    //   case 'home':
+    //     setMode('home')
+    //     break
+    //   case 'new':
+    //     setMode('home')
+    //     break
+    //   case 'comment':
+    //     setMode('detail')
+    //     break
+    //   case 'detail':
+    //     setMode('home')
+    //     break
+    // }
   }
 
   return (

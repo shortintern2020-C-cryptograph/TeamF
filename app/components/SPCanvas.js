@@ -157,6 +157,7 @@ class SPCanvas extends Component {
             // }
             // console.log(self.context)
             // do routing here
+            this.props.setMode('detail')
             this.props.setDialogID(s.id)
             this.props.setDialog(s)
             location.hash = `dialog/${s.id}`

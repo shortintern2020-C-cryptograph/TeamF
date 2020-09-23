@@ -8,7 +8,7 @@ const Dialog = () => {
   const { mode, setMode } = useContext(MainContext)
 
   useEffect(() => {
-    setMode('detail')
+    // setMode('detail')
     console.log(dialogID)
     router.push('/', `/dialog/${dialogID}`, { shallow: true })
   }, [])

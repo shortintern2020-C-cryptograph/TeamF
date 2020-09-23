@@ -8,7 +8,7 @@ import styles from '../styles/Fab.module.scss'
  * @author Takahiro Nishino
  */
 const Fab = () => {
-  const { mode, nextMode } = useContext(MainContext)
+  const { mode, nextMode, setMode } = useContext(MainContext)
   const { user, setSignInModalOpen } = useContext(AuthContext)
   const blackStyle = 'linear-gradient(120deg, #222, #555)'
   const redStyle = 'linear-gradient(120deg, #F05353, #E9468A)'
@@ -20,19 +20,38 @@ const Fab = () => {
       setSignInModalOpen(true)
       return
     }
-    nextMode(mode)
+    switch (mode) {
+      case 'home':
+        setMode('new')
+        break
+      case 'new':
+        setMode('home')
+        break
+      case 'detail':
+        setMode('comment')
+        break
+      case 'comment':
+        setMode('detail')
+        break
+
+      default:
+        break
+    }
+    // nextMode(mode)
   }
 
   return (
-    <div className={styles.container} onClick={handleChangeMode}>
-      <span
-        className={styles.icon}
-        style={{
-          background: isBlackStyle ? blackStyle : redStyle,
-          transform: isBlackStyle ? 'none' : 'rotateZ(-45deg)'
-        }}>
-        <img src={mode === 'detail' ? '/comment.svg' : '/cross.svg'} alt="cross" />
-      </span>
+    <div className={styles.container} onClick={() => setMode('detail')}>
+      {(mode === 'detail' || mode === 'comment') && (
+        <span
+          className={styles.icon}
+          style={{
+            background: isBlackStyle ? blackStyle : redStyle,
+            transform: isBlackStyle ? 'none' : 'rotateZ(-45deg)'
+          }}>
+          <img src={mode === 'detail' ? '/comment.svg' : '/cross.svg'} alt="cross" />
+        </span>
+      )}
     </div>
   )
 }
