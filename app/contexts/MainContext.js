@@ -14,6 +14,7 @@ const MainContextProvider = ({ children }) => {
   const [shouldUpdate, setShouldUpdate] = useState(false)
   const [dialogID, setDialogID] = useState(null)
   const [dialog, setDialog] = useState(null)
+  const [cameBack, setCameBack] = useState(false)
 
   const nextMode = (current) => {
     switch (current) {
@@ -21,6 +22,7 @@ const MainContextProvider = ({ children }) => {
         setMode('new')
         break
       case 'new':
+        setCameBack(true)
         setMode('home')
         break
       case 'comment':
@@ -31,6 +33,7 @@ const MainContextProvider = ({ children }) => {
         break
     }
   }
+
   const prevMode = (current) => {
     switch (current) {
       case 'home':
@@ -62,7 +65,9 @@ const MainContextProvider = ({ children }) => {
         dialogID,
         setDialogID,
         dialog,
-        setDialog
+        setDialog,
+        cameBack,
+        setCameBack
       }}>
       {children}
     </MainContext.Provider>

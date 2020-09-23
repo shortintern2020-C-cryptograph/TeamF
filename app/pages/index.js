@@ -23,12 +23,20 @@ const Home = () => {
     dialogID,
     setDialogID,
     dialog,
-    setDialog
+    setDialog,
+    setSelectedGenre,
+    cameBack,
+    setCameBack
   } = useContext(MainContext)
+
   const [inputOpen, setInputOpen] = useState(false)
   const [inputContents, setInputContents] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
+  console.log(location.hash.split('#')[1])
+  if (location.hash.split('#')[1]) {
+    setMode('detail')
+  }
 
   /**
    *
@@ -98,6 +106,9 @@ const Home = () => {
           mode={mode}
           dialog={dialog}
           setDialog={setDialog}
+          setSelectedGenre={setSelectedGenre}
+          cameBack={cameBack}
+          setCameBack={setCameBack}
         />
         {/* <PageTransition> */}
         {inputOpen && (

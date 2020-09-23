@@ -90,7 +90,7 @@ class SPCanvas extends Component {
    * 更新するやつ
    * @param {*} viewMode - one of listDialog, detailDialog
    */
-  async changeView(viewMode, context, genre = 'all', offset = 0, limit = 20) {
+  async changeView(viewMode, id, dialog, genre = 'all', offset = 0, limit = 20) {
     // console.log('changeView')
     // console.log(viewMode)
     const self = this
@@ -161,10 +161,7 @@ class SPCanvas extends Component {
             this.props.setDialog(s)
             location.hash = `dialog/${s.id}`
             // window.setTimeout(() => {
-            self.changeView('detailDialog', {
-              targetDialog: dialog,
-              targetDialogData: s
-            })
+            self.changeView('detailDialog', s.id, dialog)
             // }, 1000)
           })
           window.setTimeout(() => {
@@ -175,21 +172,21 @@ class SPCanvas extends Component {
         break
       case 'detailDialog':
         // console.log(this.context)
-        if (typeof self.context === 'undefined') {
-          return
-        }
+        // if (typeof self.context === 'undefined') { // undefined
+        //   return
+        // }
         await loadRequiredResources()
-        const { targetDialog, targetDialogData } = context
-        if (typeof targetDialog === 'undefined' && typeof targetDialogData === 'undefined') {
-          // console.log('bye')
-          return
-        }
+        // idだけでfetchしたい
+        // const { targetDialog, targetDialogData } = context
+        // if (typeof targetDialog === 'undefined' && typeof targetDialogData === 'undefined') {
+        //   // console.log('bye')
+        //   return
+        // }
 
-        console.log(targetDialogData)
         /*----------------.
         | 追加データフェッチ |
         `-----------------*/
-        const detailRes = await getDialogDetail(targetDialogData.id, {
+        const detailRes = await getDialogDetail(id, {
           // genre: 'all',
           limit: 20,
           offset: 0
@@ -198,7 +195,12 @@ class SPCanvas extends Component {
           this.props.addToast('サーバーにアクセスできませんでした。', { appearance: 'error' })
           return
         }
+        const dialogData = detailRes.dialog
         const commentDatas = detailRes.comments
+        // const targetDialog = new Dialog(Math.random() * 0.8 * CENTER_X * 1.1, Math.random() * 0.8 * CENTER_Y * 1.1, {
+        //   dialog: detailRes.content
+        // })
+        const targetDialog = dialog
 
         /*--------.
         | 描画実行 |
@@ -213,10 +215,14 @@ class SPCanvas extends Component {
             0,
             300,
             {
-              author: targetDialogData.author,
-              title: targetDialogData.title,
-              source: targetDialogData.link,
-              cite: targetDialogData.source
+              // author: targetDialogData.author,
+              // title: targetDialogData.title,
+              // source: targetDialogData.link,
+              // cite: targetDialogData.source
+              author: dialogData.author,
+              title: dialogData.title,
+              source: dialogData.link,
+              cite: dialogData.source
             },
             {
               movement: {
@@ -347,6 +353,9 @@ class SPCanvas extends Component {
             self={this}
             selectedGenre={this.props.selectedGenre}
             mode={this.props.mode}
+            setSelectedGenre={this.props.setSelectedGenre}
+            cameBack={this.props.cameBack}
+            setCameBack={this.props.setCameBack}
           />
         </MainContextProvider>
         <div

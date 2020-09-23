@@ -3,7 +3,20 @@ import React, { useEffect } from 'react'
 const genres = ['all', 'book', 'manga', 'anime', 'all']
 
 const Observer = (props) => {
-  const { value, didUpdate, cb, changeView, shouldUpdate, setShouldUpdate, self, selectedGenre, mode } = props
+  const {
+    value,
+    didUpdate,
+    cb,
+    changeView,
+    shouldUpdate,
+    setShouldUpdate,
+    self,
+    selectedGenre,
+    mode,
+    setSelectedGenre,
+    cameBack,
+    setCameBack
+  } = props
 
   useEffect(() => {
     // didUpdate(value)
@@ -11,7 +24,7 @@ const Observer = (props) => {
     console.log(selectedGenre + 'のジャンルが選択されました')
     cb()
     location.hash = ''
-    changeView.bind(self)('listDialog', undefined, genres[selectedGenre])
+    changeView.bind(self)('listDialog', undefined, undefined, genres[selectedGenre])
     // }
   }, [selectedGenre])
 
@@ -27,12 +40,15 @@ const Observer = (props) => {
 
   // 投稿画面に遷移させるくん
   useEffect(() => {
-    //
     if (mode === 'new') {
       changeView.bind(self)(mode)
       console.log('新しい投稿するよ')
     }
-  }, [mode])
+    if (cameBack && mode === 'home') {
+      setCameBack(false)
+      changeView.bind(self)(mode)
+    }
+  }, [mode, cameBack])
 
   return null // component does not render anything
 }
