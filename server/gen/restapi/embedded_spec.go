@@ -489,6 +489,30 @@ func init() {
           }
         }
       }
+    },
+    "/twitter": {
+      "get": {
+        "operationId": "postToTwitter",
+        "responses": {
+          "200": {
+            "description": "posted to twitter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1033,6 +1057,30 @@ func init() {
             "description": "internal serever error",
             "schema": {
               "$ref": "#/definitions/error"
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/twitter": {
+      "get": {
+        "operationId": "postToTwitter",
+        "responses": {
+          "200": {
+            "description": "posted to twitter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "default": {
