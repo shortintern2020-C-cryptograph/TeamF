@@ -21,7 +21,7 @@ import { createGradient, calcTextSize, wrapedText, aspectSaveImageSprite, loadIm
  */
 
 /**
- * 物理演算とCanvas壁画を連携させるための基底クラスです。
+ * 物理演算とCanvas描画を連携させるための基底クラスです。
  * @author Ritsuki KOKUBO
  */
 class GrahicObject {
@@ -58,21 +58,21 @@ class GrahicObject {
    */
   _area
   /**
-   * 壁画するデータを保持するオブジェクト (子クラスで規定)
+   * 描画するデータを保持するオブジェクト (子クラスで規定)
    * @type {Object}
    * @access private
    */
   _content
   /**
-   * 壁画や動作に関するオプションを保持するオブジェクト (子クラスで規定)
+   * 描画や動作に関するオプションを保持するオブジェクト (子クラスで規定)
    * @type {Object}
    * @access private
    */
   _options
   /**
-   * Canvasへの壁画を行うPIXIのオブジェクト
+   * Canvasへの描画を行うPIXIのオブジェクト
    *
-   * このオブジェクトをPIXIのステージに追加することで要素が壁画される
+   * このオブジェクトをPIXIのステージに追加することで要素が描画される
    * @type {PIXI.Container}
    */
   presentation
@@ -103,11 +103,11 @@ class GrahicObject {
 
   /**
    * コンストラクタ,
-   * オブジェクトを生成しただけでは、壁画・物理演算は行われません。
+   * オブジェクトを生成しただけでは、描画・物理演算は行われません。
    * @param {number} x - 横方向の初期位置
    * @param {number} y - 縦方向の初期位置
-   * @param {Object} contents - 壁画するデータを保持するオブジェクト (子クラスで規定)
-   * @param {Object} options - 壁画や動作に関するオプションを保持するオブジェクト (子クラスで規定)
+   * @param {Object} contents - 描画するデータを保持するオブジェクト (子クラスで規定)
+   * @param {Object} options - 描画や動作に関するオプションを保持するオブジェクト (子クラスで規定)
    */
   constructor(x, y, contents, options) {
     this._x = x
@@ -136,7 +136,7 @@ class GrahicObject {
     return this._height
   }
   /**
-   * 壁画や動作に関するオプションを保持するオブジェクト
+   * 描画や動作に関するオプションを保持するオブジェクト
    * @type {Object}
    * @readonly
    */
@@ -168,17 +168,17 @@ class GrahicObject {
 
   /**
    * オプションの上書き更新, `options`内に存在しないプロパティについては現在の内容を保持します
-   * @param {Object} options - 壁画や動作に関するオプションを保持するオブジェクト
+   * @param {Object} options - 描画や動作に関するオプションを保持するオブジェクト
    */
   updateOption(options) {
     Object.assign(this._options, options)
   }
 
   /**
-   * 壁画オブジェクトを生成します,
-   * この関数内でPIXIの壁画オブジェクトが生成されて`presentation`にセットされます,
-   * またその際、壁画オブジェクトから高さ, 幅を計算して`_width`, `_height`がセットされ, 物理演算モデルを作成する際に用いられます
-   * 子クラスはこの関数をオーバーライドしてそれぞれの壁画を行います
+   * 描画オブジェクトを生成します,
+   * この関数内でPIXIの描画オブジェクトが生成されて`presentation`にセットされます,
+   * またその際、描画オブジェクトから高さ, 幅を計算して`_width`, `_height`がセットされ, 物理演算モデルを作成する際に用いられます
+   * 子クラスはこの関数をオーバーライドしてそれぞれの描画を行います
    * @access private
    */
   _initPresentation() {
@@ -187,8 +187,31 @@ class GrahicObject {
   }
 
   /**
+   * テキスト入力ボックスの位置・範囲を払い出します
+   * @returns {Object[]} - 位置・範囲を持っているオブジェクト
+   * @example
+   * ```javascript
+   * [
+   *   {
+   *     type: 'dialog',
+   *     position: {
+   *       x: 0,
+   *       y: 0
+   *     },
+   *     size: {
+   *       width: 200,
+   *       height: 100
+   *     }
+   *   }
+   * ]
+   */
+  calcTextAreas() {
+    return []
+  }
+
+  /**
    * 物理演算モデルを生成します,
-   * `_initPresentation()`で壁画する内容から壁画オブジェクトを生成した際に決定される幅・高さを用います,
+   * `_initPresentation()`で描画する内容から描画オブジェクトを生成した際に決定される幅・高さを用います,
    * そのため`_initPresentation()`が呼ばれるより前にこの関数を呼んでは**いけません**。
    * @access private
    */
@@ -210,9 +233,9 @@ class GrahicObject {
   }
 
   /**
-   * 物理演算モデルの位置と壁画オブジェクトの位置を同期します,
+   * 物理演算モデルの位置と描画オブジェクトの位置を同期します,
    * 物理演算エンジンの計算処理終了後のフックメソッド内で呼ばれることを想定しています,
-   * この関数が呼ばれない限り物理演算エンジンによりモデルの位置が移動しても壁画には反映されません
+   * この関数が呼ばれない限り物理演算エンジンによりモデルの位置が移動しても描画には反映されません
    * @param {boolean} presentationToModel - 表示オブジェクトの位置 -> 物理モデルに反映（デフォルトは逆） @default false
    */
   syncPosition(presentationToModel = false) {
@@ -233,8 +256,8 @@ class GrahicObject {
   }
 
   /**
-   * アニメーションを付けずに壁画・物理演算モデルを追加します
-   * @param {PIXI.Application} app - 壁画オブジェクトを追加するPIXIのApplicationオブジェクト
+   * アニメーションを付けずに描画・物理演算モデルを追加します
+   * @param {PIXI.Application} app - 描画オブジェクトを追加するPIXIのApplicationオブジェクト
    * @param {Matter.World} world  - 物理演算モデルを追加するmatterのWorldオブジェクト
    */
   normalInitRender(app, world) {
@@ -244,14 +267,15 @@ class GrahicObject {
   }
 
   /**
-   * 壁画・物理演算モデルを追加し、滑らかにスケールインするようなアニメーションを付けます
+   * 描画・物理演算モデルを追加し、滑らかにスケールインするようなアニメーションを付けます
    * @async
-   * @param {PIXI.Application} app - 壁画オブジェクトを追加するPIXIのApplicationオブジェクト
+   * @param {PIXI.Application} app - 描画オブジェクトを追加するPIXIのApplicationオブジェクト
    * @param {Matter.World} world  - 物理演算モデルを追加するmatterのWorldオブジェクト
    */
   easingInitRender(app, world) {
     return new Promise((resolve, reject) => {
       const m = this.model
+      // console.log(this.presentation)
       const p = this.presentation
       p.scale.set(0, 0)
       app.stage.addChild(p)
@@ -310,7 +334,7 @@ class GrahicObject {
 
   /**
    * 描画オブジェクトおよび物理演算モデルを削除します
-   * @param {PIXI.Application} app - 壁画オブジェクトが追加されていたPIXIのApplicationオブジェクト
+   * @param {PIXI.Application} app - 描画オブジェクトが追加されていたPIXIのApplicationオブジェクト
    * @param {Matter.World} world  - 物理演算モデルが追加されていたmatterのWorldオブジェクト
    */
   normalRemoveRender(app, world) {
@@ -416,17 +440,17 @@ class GrahicObject {
 }
 
 /**
- * セリフの壁画を行うクラスです
+ * セリフの描画を行うクラスです
  * @author Ritsuki KOKUBO
  */
 export class Dialog extends GrahicObject {
   /**
    * コンストラクタ,
-   * オブジェクトを生成しただけでは、壁画・物理演算は行われません。
+   * オブジェクトを生成しただけでは、描画・物理演算は行われません。
    * @param {number} x - 横方向の初期位置
    * @param {number} y - 縦方向の初期位置
-   * @param {module:SPGraphic~DialogContents} contents - 壁画するデータを保持するオブジェクト
-   * @param {module:SPGraphic~GraphicObjectOptions} options - 壁画や動作に関するオプションを保持するオブジェクト
+   * @param {module:SPGraphic~DialogContents} contents - 描画するデータを保持するオブジェクト
+   * @param {module:SPGraphic~GraphicObjectOptions} options - 描画や動作に関するオプションを保持するオブジェクト
    */
   constructor(x, y, contents, options) {
     const defaultOptions = {
@@ -445,10 +469,10 @@ export class Dialog extends GrahicObject {
   }
 
   /**
-   * 壁画オブジェクトを生成します,
-   * この関数内でPIXIの壁画オブジェクトが生成されて`presentation`にセットされます,
-   * またその際、壁画オブジェクトから高さ, 幅を計算して`_width`, `_height`がセットされ, 物理演算モデルを作成する際に用いられます
-   * 子クラスはこの関数をオーバーライドしてそれぞれの壁画を行います
+   * 描画オブジェクトを生成します,
+   * この関数内でPIXIの描画オブジェクトが生成されて`presentation`にセットされます,
+   * またその際、描画オブジェクトから高さ, 幅を計算して`_width`, `_height`がセットされ, 物理演算モデルを作成する際に用いられます
+   * 子クラスはこの関数をオーバーライドしてそれぞれの描画を行います
    * @access private
    */
   _initPresentation() {
@@ -558,20 +582,41 @@ export class Dialog extends GrahicObject {
     this.presentation = container
     this.presentation.interactive = true
   }
+
+  /**
+   * テキスト入力ボックスの位置・範囲を払い出します
+   * @returns {Object[]} - 位置・範囲を持っているオブジェクト
+   */
+  calcTextAreas() {
+    const dialog = this._presentationParts.dialog
+    return [
+      {
+        type: 'dialog',
+        position: {
+          x: dialog.position.x,
+          y: dialog.position.y
+        },
+        size: {
+          width: dialog.width,
+          height: dialog.height
+        }
+      }
+    ]
+  }
 }
 
 /**
- * セリフ詳細の壁画を行うクラスです
+ * セリフ詳細の描画を行うクラスです
  * @author Ritsuki KOKUBO
  */
 export class DialogDetail extends GrahicObject {
   /**
    * コンストラクタ,
-   * オブジェクトを生成しただけでは、壁画・物理演算は行われません。
+   * オブジェクトを生成しただけでは、描画・物理演算は行われません。
    * @param {number} x - 横方向の初期位置
    * @param {number} y - 縦方向の初期位置
-   * @param {module:SPGraphic~DialogDetailContents} contents - 壁画するデータを保持するオブジェクト
-   * @param {module:SPGraphic~GraphicObjectOptions} options - 壁画や動作に関するオプションを保持するオブジェクト
+   * @param {module:SPGraphic~DialogDetailContents} contents - 描画するデータを保持するオブジェクト
+   * @param {module:SPGraphic~GraphicObjectOptions} options - 描画や動作に関するオプションを保持するオブジェクト
    */
   constructor(x, y, contents, options) {
     const defaultOptions = {
@@ -591,10 +636,10 @@ export class DialogDetail extends GrahicObject {
   }
 
   /**
-   * 壁画オブジェクトを生成します,
-   * この関数内でPIXIの壁画オブジェクトが生成されて`presentation`にセットされます,
-   * またその際、壁画オブジェクトから高さ, 幅を計算して`_width`, `_height`がセットされ, 物理演算モデルを作成する際に用いられます
-   * 子クラスはこの関数をオーバーライドしてそれぞれの壁画を行います
+   * 描画オブジェクトを生成します,
+   * この関数内でPIXIの描画オブジェクトが生成されて`presentation`にセットされます,
+   * またその際、描画オブジェクトから高さ, 幅を計算して`_width`, `_height`がセットされ, 物理演算モデルを作成する際に用いられます
+   * 子クラスはこの関数をオーバーライドしてそれぞれの描画を行います
    * @access private
    */
   _initPresentation() {
@@ -685,6 +730,16 @@ export class DialogDetail extends GrahicObject {
 
     this.presentation = container
 
+    this._presentationParts = {
+      bg: bg,
+      mask: mask,
+      authorIcon: authorIcon,
+      author: text.author,
+      title: text.title,
+      source: text.source,
+      cite: text.cite
+    }
+
     // 商品画像
     if (marchantImagePath) {
       const marchantImage = aspectSaveImageSprite(marchantImagePath, { width: marchantIconWidth })
@@ -703,8 +758,65 @@ export class DialogDetail extends GrahicObject {
   }
 
   /**
+   * テキスト入力ボックスの位置・範囲を払い出します
+   * @returns {Object[]} - 位置・範囲を持っているオブジェクト
+   */
+  calcTextAreas() {
+    const author = this._presentationParts.author
+    const title = this._presentationParts.title
+    const source = this._presentationParts.source
+    const cite = this._presentationParts.cite
+    return [
+      {
+        type: 'author',
+        position: {
+          x: author.position.x,
+          y: author.position.y
+        },
+        size: {
+          width: author.width,
+          height: author.height
+        }
+      },
+      {
+        type: 'title',
+        position: {
+          x: title.position.x,
+          y: title.position.y
+        },
+        size: {
+          width: title.width,
+          height: title.height
+        }
+      },
+      {
+        type: 'source',
+        position: {
+          x: source.position.x,
+          y: source.position.y
+        },
+        size: {
+          width: source.width,
+          height: source.height
+        }
+      },
+      {
+        type: 'cite',
+        position: {
+          x: cite.position.x,
+          y: cite.position.y
+        },
+        size: {
+          width: cite.width,
+          height: cite.height
+        }
+      }
+    ]
+  }
+
+  /**
    * 物理演算モデルを生成します,
-   * `_initPresentation()`で壁画する内容から壁画オブジェクトを生成した際に決定される幅・高さを用います,
+   * `_initPresentation()`で描画する内容から描画オブジェクトを生成した際に決定される幅・高さを用います,
    * そのため`_initPresentation()`が呼ばれるより前にこの関数を呼んでは**いけません**。
    * @access private
    */
@@ -722,17 +834,17 @@ export class DialogDetail extends GrahicObject {
 }
 
 /**
- * コメントの壁画を行うクラスです
+ * コメントの描画を行うクラスです
  * @author Ritsuki KOKUBO
  */
 export class Comment extends GrahicObject {
   /**
    * コンストラクタ,
-   * オブジェクトを生成しただけでは、壁画・物理演算は行われません。
+   * オブジェクトを生成しただけでは、描画・物理演算は行われません。
    * @param {number} x - 横方向の初期位置
    * @param {number} y - 縦方向の初期位置
-   * @param {module:SPGraphic~CommentContents} contents - 壁画するデータを保持するオブジェクト
-   * @param {module:SPGraphic~GraphicObjectOptions} options - 壁画や動作に関するオプションを保持するオブジェクト
+   * @param {module:SPGraphic~CommentContents} contents - 描画するデータを保持するオブジェクト
+   * @param {module:SPGraphic~GraphicObjectOptions} options - 描画や動作に関するオプションを保持するオブジェクト
    */
   constructor(x, y, contents, options) {
     const defaultOptions = {
@@ -753,10 +865,10 @@ export class Comment extends GrahicObject {
   }
 
   /**
-   * 壁画オブジェクトを生成します,
-   * この関数内でPIXIの壁画オブジェクトが生成されて`presentation`にセットされます,
-   * またその際、壁画オブジェクトから高さ, 幅を計算して`_width`, `_height`がセットされ, 物理演算モデルを作成する際に用いられます
-   * 子クラスはこの関数をオーバーライドしてそれぞれの壁画を行います
+   * 描画オブジェクトを生成します,
+   * この関数内でPIXIの描画オブジェクトが生成されて`presentation`にセットされます,
+   * またその際、描画オブジェクトから高さ, 幅を計算して`_width`, `_height`がセットされ, 物理演算モデルを作成する際に用いられます
+   * 子クラスはこの関数をオーバーライドしてそれぞれの描画を行います
    * @access private
    */
   _initPresentation() {
@@ -859,6 +971,13 @@ export class Comment extends GrahicObject {
 
     this.presentation = container
 
+    this._presentationParts = {
+      commentBg: commentBg,
+      comment: text.comment,
+      userName: text.userName,
+      time: text.time
+    }
+
     const userIcon = aspectSaveImageSprite('userIcon', { width: userIconParam.size })
 
     const mask = new PIXI.Graphics()
@@ -872,16 +991,37 @@ export class Comment extends GrahicObject {
     mask.position.set(offsetX, offsetY + (this._height - userIcon.height))
     userIcon.mask = mask
   }
+
+  /**
+   * テキスト入力ボックスの位置・範囲を払い出します
+   * @returns {Object[]} - 位置・範囲を持っているオブジェクト
+   */
+  calcTextAreas() {
+    const comment = this._presentationParts.comment
+    return [
+      {
+        type: 'comment',
+        position: {
+          x: comment.position.x,
+          y: comment.position.y
+        },
+        size: {
+          width: comment.width,
+          height: comment.height
+        }
+      }
+    ]
+  }
 }
 
 export class Spacer extends GrahicObject {
   /**
    * コンストラクタ,
-   * オブジェクトを生成しただけでは、壁画・物理演算は行われません。
+   * オブジェクトを生成しただけでは、描画・物理演算は行われません。
    * @param {number} x - 横方向の初期位置
    * @param {number} y - 縦方向の初期位置
-   * @param {module:SPGraphic~CommentContents} contents - 壁画するデータを保持するオブジェクト
-   * @param {module:SPGraphic~GraphicObjectOptions} options - 壁画や動作に関するオプションを保持するオブジェクト
+   * @param {module:SPGraphic~CommentContents} contents - 描画するデータを保持するオブジェクト
+   * @param {module:SPGraphic~GraphicObjectOptions} options - 描画や動作に関するオプションを保持するオブジェクト
    */
   constructor(x, y, contents, options) {
     const defaultOptions = {

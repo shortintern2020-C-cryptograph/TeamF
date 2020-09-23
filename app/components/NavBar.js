@@ -1,6 +1,6 @@
 import styles from '../styles/Navbar.module.scss'
 import { AuthContext } from '../contexts/AuthContext'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { MainContext } from '../contexts/MainContext'
 
@@ -14,7 +14,7 @@ const widths = [50, 40, 65, 65, 82]
 const Navbar = () => {
   const { user, setSignInModalOpen } = useContext(AuthContext)
   const router = useRouter()
-  const { selectedGenre, setSelectedGenre, setFabMode } = useContext(MainContext)
+  const { selectedGenre, setSelectedGenre, setMode, setShouldUpdate, dialogID } = useContext(MainContext)
 
   return (
     <div className={styles.container}>
@@ -22,35 +22,34 @@ const Navbar = () => {
         className={styles.title}
         onClick={() => {
           router.push('/', undefined, { shallow: true })
-          setFabMode('home')
+          setShouldUpdate(true)
+          setMode('home')
         }}>
         ScenePicks
       </div>
-      {router.asPath === '/' && (
-        <div style={{ display: 'inline-block' }}>
-          <ul className={styles.genreList}>
-            {['全て', '本', 'マンガ', 'アニメ', 'YouTube'].map((item, index) => {
-              const active = selectedGenre === index
-              return (
-                <li
-                  key={index}
-                  onClick={() => setSelectedGenre(index)}
-                  style={{ color: active ? '#FFF' : '#222', fontWeight: active ? '600' : 'inherit' }}>
-                  {item}
-                </li>
-              )
-            })}
+      <div style={{ display: 'inline-block' }}>
+        <ul className={styles.genreList}>
+          {['全て', '本', 'マンガ', 'アニメ'].map((item, index) => {
+            const active = selectedGenre === index
+            return (
+              <li
+                key={index}
+                onClick={() => setSelectedGenre(index)}
+                style={{ color: active ? '#FFF' : '#222', fontWeight: active ? '600' : 'inherit' }}>
+                {item}
+              </li>
+            )
+          })}
 
-            <li
-              style={{
-                width: `${widths[selectedGenre]}px`,
-                left: `${lefts[selectedGenre]}px`
-              }}
-              className={styles.menuList}
-            />
-          </ul>
-        </div>
-      )}
+          <li
+            style={{
+              width: `${widths[selectedGenre]}px`,
+              left: `${lefts[selectedGenre]}px`
+            }}
+            className={styles.menuList}
+          />
+        </ul>
+      </div>
       {user ? (
         <img
           src={user.providerData[0].photoURL}

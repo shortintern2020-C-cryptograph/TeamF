@@ -1,6 +1,8 @@
 import axios from 'axios'
 import firebase from '../config/firebase'
 import { apiConfig } from '../config/api'
+import { useToasts } from 'react-toast-notifications'
+import { rollbar } from '../config/logger'
 
 /**
  * AxiosをラップしてAPIを叩きやすくする関数群を提供します。
@@ -99,11 +101,15 @@ export async function getDialog(query) {
   if (!checkFetchParams(query)) {
     return
   }
-  return resultMapper(
-    await ax.get(endpoints.getDialog(), {
-      params: query
-    })
-  )
+  try {
+    return resultMapper(
+      await ax.get(endpoints.getDialog(), {
+        params: query
+      })
+    )
+  } catch (error) {
+    rollbar.error('error at getDialog: ' + JSON.stringify(error))
+  }
 }
 
 /**
@@ -112,11 +118,15 @@ export async function getDialog(query) {
  * @param {number} dialogId - セリフのID
  */
 export async function getDialogDetail(dialogId, query) {
-  return resultMapper(
-    await ax.get(endpoints.getDialogDetail(dialogId), {
-      params: query
-    })
-  )
+  try {
+    return resultMapper(
+      await ax.get(endpoints.getDialogDetail(dialogId), {
+        params: query
+      })
+    )
+  } catch (error) {
+    rollbar.error('error at getDialogDetail: ' + JSON.stringify(error))
+  }
 }
 
 /**
