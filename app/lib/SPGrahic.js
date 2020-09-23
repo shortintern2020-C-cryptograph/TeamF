@@ -139,6 +139,13 @@ class GrahicObject {
   get options() {
     return this._options
   }
+  /**
+   *
+   * @param {Object} options
+   */
+  get content() {
+    return this._content
+  }
 
   /**
    * オプションの上書き更新, `options`内に存在しないプロパティについては現在の内容を保持します
@@ -280,6 +287,69 @@ class GrahicObject {
     Matter.World.remove(world, m)
     this.model = null
     this.presentation = null
+  }
+
+  /**
+   * 描画オブジェクトおよび物理演算モデルを特定の位置に移動します
+   * @param {number} x - 移動先の位置(x)
+   * @param {number} y - 移動先の位置(y)
+   */
+  normalMoveRender(x, y) {
+    const m = this.model
+    const p = this.presentation
+    const desiredPosition = {
+      x: x,
+      y: y
+    }
+    p.position.set(desiredPosition.x, desiredPosition.y)
+    Matter.Body.setPosition(m, {
+      x: desiredPosition.x,
+      y: desiredPosition.y
+    })
+  }
+
+  /**
+   * 描画オブジェクトおよび物理演算モデルを特定の位置にアニメーション付きで移動します
+   * @param {number} x - 移動先の位置(x)
+   * @param {number} y - 移動先の位置(y)
+   */
+  easingMoveRender(x, y) {
+    const m = this.model
+    const p = this.presentation
+    // pixiの.positionは常に値を取得した瞬間の位置を返すので、値を保存しておくには以下のようにする必要がある
+    // NG: const originalPosition = p.position
+    const originalPosition = {
+      x: p.position.x,
+      y: p.position.y
+    }
+    const desiredPosition = {
+      x: x,
+      y: y
+    }
+    const positionDiff = {
+      x: desiredPosition.x - originalPosition.x,
+      y: desiredPosition.y - originalPosition.y
+    }
+    const startTimeMs = Date.now().valueOf()
+    const transionMs = 1000
+    const transionFn = () => {
+      const currentMs = Date.now().valueOf()
+      const diffMs = currentMs - startTimeMs
+      if (diffMs > transionMs) {
+        return
+      }
+      const transionRatio = easing.easeOutCubic(diffMs / transionMs)
+      p.position.set(
+        originalPosition.x + positionDiff.x * transionRatio,
+        originalPosition.y + positionDiff.y * transionRatio
+      )
+      Matter.Body.setPosition(m, {
+        x: originalPosition.x + positionDiff.x * transionRatio,
+        y: originalPosition.y + positionDiff.y * transionRatio
+      })
+      requestAnimationFrame(transionFn)
+    }
+    requestAnimationFrame(transionFn)
   }
 }
 
@@ -424,6 +494,7 @@ export class Dialog extends GrahicObject {
       cite: cite
     }
     this.presentation = container
+    this.presentation.interactive = true
   }
 }
 
@@ -753,6 +824,7 @@ export function moveVectorAdjust(targets) {
     const WORLD_HEIGHT = window.innerHeight
     let possub
     if (!target.initFinished) {
+      target.syncPosition()
       return
     }
     if (!target.options.movement) {
@@ -804,6 +876,7 @@ export function moveVectorAdjust(targets) {
       Matter.Body.setAngularVelocity(m, 0)
       Matter.Body.setAngle(m, 0)
     }
+    target.syncPosition()
   })
 }
 
@@ -812,7 +885,9 @@ export function moveVectorAdjust(targets) {
  * @async
  */
 export async function loadRequiredResources() {
-  await loadImages({
-    quotation_white: '/quotation_white.png'
-  })
+  try {
+    await loadImages({
+      quotation_white: '/quotation_white.png'
+    })
+  } catch {}
 }
