@@ -218,7 +218,7 @@ class GrahicObject {
   _initModel() {
     const options = {
       restitution: 0, // 弾性係数 0-1
-      density: 0.025, // 密度
+      density: 0.019, // 密度
       friction: 0 // 摩擦
     }
     const model = Matter.Bodies.rectangle(
@@ -463,7 +463,7 @@ export class Dialog extends GrahicObject {
     }
     const defaultContents = {
       dialog: 'セリフ',
-      cite: '著作権表示'
+      cite: ''
     }
     super(x, y, Object.assign(defaultContents, contents), Object.assign(defaultOptions, options))
   }
@@ -480,7 +480,7 @@ export class Dialog extends GrahicObject {
     const quotIconParam = {
       height: 30,
       margin: 15,
-      alpha: 0.6
+      alpha: 0.3
     }
     const dialogParam = {
       margin: 20,
@@ -533,7 +533,7 @@ export class Dialog extends GrahicObject {
     const cite = new PIXI.Text(this._content.cite, citeStyle)
 
     // 高さの決定
-    this._height = quotIconParam.height + dialog.height + citeParam.margin + cite.height + quotIconParam.height / 2
+    this._height = quotIconParam.height + dialog.height + quotIconParam.height / 2
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     const offsetX = -(this._width / 2)
@@ -571,7 +571,7 @@ export class Dialog extends GrahicObject {
     mask.position.set(offsetX, offsetY)
     quotIcon.position.set(offsetX + quotIconParam.margin, offsetY + quotIconParam.margin)
     dialog.position.set(offsetX + dialogParam.margin, offsetY + quotIcon.height)
-    cite.position.set(offsetX + citeParam.margin, dialog.position.y + dialog.height + citeParam.margin)
+    // cite.position.set(offsetX + citeParam.margin, dialog.position.y + dialog.height + citeParam.margin)
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -835,8 +835,8 @@ export class DialogDetail extends GrahicObject {
   _initModel() {
     const options = {
       restitution: 0, // 弾性係数 0-1
-      density: 0.001, // 密度
-      friction: 0 // 摩擦
+      density: 0.006, // 密度
+      friction: 0.01 // 摩擦
     }
     const eclipse = Matter.Bodies.rectangle(this._x, this._y + this._height / 2, this._width, this._height / 2, options)
 

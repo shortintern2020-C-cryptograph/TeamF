@@ -88,6 +88,7 @@ const Home = () => {
     // console.log('about to post')
     setInputOpen(false)
     setSubmitting(false)
+    setMode('detail')
     setComment('')
     setPostedCommet(comment)
   }
@@ -163,7 +164,7 @@ const Home = () => {
       {mode === 'detail' && (
         <PageTransition>
           <TwitterShareButton
-            url={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api${router.asPath}`} // TODO: 自分自身
+            url={`https://app.scenepicks.tk`} // TODO: 自分自身
             className={styles.shareContainer}
             title={`「${dialog?.content}」- ${dialog?.title}    #scenepicks でセリフをシェア！`} // TODO: dialog の本文など
             hashtags={['scenepicks', dialog?.author]} // 考える
