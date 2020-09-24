@@ -10,22 +10,47 @@ export const MainContext = createContext()
 const MainContextProvider = ({ children }) => {
   const [selectedGenre, setSelectedGenre] = useState(0)
   // one of 'home', 'new', 'comment', 'detail'
-  const [fabMode, setFabMode] = useState('home')
-  const nextFabMode = (current) => {
-    switch (current) {
-      case 'home':
-        setFabMode('new')
-        break
-      case 'new':
-        setFabMode('home')
-        break
-      case 'comment':
-        setFabMode('detail')
-        break
-      case 'detail':
-        setFabMode('comment')
-        break
-    }
+  const [mode, setMode] = useState('home')
+  const [shouldUpdate, setShouldUpdate] = useState(false)
+  const [dialogID, setDialogID] = useState(null)
+  const [dialog, setDialog] = useState(null)
+  const [cameBack, setCameBack] = useState(false)
+  const [inputOpen, setInputOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  const nextMode = (current) => {
+    // switch (current) {
+    //   case 'home':
+    //     setMode('new')
+    //     break
+    //   case 'new':
+    //     setCameBack(true)
+    //     setMode('home')
+    //     break
+    //   case 'comment':
+    //     setMode('detail')
+    //     break
+    //   case 'detail':
+    //     setMode('comment')
+    //     break
+    // }
+  }
+
+  const prevMode = (current) => {
+    // switch (current) {
+    //   case 'home':
+    //     setMode('home')
+    //     break
+    //   case 'new':
+    //     setMode('home')
+    //     break
+    //   case 'comment':
+    //     setMode('detail')
+    //     break
+    //   case 'detail':
+    //     setMode('home')
+    //     break
+    // }
   }
 
   return (
@@ -33,9 +58,22 @@ const MainContextProvider = ({ children }) => {
       value={{
         selectedGenre,
         setSelectedGenre,
-        fabMode,
-        setFabMode,
-        nextFabMode
+        mode,
+        setMode,
+        nextMode,
+        shouldUpdate,
+        setShouldUpdate,
+        prevMode,
+        dialogID,
+        setDialogID,
+        dialog,
+        setDialog,
+        cameBack,
+        setCameBack,
+        inputOpen,
+        setInputOpen,
+        mounted,
+        setMounted
       }}>
       {children}
     </MainContext.Provider>

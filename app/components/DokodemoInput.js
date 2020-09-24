@@ -6,12 +6,23 @@ import styles from '../styles/DokodemoInput.module.scss'
  * @param {*} props
  */
 const DokodemoInput = (props) => {
-  const [value, setValue] = useState('')
-  const { top, left, fontSize, width, height, type, multipleLines, submitting, updateInputContent } = props
+  const {
+    bottom,
+    left,
+    fontSize,
+    width,
+    height,
+    type,
+    multipleLines,
+    submitting,
+    updateInputContent,
+    comment,
+    setComment
+  } = props
 
   const dynamicStyles = {
-    top: `${top}px`,
-    left: `${left}px`,
+    bottom: `${bottom}px`,
+    left: left,
     fontSize: `${fontSize}px`,
     width: `${width}px`,
     height: `${height}px`
@@ -38,24 +49,25 @@ const DokodemoInput = (props) => {
   if (multipleLines) {
     return (
       <textarea
-        value={value}
+        value={comment}
         onChange={(e) => {
-          setValue(e.target.value)
-          updateInputContent(type, value)
+          setComment(e.target.value)
+          // updateInputContent(type, value)
         }}
         style={dynamicStyles}
         className={styles.container}
-        placeholder={placeholder}
+        placeholder={type}
       />
     )
   }
 
+  // 無能
   return (
     <input
-      value={value}
+      value={comment}
       onChange={(e) => {
-        setValue(e.target.value)
-        updateInputContent(type, value)
+        setComment(e.target.value)
+        // updateInputContent(type, value)
       }}
       style={dynamicStyles}
       className={styles.container}

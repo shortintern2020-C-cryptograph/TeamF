@@ -1,30 +1,28 @@
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useLayoutEffect } from 'react'
-import Layout from '../../components/Layout'
 import { MainContext } from '../../contexts/MainContext'
 
 const Dialog = () => {
   const router = useRouter()
   const { dialogID } = router.query
-  const { fabMode, setFabMode } = useContext(MainContext)
+  const { mode, setMode } = useContext(MainContext)
 
   useEffect(() => {
-    setFabMode('detail')
-    console.log(dialogID)
+    // setMode('detail')
+    // console.log(dialogID)
     router.push('/', `/dialog/${dialogID}`, { shallow: true })
   }, [])
 
   useEffect(() => {
-    if (fabMode === 'detail') {
+    if (mode === 'detail') {
       // もどる
-    } else if (fabMode === 'comment') {
+    } else if (mode === 'comment') {
       // 新規コメントstart
     }
-  }, [fabMode])
+  }, [mode])
 
   useLayoutEffect(() => {
-    console.log(dialogID)
+    // console.log(dialogID)
     // 簡単なバリデーションができると良いかも
   }, [])
   return null

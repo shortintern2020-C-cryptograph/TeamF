@@ -6,7 +6,7 @@ if (typeof window !== 'undefined') {
 export let loader = null
 
 /**
- * Canvasへの壁画を行うライブラリであるPIXI.jsを用いるのに有用なヘルパー関数群を提供します。本モジュールの関数群はブラウザ環境でのみ動作します。
+ * Canvasへの描画を行うライブラリであるPIXI.jsを用いるのに有用なヘルパー関数群を提供します。本モジュールの関数群はブラウザ環境でのみ動作します。
  * @module pixiHelpers
  * @author Ritsuki KOKUBO
  */
@@ -32,8 +32,8 @@ export let loader = null
  */
 
 /**
- * PIXIの初期化を行い、壁画オブジェクトを追加できる状態にします。
- * @param {HTMLCanvasElement} element  - 壁画を行うCanvas要素
+ * PIXIの初期化を行い、描画オブジェクトを追加できる状態にします。
+ * @param {HTMLCanvasElement} element  - 描画を行うCanvas要素
  * @return {PIXI.Application} - 初期化済みのPIXI.Applicationオブジェクト
  */
 export function initPixi(element) {
@@ -103,8 +103,8 @@ export function createGradient(width, height, colorFrom, colorTo, direction) {
 }
 
 /**
- * テキストを壁画した場合の大きさを調べます
- * @param {string} text - 壁画する文字列
+ * テキストを描画した場合の大きさを調べます
+ * @param {string} text - 描画する文字列
  * @param {TextParam} param - テキストのパラメータ
  * @return {Size} - テキストの大きさ
  */
@@ -140,8 +140,8 @@ export function calcTextSize(text, param) {
  * 改行を有効にしたPIXIのTextオブジェクトを生成します
  *
  * `param` はPIXI.TextStyleオブジェクトですが、一行の幅( `wordWrapWidth` )は `width` プロパティにしてあります。
- * @param {string} text - 壁画するテキスト
- * @param {PIXI.TextStyle} param - テキスト壁画のPIXIのパラメータ
+ * @param {string} text - 描画するテキスト
+ * @param {PIXI.TextStyle} param - テキスト描画のPIXIのパラメータ
  * @return {PIXI.Text} - 生成したTextオブジェクト
  */
 export function wrapedText(text, param) {
@@ -157,7 +157,7 @@ export function wrapedText(text, param) {
 
 /**
  * アスペクト比を保存するように大きさを調整した画像のSpriteを生成します
- * @param {string} path - 壁画する画像のパス
+ * @param {string} path - 描画する画像のパス
  *
  * 画像は予めPIXI.Loaderにより読み込まれている必要があります
  * @param {ImageParam} param - 画像のプロパティ
