@@ -1,10 +1,14 @@
 # This is the appspec file for CodeDeploy.
-version: 0.0
+version: 0.1
 os: linux
 files:
   - source: /
     destination: /home/ec2-user/TeamF
 hooks:
-  ApplicationStart:
+  AfterInstall:
     - location: scripts/start.sh
+      runas: ec2-user
+
+  ApplicationStart:
+    - location: scripts/data_ingection.sh
       runas: ec2-user
