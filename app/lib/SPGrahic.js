@@ -478,13 +478,13 @@ export class Dialog extends GrahicObject {
   _initPresentation() {
     // パラメータ
     const quotIconParam = {
-      height: 40,
-      margin: 10,
+      height: 30,
+      margin: 15,
       alpha: 0.6
     }
     const dialogParam = {
       margin: 20,
-      fontSize: 20,
+      fontSize: 18,
       fontWeight: 800,
       maxWidth: 500
     }
@@ -511,7 +511,7 @@ export class Dialog extends GrahicObject {
     const dialogStyle = {
       fontSize: dialogParam.fontSize,
       fontWeight: dialogParam.fontWeight,
-      fill: 'black',
+      fill: 'white',
       wordWrap: true,
       wordWrapWidth: this._width - dialogParam.margin * 2,
       breakWords: true
@@ -520,9 +520,11 @@ export class Dialog extends GrahicObject {
 
     // 引用
     const citeStyle = {
-      fontSize: citeParam.fontSize,
-      fontWeight: citeParam.fontWeight,
-      fill: 'black',
+      // fontSize: citeParam.fontSize,
+      fontSize: 14,
+      // fontWeight: citeParam.fontWeight,
+      fontWeight: 400,
+      fill: 'white',
       wordWrap: true,
       wordWrapWidth: this._width - citeParam.margin * 2,
       breakWords: true,
@@ -542,9 +544,19 @@ export class Dialog extends GrahicObject {
     mask.beginFill(0x000000)
     mask.drawRoundedRect(0, 0, this._width, this._height, 30)
     mask.endFill()
-
+    const colors = [
+      ['FF00E5', 'BD00FF'],
+      ['FF00E5', 'BD00FF'],
+      ['949494', '1C1C1C'],
+      ['00AA19', 'ACC805'],
+      ['4200FF', '0066FF'],
+      ['FFB800', 'FFA800'],
+      ['FF0000', 'FF8A00'],
+      ['00C2FF', '00A3FF']
+    ]
     // 背景
-    const bg = createGradient(this._width, this._height, '#ccffff', '#cce5ff')
+    const color = this._content.dialog.length % 8
+    const bg = createGradient(this._width, this._height, `#${colors[color][0]}`, `#${colors[color][1]}`)
 
     // 引用符
     const quotIcon = new PIXI.Sprite(loader.resources['quotation_white'].texture)

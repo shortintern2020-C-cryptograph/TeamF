@@ -1,4 +1,4 @@
-console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL)
+// console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL)
 
 export const apiConfig = {
   fqdn: process.env.NEXT_PUBLIC_ENDPOINT_URL + '/api',

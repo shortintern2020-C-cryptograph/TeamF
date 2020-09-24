@@ -74,22 +74,21 @@ const Home = () => {
 
   const submitPost = () => {
     setSubmitting(true)
-    console.log('submit!')
-    console.log(comment)
+    // console.log('submit!')
+    // console.log(comment)
     const dialogID = location.hash.split('/')[1]
-    console.log(dialogID)
+    // console.log(dialogID)
     // submit here
     try {
       postComment(dialogID, comment).then((res) => console.log(res))
     } catch (error) {
       addToast(`サーバーと通信ができませんでした`, { appearance: 'error' })
     }
-    console.log('about to post')
+    // console.log('about to post')
     setInputOpen(false)
     setSubmitting(false)
     setComment('')
   }
-  console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL)
   const updateInputContent = (type, text) => {
     let old = { ...inputContents }
     old[type] = text
