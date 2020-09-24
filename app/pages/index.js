@@ -120,13 +120,13 @@ const Home = () => {
             {
               <>
                 <PageTransition>
-                  <DokodemoInput
+                  {/* <DokodemoInput
                     comment={comment}
                     setComment={setComment}
                     {...initialValue}
                     updateInputContent={updateInputContent}
                     submitting={submitting}
-                  />
+                  /> */}
                   <button
                     className={styles.submitButton}
                     onClick={submitPost}

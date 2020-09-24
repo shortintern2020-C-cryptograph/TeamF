@@ -774,47 +774,35 @@ export class DialogDetail extends GrahicObject {
     return [
       {
         type: 'author',
-        position: {
-          x: author.position.x,
-          y: author.position.y
-        },
-        size: {
-          width: author.width,
-          height: author.height
-        }
+        top: this.presentation.position.y + author.position.y,
+        left: this.presentation.position.x + author.position.x,
+        width: author.width,
+        height: author.height,
+        fontSize: 16
       },
       {
         type: 'title',
-        position: {
-          x: title.position.x,
-          y: title.position.y
-        },
-        size: {
-          width: title.width,
-          height: title.height
-        }
+        top: this.presentation.position.y + title.position.y,
+        left: this.presentation.position.x + title.position.y,
+        width: title.width,
+        height: title.height,
+        fontSize: 30
       },
       {
         type: 'source',
-        position: {
-          x: source.position.x,
-          y: source.position.y
-        },
-        size: {
-          width: source.width,
-          height: source.height
-        }
+        top: this.presentation.position.y + source.position.y,
+        left: this.presentation.position.x + source.position.x,
+        width: source.width,
+        height: source.height,
+        fontSize: 16
       },
       {
         type: 'cite',
-        position: {
-          x: cite.position.x,
-          y: cite.position.y
-        },
-        size: {
-          width: cite.width,
-          height: cite.height
-        }
+        top: this.presentation.position.y + cite.position.y,
+        left: this.presentation.position.x + cite.position.x,
+        width: cite.width,
+        height: cite.height,
+        fontSize: 16
       }
     ]
   }
@@ -1009,14 +997,10 @@ export class Comment extends GrahicObject {
     return [
       {
         type: 'comment',
-        position: {
-          x: comment.position.x,
-          y: comment.position.y
-        },
-        size: {
-          width: comment.width,
-          height: comment.height
-        }
+        top: this.presentation.position.y + comment.position.y,
+        left: this.presentation.position.x + comment.position.x,
+        width: comment.width,
+        height: comment.height
       }
     ]
   }

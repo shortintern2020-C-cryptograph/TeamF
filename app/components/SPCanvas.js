@@ -30,7 +30,8 @@ class SPCanvas extends Component {
     this.dialogDetail = null
     this.centerSpacer = null
     this.comments = []
-    const newDialog = null
+    this.newDialog = null
+    this.newDialogDetail = null
     this.pixi = null
     this.matter = null
     this.matterRender = null
@@ -38,7 +39,11 @@ class SPCanvas extends Component {
     this.currentViewMode = 'empty'
     this.context = {}
     this.state = {
-      dDialogInputProps: {}
+      dDialogInputProps: {},
+      dCiteInputProps: {},
+      dAuthorInputProps: {},
+      dTitleInputProps: {},
+      dSourceInputProps: {}
     }
     this.t = true
   }
@@ -357,24 +362,60 @@ class SPCanvas extends Component {
           {
             movement: {
               mode: 'None'
+            },
+            hideText: true
+          }
+        )
+        this.newDialogDetail = new DialogDetail(
+          0,
+          300,
+          {
+            author: '作者',
+            title: '作品名',
+            source: 'ソース',
+            cite: ''
+          },
+          {
+            movement: {
+              mode: 'None'
             }
           }
         )
         this.newDialog.easingInitRender(this.pixi, this.matter.engine.world).then(() => {
           this.newDialog.unmountModel(this.matter.engine.world)
-        })
-        const objProp = this.newDialog.calcTextAreas()
-        objProp[0]['setComment'] = (txt) => {
-          self.updateInputView(0, {
-            dialog: {
-              dialog: txt,
-              cite: ''
+          this.newDialog.easingMoveRender(
+            window.innerWidth / 2 -
+              Math.max(this.newDialog.width, this.newDialogDetail.width) / 2 +
+              this.newDialog.width / 2 -
+              5,
+            window.innerHeight / 2 -
+              (this.newDialog.height + this.newDialogDetail.height) / 2 +
+              this.newDialog.height / 2
+          )
+
+          this.newDialogDetail.x = CENTER_X + 5
+          this.newDialogDetail.y =
+            CENTER_Y + (this.newDialog.height + this.newDialogDetail.height) / 2 - this.newDialogDetail.height / 2
+          this.newDialogDetail.easingInitRender(self.pixi, self.matter.engine.world).then(() => {
+            this.newDialogDetail.unmountModel(self.matter.engine.world)
+            const objProp = this.newDialog.calcTextAreas()
+            objProp[0]['setComment'] = (txt) => {
+              self.updateInputView(0, {
+                dialog: {
+                  dialog: txt,
+                  cite: ''
+                }
+              })
             }
+            const objDetailProp = this.newDialogDetail.calcTextAreas()
+            this.setState({
+              dAuthorInputProps: objDetailProp[0],
+              dTitleInputProps: objDetailProp[1],
+              dSourceInputProps: objDetailProp[2]
+            })
           })
-        }
-        this.setState({
-          dDialogInputProps: objProp[0]
         })
+
         break
       default:
         break
@@ -382,35 +423,36 @@ class SPCanvas extends Component {
   }
 
   updateInputView(i, inputs) {
-    const self = this
-    const CENTER_X = window.innerWidth / 2
-    const CENTER_Y = window.innerHeight / 2
-    const p = this.pixi
-    const w = this.matter.engine.world
-    const dialogInput = inputs.dialog
-    const updatedNewDialog = new Dialog(CENTER_X, CENTER_Y, dialogInput, {
-      movement: {
-        mode: 'None'
-      }
-    })
-    if (this.newDialog) {
-      this.newDialog.normalRemoveRender(p, w)
-    }
-    updatedNewDialog.normalInitRender(p, w)
-    const objProp = updatedNewDialog.calcTextAreas()
-    objProp[0]['setComment'] = (txt) => {
-      this.updateInputView(0, {
-        dialog: {
-          dialog: txt,
-          cite: ''
-        }
-      })
-    }
-    objProp[0]['setComment'] = objProp[0]['setComment'].bind(self)
-    console.log('a')
-    this.setState({
-      dDialogInputProps: objProp[0]
-    })
+    // const self = this
+    // const CENTER_X = window.innerWidth / 2
+    // const CENTER_Y = window.innerHeight / 2
+    // const p = this.pixi
+    // const w = this.matter.engine.world
+    // const dialogInput = inputs.dialog
+    // const updatedNewDialog = new Dialog(CENTER_X, CENTER_Y, dialogInput, {
+    //   movement: {
+    //     mode: 'None'
+    //   },
+    //   hideText: true
+    // })
+    // if (this.newDialog) {
+    //   this.newDialog.normalRemoveRender(p, w)
+    // }
+    // updatedNewDialog.normalInitRender(p, w)
+    // const objProp = updatedNewDialog.calcTextAreas()
+    // objProp[0]['setComment'] = (txt) => {
+    //   this.updateInputView(0, {
+    //     dialog: {
+    //       dialog: txt,
+    //       cite: ''
+    //     }
+    //   })
+    // }
+    // objProp[0]['setComment'] = objProp[0]['setComment'].bind(self)
+    // console.log('a')
+    // this.setState({
+    //   dDialogInputProps: objProp[0]
+    // })
   }
 
   /**
@@ -444,7 +486,10 @@ class SPCanvas extends Component {
             setCameBack={this.props.setCameBack}
           />
         </MainContextProvider>
-        <DokodemoInput t={this.t} {...this.state.dDialogInputProps}></DokodemoInput>
+        <DokodemoInput {...this.state.dDialogInputProps}></DokodemoInput>
+        <DokodemoInput {...this.state.dAuthorInputProps}></DokodemoInput>
+        <DokodemoInput {...this.state.dTitleInputProps}></DokodemoInput>
+        <DokodemoInput {...this.state.dSourceInputProps}></DokodemoInput>
         <div
           id="spDebugCanvas"
           style={{
