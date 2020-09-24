@@ -85,22 +85,22 @@ func TestGetDialog(t *testing.T) {
 }
 
 type Response struct {
-	Kind string `json:"kind,omitempty"`
-	IDToken string `json:"idToken,omitempty"`
+	Kind         string `json:"kind,omitempty"`
+	IDToken      string `json:"idToken,omitempty"`
 	RefreshToken string `json:"refreshToken,omitempty"`
-	ExpiresIn string `json:"expiresIn,omitempty"`
-	IsNewUser bool `json:"isNewUser,omitempty"`
+	ExpiresIn    string `json:"expiresIn,omitempty"`
+	IsNewUser    bool   `json:"isNewUser,omitempty"`
 }
 
 type DialogRequest struct {
-	Token string `json:"token"`
+	Token  string `json:"token"`
 	Dialog struct {
 		Content string `json:"content"`
-		Title string `json:"title"`
-		Author string `json:"author"`
-		Link string `json:"link"`
-		Style string `json:"style"`
-		Source string `json:"source"`
+		Title   string `json:"title"`
+		Author  string `json:"author"`
+		Link    string `json:"link"`
+		Style   string `json:"style"`
+		Source  string `json:"source"`
 		Comment string `json:"comment"`
 	} `json:"content"`
 }
@@ -115,54 +115,54 @@ func TestPostDialog(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		in     string
-		status  int
-		want    string
-		wantErr bool
-		getToken bool
-		checkDB bool
+		name      string
+		in        string
+		status    int
+		want      string
+		wantErr   bool
+		getToken  bool
+		checkDB   bool
 		increment int
 	}{
 		{
-			name:    "[正常系] 必要なデータが全て揃ってる（titleとauthorが初めて登録される場合）",
-			in:      "./testdata/post_dialog_test_data_in1.json",
-			status:  200,
-			want:    `{"message":"success", "id": 2}`,
-			wantErr: false,
-			getToken: true,
-			checkDB: true,
+			name:      "[正常系] 必要なデータが全て揃ってる（titleとauthorが初めて登録される場合）",
+			in:        "./testdata/post_dialog_test_data_in1.json",
+			status:    200,
+			want:      `{"message":"success", "id": 2}`,
+			wantErr:   false,
+			getToken:  true,
+			checkDB:   true,
 			increment: 2,
 		},
 		{
-			name:    "[正常系] 必要なデータが全て揃ってる（titleとauthorが既に登録されている場合）",
-			in:      "./testdata/post_dialog_test_data_in2.json",
-			status:  200,
-			want:    `{"message":"success", "id": 3}`,
-			wantErr: false,
-			getToken: true,
-			checkDB: true,
+			name:      "[正常系] 必要なデータが全て揃ってる（titleとauthorが既に登録されている場合）",
+			in:        "./testdata/post_dialog_test_data_in2.json",
+			status:    200,
+			want:      `{"message":"success", "id": 3}`,
+			wantErr:   false,
+			getToken:  true,
+			checkDB:   true,
 			increment: 0,
 		},
 		{
-			name:    "[異常系] パラメータが不足している",
-			in:      "./testdata/post_dialog_test_data_in3.json",
-			status:  400,
-			want:    `{"message":"success", "id": 2}`,
-			wantErr: false,
-			getToken: true,
-			checkDB: false,
+			name:      "[異常系] パラメータが不足している",
+			in:        "./testdata/post_dialog_test_data_in3.json",
+			status:    400,
+			want:      `{"message":"success", "id": 2}`,
+			wantErr:   false,
+			getToken:  true,
+			checkDB:   false,
 			increment: 0,
 		},
 		{
 			// firebase認証できてからはじけるようにしたい
-			name:    "[異常系] トークンが正しく無い",
-			in:      "./testdata/post_dialog_test_data_in4.json",
-			status:  400,
-			want:    ``,
-			wantErr: true,
-			getToken: false,
-			checkDB: false,
+			name:      "[異常系] トークンが正しく無い",
+			in:        "./testdata/post_dialog_test_data_in4.json",
+			status:    400,
+			want:      ``,
+			wantErr:   true,
+			getToken:  false,
+			checkDB:   false,
 			increment: 0,
 		},
 	}
@@ -253,7 +253,7 @@ func customTokenToIDToken(customToken string) (string, error) {
 	return val.IDToken, nil
 }
 
-func setUpWithIDToken() (string, error){
+func setUpWithIDToken() (string, error) {
 	client := NewClientWithNoToken()
 	if client.err != nil {
 		return "", client.err

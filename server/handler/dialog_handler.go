@@ -119,7 +119,7 @@ type dialog struct {
 	Source string `json:"genre,omitempty" db:"source"`
 
 	// userID
-	UserID int64  `json:"user_id,omitempty" db:"user_id"`
+	UserID int64 `json:"user_id,omitempty" db:"user_id"`
 
 	CTime time.Time `json:"ctime" db:"ctime"`
 

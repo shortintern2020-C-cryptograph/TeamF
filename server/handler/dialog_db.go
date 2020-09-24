@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"github.com/pkg/errors"
 	"github.com/shortintern2020-C-cryptograph/TeamF/server/gen/models"
 	"log"
-	"github.com/pkg/errors"
 )
 
 func getDialog(genre string, offset int64, limit int64, sort string, q string) ([]*models.Dialog, error) {
@@ -21,7 +21,7 @@ func getDialog(genre string, offset int64, limit int64, sort string, q string) (
 			ORDER BY utime DESC
 			LIMIT ?
 			OFFSET ?
-		`, "%" + q + "%", limit, offset)
+		`, "%"+q+"%", limit, offset)
 	} else {
 		err = sqlHandler.DB.Select(&dialogs, `
 			SELECT * FROM dialog 
@@ -29,7 +29,7 @@ func getDialog(genre string, offset int64, limit int64, sort string, q string) (
 			ORDER BY utime DESC
 			LIMIT ?
 			OFFSET ?
-		`, genre, "%" + q + "%", limit, offset)
+		`, genre, "%"+q+"%", limit, offset)
 	}
 	if err != nil {
 		log.Fatal(err)
@@ -68,8 +68,8 @@ func postDialog(content string, title string, author string, source string, link
 	//comment
 	_, err = tx.NamedExec("INSERT INTO comment (content, user_id, dialog_id) VALUES (:content, :user_id, :dialog_id)",
 		map[string]interface{}{
-			"content": comment,
-			"user_id": userID,
+			"content":   comment,
+			"user_id":   userID,
 			"dialog_id": id,
 		})
 	if err != nil {
@@ -108,12 +108,11 @@ func postDialog(content string, title string, author string, source string, link
 		return 0, nil
 	}
 
-
 	//dialog_tag
 	_, err = tx.NamedExec("INSERT INTO dialog_tag (dialog_id, tag_id) VALUES (:dialog_id, :tag_id)",
 		map[string]interface{}{
 			"dialog_id": id,
-			"tag_id": titleTagID,
+			"tag_id":    titleTagID,
 		})
 	if err != nil {
 		log.Fatal(err)
@@ -122,14 +121,12 @@ func postDialog(content string, title string, author string, source string, link
 	_, err = tx.NamedExec("INSERT INTO dialog_tag (dialog_id, tag_id) VALUES (:dialog_id, :tag_id)",
 		map[string]interface{}{
 			"dialog_id": id,
-			"tag_id": authorTagID,
+			"tag_id":    authorTagID,
 		})
 	if err != nil {
 		log.Fatal(err)
 		return 0, err
 	}
-
-
 
 	defer func() {
 		if err != nil {

@@ -27,7 +27,7 @@ func PostToTwitter(p scenepicks.PostToTwitterParams) middleware.Responder {
 
 	// ツイート実行
 	_, err = api.PostTweet("https://app.scenepicks.tk/dialog/"+strconv.Itoa(popularDialogID), nil)
-	if(err != nil){
+	if err != nil {
 		panic(err)
 	}
 

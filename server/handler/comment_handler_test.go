@@ -127,8 +127,8 @@ func TestGetCommentById(t *testing.T) {
 }
 
 type CommentRequest struct {
-	Token string `json:"token"`
-	ID int `json:"id"`
+	Token   string `json:"token"`
+	ID      int    `json:"id"`
 	Comment struct {
 		Comment string `json:"comment"`
 	} `json:"comment"`
@@ -142,41 +142,41 @@ func TestPostCommentById(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		params  scenepicks.PostCommentByIDParams
-		in      string
-		status  int
-		want    string
-		wantErr bool
+		name     string
+		params   scenepicks.PostCommentByIDParams
+		in       string
+		status   int
+		want     string
+		wantErr  bool
 		getToken bool
-		checkDB bool
+		checkDB  bool
 	}{
 		{
-			name:    "[正常系] 必要なデータが全て揃ってる",
-			in:      "./testdata/post_comment_by_id_test_data_in1.json",
-			status:  200,
-			want:    `{"message":"success", "id": 2}`,
-			wantErr: false,
+			name:     "[正常系] 必要なデータが全て揃ってる",
+			in:       "./testdata/post_comment_by_id_test_data_in1.json",
+			status:   200,
+			want:     `{"message":"success", "id": 2}`,
+			wantErr:  false,
 			getToken: true,
-			checkDB: true,
+			checkDB:  true,
 		},
 		{
-			name:    "[異常系] パラメータが不足している",
-			in:      "./testdata/post_comment_by_id_test_data_in2.json",
-			status:  400,
-			want:    `{"message":"success", "id": 3}`,
-			wantErr: false,
+			name:     "[異常系] パラメータが不足している",
+			in:       "./testdata/post_comment_by_id_test_data_in2.json",
+			status:   400,
+			want:     `{"message":"success", "id": 3}`,
+			wantErr:  false,
 			getToken: true,
-			checkDB: false,
+			checkDB:  false,
 		},
 		{
-			name:    "[異常系] トークンが正しく無い",
-			in:      "./testdata/post_comment_by_id_test_data_in3.json",
-			status:  400,
-			want:    `{"message":"success", "id": 3}`,
-			wantErr: false,
+			name:     "[異常系] トークンが正しく無い",
+			in:       "./testdata/post_comment_by_id_test_data_in3.json",
+			status:   400,
+			want:     `{"message":"success", "id": 3}`,
+			wantErr:  false,
 			getToken: false,
-			checkDB: false,
+			checkDB:  false,
 		},
 	}
 

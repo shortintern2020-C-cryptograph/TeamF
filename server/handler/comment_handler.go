@@ -10,7 +10,6 @@ import (
 	"time"
 )
 
-
 func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 	id := p.ID
 	offset := p.Offset
@@ -30,10 +29,10 @@ func GetCommentById(p scenepicks.GetCommentByIDParams) middleware.Responder {
 	}
 
 	params := &scenepicks.GetCommentByIDOKBody{
-		Message: "success",
-		Dialog: resDialog,
+		Message:  "success",
+		Dialog:   resDialog,
 		Comments: resComments,
-		Tags: resTags,
+		Tags:     resTags,
 	}
 
 	return scenepicks.NewGetCommentByIDOK().WithPayload(params)
