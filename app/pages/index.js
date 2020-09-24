@@ -29,7 +29,9 @@ const Home = () => {
     cameBack,
     setCameBack,
     inputOpen,
-    setInputOpen
+    setInputOpen,
+    mounted,
+    setMounted
   } = useContext(MainContext)
   // setInterval(() => console.log(mode), 1000)
 
@@ -40,6 +42,8 @@ const Home = () => {
   const { addToast } = useToasts()
   if (location.hash.split('#')[1]) {
     // setMode('detail')
+    setDialogID(location.hash.split('/')[1])
+    // console.log(location.hash.split('/')[1])
   } else {
     // setMode('home')
   }
@@ -85,7 +89,7 @@ const Home = () => {
     setSubmitting(false)
     setComment('')
   }
-
+  console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL)
   const updateInputContent = (type, text) => {
     let old = { ...inputContents }
     old[type] = text
@@ -98,6 +102,17 @@ const Home = () => {
         <Head>
           <title>Home | ScenePicks</title>
           <link rel="icon" href="/favicon.ico" />
+          <meta property="og:image" content={`${process.env.NEXT_PUBLIC_ENSPOINT_URL}/api/ogp?`} />
+          <meta
+            name="description"
+            content="札幌でテイクアウトするなら札幌ToGo！札幌ToGoを通してテイクアウトをオンライン注文をし、あとは取りに行くだけ！札幌の美味しい飲食店の味を家族と一緒にお家で楽しもう！"
+          />
+          <meta property="og:title" content="" />
+          <meta property="og:description" content="" />
+          <meta property="og:url" content={process.env.NEXT_PUBLIC_ENDPOINT_URL} />
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="ScecePicks" />
+          <meta name="twitter:card" content="summary_large_image" />
         </Head>
         <SPCanvas
           selectedGenre={selectedGenre}
@@ -113,6 +128,8 @@ const Home = () => {
           cameBack={cameBack}
           setCameBack={setCameBack}
           setMode={setMode}
+          mounted={mounted}
+          setMounted={setMounted}
         />
         {/* <PageTransition> */}
         {inputOpen && (

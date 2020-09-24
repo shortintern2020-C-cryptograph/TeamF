@@ -16,6 +16,7 @@ const MainContextProvider = ({ children }) => {
   const [dialog, setDialog] = useState(null)
   const [cameBack, setCameBack] = useState(false)
   const [inputOpen, setInputOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   const nextMode = (current) => {
     // switch (current) {
@@ -70,7 +71,9 @@ const MainContextProvider = ({ children }) => {
         cameBack,
         setCameBack,
         inputOpen,
-        setInputOpen
+        setInputOpen,
+        mounted,
+        setMounted
       }}>
       {children}
     </MainContext.Provider>

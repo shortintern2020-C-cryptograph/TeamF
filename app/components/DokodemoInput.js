@@ -56,7 +56,7 @@ const DokodemoInput = (props) => {
         }}
         style={dynamicStyles}
         className={styles.container}
-        placeholder={placeholder}
+        placeholder={type}
       />
     )
   }

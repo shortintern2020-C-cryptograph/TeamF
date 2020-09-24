@@ -79,7 +79,7 @@ const MyPage = () => {
             works from a different point of view.
           </p>
         </div>
-        {user && (
+        {/* {user && (
           <div style={{ position: 'relative', margin: '30px 0' }}>
             <div className={styles.profileName}>{user?.providerData[0].displayName}</div>
             <img src={user?.providerData[0].photoURL} alt="my profile thumbnail" className={styles.profileImage} />
@@ -89,9 +89,9 @@ const MyPage = () => {
               </button>
             </p>
           </div>
-        )}
+        )} */}
       </div>
-      <div>
+      {/* <div>
         <h3>ScenePicksについて</h3>
         <p>新しい点に立てて、別の切り口から見れるようにする。今までと違う視点から作品を広めたり、</p>
         <p>探せたりすることが面白いという大切なことを多くの人に知って欲しいという思いで開発しました。</p>
@@ -101,7 +101,7 @@ const MyPage = () => {
           It was developed with the desire that many people know that it is interesting to be able to spread and find
           works from a different point of view.
         </p>
-      </div>
+      </div> */}
     </PageTransition>
   )
 }
