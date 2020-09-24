@@ -162,8 +162,8 @@ const Home = () => {
           <TwitterShareButton
             url={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api${router.asPath}`} // TODO: 自分自身
             className={styles.shareContainer}
-            title="scenepicksでセリフをシェア！    " // TODO: dialog の本文など
-            hashtags={['scenepicks']} // 考える
+            title={`「${dialog?.content}」- ${dialog?.title}    #scenepicks でセリフをシェア！`} // TODO: dialog の本文など
+            hashtags={['scenepicks', dialog?.author]} // 考える
           >
             <img src="/twitter.svg" alt="twitter icon" className={styles.twitterIcon} />
           </TwitterShareButton>
