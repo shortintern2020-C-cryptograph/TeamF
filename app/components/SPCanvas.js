@@ -6,6 +6,7 @@ import { getDialog, getDialogDetail } from '../lib/api'
 import { createMock } from '../lib/createMock'
 import Observer from '../lib/observer'
 import MainContextProvider from '../contexts/MainContext'
+import AuthContextProvider from '../contexts/AuthContext'
 import { MainContext } from '../contexts/MainContext'
 import { withToast } from '../lib/withToast'
 
@@ -342,6 +343,23 @@ class SPCanvas extends Component {
     }
   }
 
+  renderPostedComment(txt) {
+    if (txt.length < 1) {
+      return
+    }
+    const CENTER_X = window.innerWidth / 2
+    const CENTER_Y = window.innerHeight / 2
+    console.log(`spcanvas ${txt}`)
+    const comment = new Comment(Math.random() * CENTER_X * 2, Math.random() * CENTER_Y * 2, {
+      comment: txt,
+      userName: 'あなた',
+      userPhoto: '',
+      time: '●分前'
+    })
+    comment.easingInitRender(this.pixi, this.matter.engine.world)
+    this.comments.push(comment)
+  }
+
   render() {
     return (
       <>
@@ -359,6 +377,8 @@ class SPCanvas extends Component {
             setCameBack={this.props.setCameBack}
             mounted={this.props.mounted}
             setMounted={this.props.setMounted}
+            postedCommet={this.props.postedCommet}
+            renderPostedComment={this.renderPostedComment}
           />
         </MainContextProvider>
         <div

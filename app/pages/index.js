@@ -38,6 +38,7 @@ const Home = () => {
   const [inputContents, setInputContents] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [comment, setComment] = useState('')
+  const [postedCommet, setPostedCommet] = useState('')
   const router = useRouter()
   const { addToast } = useToasts()
   if (location.hash.split('#')[1]) {
@@ -88,6 +89,7 @@ const Home = () => {
     setInputOpen(false)
     setSubmitting(false)
     setComment('')
+    setPostedCommet(comment)
   }
   console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL)
   const updateInputContent = (type, text) => {
@@ -130,6 +132,7 @@ const Home = () => {
           setMode={setMode}
           mounted={mounted}
           setMounted={setMounted}
+          postedCommet={postedCommet}
         />
         {/* <PageTransition> */}
         {inputOpen && (
