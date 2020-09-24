@@ -152,7 +152,7 @@ export async function postDialog(dialog) {
  */
 export async function postComment(dialogId, comment) {
   const headers = await authHeader()
-  console.log(headers)
+  // console.log(headers)
   try {
     return resultMapper(
       await ax.post(

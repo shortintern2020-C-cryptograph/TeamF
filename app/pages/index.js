@@ -75,23 +75,22 @@ const Home = () => {
 
   const submitPost = () => {
     setSubmitting(true)
-    console.log('submit!')
-    console.log(comment)
+    // console.log('submit!')
+    // console.log(comment)
     const dialogID = location.hash.split('/')[1]
-    console.log(dialogID)
+    // console.log(dialogID)
     // submit here
     try {
       postComment(dialogID, comment).then((res) => console.log(res))
     } catch (error) {
       addToast(`サーバーと通信ができませんでした`, { appearance: 'error' })
     }
-    console.log('about to post')
+    // console.log('about to post')
     setInputOpen(false)
     setSubmitting(false)
     setComment('')
     setPostedCommet(comment)
   }
-  console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL)
   const updateInputContent = (type, text) => {
     let old = { ...inputContents }
     old[type] = text
@@ -166,8 +165,8 @@ const Home = () => {
           <TwitterShareButton
             url={`${process.env.NEXT_PUBLIC_ENDPOINT_URL}/api${router.asPath}`} // TODO: 自分自身
             className={styles.shareContainer}
-            title="scenepicksでセリフをシェア！    " // TODO: dialog の本文など
-            hashtags={['scenepicks']} // 考える
+            title={`「${dialog?.content}」- ${dialog?.title}    #scenepicks でセリフをシェア！`} // TODO: dialog の本文など
+            hashtags={['scenepicks', dialog?.author]} // 考える
           >
             <img src="/twitter.svg" alt="twitter icon" className={styles.twitterIcon} />
           </TwitterShareButton>

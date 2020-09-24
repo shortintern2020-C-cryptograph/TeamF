@@ -9,7 +9,7 @@ const Dialog = () => {
 
   useEffect(() => {
     // setMode('detail')
-    console.log(dialogID)
+    // console.log(dialogID)
     router.push('/', `/dialog/${dialogID}`, { shallow: true })
   }, [])
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-const genres = ['all', 'book', 'manga', 'anime', 'all']
+const genres = ['all', 'book', 'manga', 'anime', 'youtube']
 
 const Observer = (props) => {
   const {

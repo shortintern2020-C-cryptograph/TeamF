@@ -15,7 +15,7 @@ export default (req, res) => {
   let bgcolor = '#' + req.query.bgcolor
   let title = req.query.title
   let author = req.query.author
-  console.log('dialog: ', dialog, 'bgcolor:', bgcolor)
+  // console.log('dialog: ', dialog, 'bgcolor:', bgcolor)
   let content = speaker + ', ' + title + ', ' + author
   let img = generate(dialog, content, bgcolor, './pages/api/images/ogp.jpg')
   res.statusCode = 200

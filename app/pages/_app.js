@@ -26,15 +26,15 @@ const MyApp = ({ Component, pageProps }) => {
       if (firebaseUser) {
         setUser(firebaseUser)
         // TODO: 消す
-        firebase
-          .auth()
-          .currentUser.getIdToken(/* forceRefresh */ true)
-          .then(function (idToken) {
-            console.log(`ID Token: ${idToken}`)
-          })
-          .catch(function (error) {
-            // Handle error
-          })
+        // firebase
+        //   .auth()
+        //   .currentUser.getIdToken(/* forceRefresh */ true)
+        //   .then(function (idToken) {
+        //     console.log(`ID Token: ${idToken}`)
+        //   })
+        //   .catch(function (error) {
+        //     // Handle error
+        //   })
 
         if (storageAvailable('sessionStorage')) {
           let isWaiting = JSON.parse(sessionStorage.getItem('waiting_redirect'))

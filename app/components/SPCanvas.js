@@ -37,7 +37,7 @@ class SPCanvas extends Component {
   }
 
   componentDidMount() {
-    console.log('_indexs')
+    // console.log('_indexs')
     const self = this
     if (process.env.NEXT_PUBLIC_ENV === 'MOCK') {
       this.mock = createMock()
@@ -47,7 +47,7 @@ class SPCanvas extends Component {
       return
     }
     this.pixi = initPixi(document.getElementById('spMainCanvas'))
-    console.log('init spcanvas!')
+    // console.log('init spcanvas!')
     this.matter = initMatter()
     //デバッグ用レンダラー
     // this.matterRender = initMatterRenderer(document.getElementById('spDebugCanvas'), this.matter.engine)
@@ -81,7 +81,7 @@ class SPCanvas extends Component {
     }
     this.dialogs = []
     this.pixi = null
-    console.log('unmounted spcanvas')
+    // console.log('unmounted spcanvas')
     this.matter = null
     this.matterRender = null
     this.mock = null
@@ -101,7 +101,7 @@ class SPCanvas extends Component {
     switch (viewMode) {
       case 'listDialog':
         await loadRequiredResources()
-        console.log('updating!')
+        // console.log('updating!')
         // リセット -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
         if (this.dialogs.length > 0) {
           this.dialogs.forEach((dialog) => {
@@ -316,7 +316,7 @@ class SPCanvas extends Component {
         })
         break
       case 'new':
-        console.log('about to new post')
+        // console.log('about to new post')
         self.dialogs.forEach((dialog) => {
           dialog.updateOption({
             movement: {
