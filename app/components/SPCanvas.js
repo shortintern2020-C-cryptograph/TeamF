@@ -146,8 +146,7 @@ class SPCanvas extends Component {
           return
         }
         res.schema.forEach((s, i) => {
-          // console.log(s)
-          const dialog = new Dialog(Math.random() * 0.8 * CENTER_X * 1.1, Math.random() * 0.8 * CENTER_Y * 1.1, {
+          const dialog = new Dialog(Math.random() * CENTER_X * 2, Math.random() * CENTER_Y * 2, {
             dialog: s.content
           })
           dialog.presentation.on('pointerdown', () => {
