@@ -357,6 +357,8 @@ class SPCanvas extends Component {
             setSelectedGenre={this.props.setSelectedGenre}
             cameBack={this.props.cameBack}
             setCameBack={this.props.setCameBack}
+            mounted={this.props.mounted}
+            setMounted={this.props.setMounted}
           />
         </MainContextProvider>
         <div

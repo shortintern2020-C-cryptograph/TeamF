@@ -218,7 +218,7 @@ class GrahicObject {
   _initModel() {
     const options = {
       restitution: 0, // 弾性係数 0-1
-      density: 0.001, // 密度
+      density: 0.025, // 密度
       friction: 0 // 摩擦
     }
     const model = Matter.Bodies.rectangle(
@@ -484,7 +484,7 @@ export class Dialog extends GrahicObject {
     }
     const dialogParam = {
       margin: 20,
-      fontSize: 30,
+      fontSize: 20,
       fontWeight: 800,
       maxWidth: 500
     }
@@ -511,7 +511,7 @@ export class Dialog extends GrahicObject {
     const dialogStyle = {
       fontSize: dialogParam.fontSize,
       fontWeight: dialogParam.fontWeight,
-      fill: 'white',
+      fill: 'black',
       wordWrap: true,
       wordWrapWidth: this._width - dialogParam.margin * 2,
       breakWords: true
@@ -522,7 +522,7 @@ export class Dialog extends GrahicObject {
     const citeStyle = {
       fontSize: citeParam.fontSize,
       fontWeight: citeParam.fontWeight,
-      fill: 'white',
+      fill: 'black',
       wordWrap: true,
       wordWrapWidth: this._width - citeParam.margin * 2,
       breakWords: true,
@@ -544,7 +544,7 @@ export class Dialog extends GrahicObject {
     mask.endFill()
 
     // 背景
-    const bg = createGradient(this._width, this._height, '#FF00E5', '#BD00FF')
+    const bg = createGradient(this._width, this._height, '#ccffff', '#cce5ff')
 
     // 引用符
     const quotIcon = new PIXI.Sprite(loader.resources['quotation_white'].texture)

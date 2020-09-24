@@ -15,16 +15,23 @@ const Observer = (props) => {
     mode,
     setSelectedGenre,
     cameBack,
-    setCameBack
+    setCameBack,
+    mounted,
+    setMounted
   } = props
 
   useEffect(() => {
     // didUpdate(value)
     // if (selectedGenre !== 0) {
-    console.log(selectedGenre + 'のジャンルが選択されました')
-    cb()
-    location.hash = ''
     changeView.bind(self)('listDialog', undefined, undefined, genres[selectedGenre])
+    if (!mounted) {
+      setMounted(true)
+      return
+    }
+    // console.log(selectedGenre + 'のジャンルが選択されました')
+    // cb()
+    console.log(window.history)
+    location.hash = ''
     // }
   }, [selectedGenre])
 
