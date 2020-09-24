@@ -50,7 +50,7 @@ const MyApp = ({ Component, pageProps }) => {
         }
       } else {
         setUser(null)
-        console.log('not logged in')
+        // console.log('not logged in')
       }
       setLoading(false)
     })

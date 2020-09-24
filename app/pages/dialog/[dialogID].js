@@ -22,7 +22,7 @@ const Dialog = () => {
   }, [mode])
 
   useLayoutEffect(() => {
-    console.log(dialogID)
+    // console.log(dialogID)
     // 簡単なバリデーションができると良いかも
   }, [])
   return null

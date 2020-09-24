@@ -32,7 +32,7 @@ const Observer = (props) => {
     }
     // console.log(selectedGenre + 'のジャンルが選択されました')
     // cb()
-    console.log(window.history)
+    // console.log(window.history)
     location.hash = ''
     // }
   }, [selectedGenre])
@@ -51,7 +51,7 @@ const Observer = (props) => {
   useEffect(() => {
     if (mode === 'new') {
       changeView.bind(self)(mode)
-      console.log('新しい投稿するよ')
+      // console.log('新しい投稿するよ')
     }
     if (cameBack && mode === 'home') {
       setCameBack(false)
