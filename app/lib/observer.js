@@ -17,7 +17,9 @@ const Observer = (props) => {
     cameBack,
     setCameBack,
     mounted,
-    setMounted
+    setMounted,
+    postedCommet,
+    renderPostedComment
   } = props
 
   useEffect(() => {
@@ -56,6 +58,13 @@ const Observer = (props) => {
       changeView.bind(self)(mode)
     }
   }, [mode, cameBack])
+
+  // 投稿したコメント表示するくん
+  useEffect(() => {
+    if (renderPostedComment && typeof renderPostedComment == 'function') {
+      renderPostedComment.bind(self)(postedCommet)
+    }
+  }, [postedCommet, renderPostedComment])
 
   return null // component does not render anything
 }
