@@ -1,5 +1,5 @@
 # This is the appspec file for CodeDeploy.
-version: 0.1
+version: 0.0
 os: linux
 files:
   - source: /
