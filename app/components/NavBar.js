@@ -29,7 +29,7 @@ const Navbar = () => {
       </div>
       <div style={{ display: 'inline-block' }}>
         <ul className={styles.genreList}>
-          {['全て', '本', 'マンガ', 'アニメ'].map((item, index) => {
+          {['全て', '本', 'マンガ', 'アニメ', 'YouTube'].map((item, index) => {
             const active = selectedGenre === index
             return (
               <li
