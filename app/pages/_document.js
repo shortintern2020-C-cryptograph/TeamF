@@ -10,10 +10,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <meta
-            property="og:image"
-            content="https://firebasestorage.googleapis.com/v0/b/rakuten-ec1cd.appspot.com/o/scenepicks-ogp-min.png?alt=media&token=dfa9d27e-95ea-4eb0-adfc-e9ab1a7fe7ed"
-          />
+          <meta property="og:image" content="https://i.imgur.com/oIOuBWZ.png" />
           <meta property="og:title" content="ScenePicks" />
           <meta
             name="description"
