@@ -58,6 +58,7 @@ func configureAPI(api *scenepicks.SecenPickServerAPI) http.Handler {
 	api.GetTagHandler = scenepicks.GetTagHandlerFunc(handler.GetTag)
 	api.PostTagHandler = scenepicks.PostTagHandlerFunc(handler.PostTag)
 	api.HealthCheckHandler = scenepicks.HealthCheckHandlerFunc(handler.HealthCheck)
+	api.PostToTwitterHandler = scenepicks.PostToTwitterHandlerFunc(handler.PostToTwitter)
 
 	api.PreServerShutdown = func() {}
 

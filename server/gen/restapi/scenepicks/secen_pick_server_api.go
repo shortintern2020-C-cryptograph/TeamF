@@ -63,6 +63,9 @@ func NewSecenPickServerAPI(spec *loads.Document) *SecenPickServerAPI {
 		PostTagHandler: PostTagHandlerFunc(func(params PostTagParams) middleware.Responder {
 			return middleware.NotImplemented("operation PostTag has not yet been implemented")
 		}),
+		PostToTwitterHandler: PostToTwitterHandlerFunc(func(params PostToTwitterParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostToTwitter has not yet been implemented")
+		}),
 	}
 }
 
@@ -111,6 +114,8 @@ type SecenPickServerAPI struct {
 	PostDialogHandler PostDialogHandler
 	// PostTagHandler sets the operation handler for the post tag operation
 	PostTagHandler PostTagHandler
+	// PostToTwitterHandler sets the operation handler for the post to twitter operation
+	PostToTwitterHandler PostToTwitterHandler
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
 	ServeError func(http.ResponseWriter, *http.Request, error)
@@ -207,6 +212,9 @@ func (o *SecenPickServerAPI) Validate() error {
 	}
 	if o.PostTagHandler == nil {
 		unregistered = append(unregistered, "PostTagHandler")
+	}
+	if o.PostToTwitterHandler == nil {
+		unregistered = append(unregistered, "PostToTwitterHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -324,6 +332,10 @@ func (o *SecenPickServerAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/tag"] = NewPostTag(o.context, o.PostTagHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/twitter"] = NewPostToTwitter(o.context, o.PostToTwitterHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP
