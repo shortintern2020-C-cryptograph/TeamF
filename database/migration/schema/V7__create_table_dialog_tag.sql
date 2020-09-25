@@ -1,3 +1,7 @@
+/**
+ * @author Riku Nunokawa
+ */
+
 CREATE TABLE dialog_tag (
   tag_id INT UNSIGNED NOT NULL,
   dialog_id INT UNSIGNED NOT NULL,

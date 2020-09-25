@@ -1,3 +1,7 @@
+/**
+ * @author Riku Nunokawa
+ */
+
 INSERT INTO
   user(id, firebase_uid, display_name)
 VALUES
