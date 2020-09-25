@@ -1,5 +1,10 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
+/**
+ * server side renderred part wrapper. returns static html.
+ * prepared for dynamic OGP
+ * @author Takahiro Nishino
+ */
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx)

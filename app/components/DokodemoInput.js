@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from '../styles/DokodemoInput.module.scss'
 
 /**
- *
+ * @author Takahiro Nishino
  * @param {*} props
  */
 const DokodemoInput = (props) => {

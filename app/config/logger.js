@@ -1,5 +1,10 @@
 import Rollbar from 'rollbar'
 
+/**
+ * logger
+ * @author Takahiro Nishino
+ */
+
 const token = process.env.NEXT_PUBLIC_ROLLBAR_TOKEN
 
 const rollbar = new Rollbar({

@@ -1,5 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
+/**
+ * dynamic OGP endpoint
+ * @author Futa Nakayama
+ */
 const fs = require('fs')
 const { createCanvas } = require('canvas')
 const base64 = require('urlsafe-base64')

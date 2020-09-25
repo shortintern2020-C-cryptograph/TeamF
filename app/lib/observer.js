@@ -2,6 +2,11 @@ import React, { useEffect } from 'react'
 
 const genres = ['all', 'book', 'manga', 'anime', 'youtube']
 
+/**
+ * link between canvas and components
+ * @author Takahiro Nishino
+ * @param {*} props
+ */
 const Observer = (props) => {
   const {
     value,
