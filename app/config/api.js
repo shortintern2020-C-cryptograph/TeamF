@@ -1,5 +1,9 @@
 // console.log(process.env.NEXT_PUBLIC_ENDPOINT_URL)
 
+/**
+ * APIラッパー, APIモックに関する定義
+ * @author Ritsuki KOKUBO
+ */
 export const apiConfig = {
   fqdn: process.env.NEXT_PUBLIC_ENDPOINT_URL + '/api',
   endpoints: {
