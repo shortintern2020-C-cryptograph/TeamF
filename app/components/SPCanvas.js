@@ -10,6 +10,10 @@ import AuthContextProvider from '../contexts/AuthContext'
 import { MainContext } from '../contexts/MainContext'
 import { withToast } from '../lib/withToast'
 
+/**
+ * このアプリケーションのキャンバス描画
+ * @author Ritsuki KOKUBO
+ */
 class SPCanvas extends Component {
   dialogs
   dialogDetail
