@@ -1,5 +1,9 @@
 INSERT INTO
   user(id, firebase_uid, display_name)
+   /**
+   * フレーズについて
+   * @author Kaito Kuroiwa
+   */
 VALUES
   (1, "firebase01", "Alice"),
   (2, "firebase02", "Bob"),

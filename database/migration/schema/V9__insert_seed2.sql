@@ -1,6 +1,9 @@
 INSERT INTO
     dialog(id, content, title, author, source, link, style, user_id)
-
+   /**
+   * フレーズについて
+   * @author Kaito Kuroiwa
+   */
 VALUES
     (9, "命っちゅうんは限りがあるから大事なんや。限りがあるから頑張れるんやで。", "名探偵コナン", "服部平次", "youtube", "https://www.youtube.com/watch?v=r83qzmwGowI", "normal", 1),
     (10, "本当の自由とは、自分のルールで生きるってことなんだよ。", "ドラゴン桜", "桜木先生", "anime", "https://www.amazon.co.jp/dp/B009KWU5ZE/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1", "normal", 1),
