@@ -42,6 +42,24 @@ const MyPage = () => {
       })
   }
 
+  /**
+   * scenepicksについて
+   * @author Kaito Kuroiwa
+   */
+  const message = (
+    <div>
+      <h3>ScenePicksについて</h3>
+      <p>新しい点に立てて、別の切り口から見れるようにする。今までと違う視点から作品を広めたり、</p>
+      <p>探せたりすることが面白いという大切なことを多くの人に知って欲しいという思いで開発しました。</p>
+      <p> 　　　　　　　　　　　　Nexusチームリーダー 　黒岩海斗</p>
+      <p>Make it a new point so that you can see it from another cut. </p>
+      <p>
+        It was developed with the desire that many people know that it is interesting to be able to spread and find
+        works from a different point of view.
+      </p>
+    </div>
+  )
+
   return (
     <PageTransition>
       <div className={styles.container}>
@@ -52,9 +70,7 @@ const MyPage = () => {
         <div className={styles.content}>
           <div>
             <h2 className={styles.titleHeader} onClick={() => router.push('/')}>
-              {/* <Link href="/" className={styles.titleHeader}> */}
               <a>ScenePicks</a>
-              {/* </Link> */}
             </h2>
           </div>
           {user && (
@@ -69,41 +85,10 @@ const MyPage = () => {
             </div>
           )}
         </div>
-        <div>
-          <h3>ScenePicksについて</h3>
-          <p>新しい点に立てて、別の切り口から見れるようにする。今までと違う視点から作品を広めたり、</p>
-          <p>探せたりすることが面白いという大切なことを多くの人に知って欲しいという思いで開発しました。</p>
-          <p>Make it a new point so that you can see it from another cut. </p>
-          <p>
-            It was developed with the desire that many people know that it is interesting to be able to spread and find
-            works from a different point of view.
-          </p>
-        </div>
-        {/* {user && (
-          <div style={{ position: 'relative', margin: '30px 0' }}>
-            <div className={styles.profileName}>{user?.providerData[0].displayName}</div>
-            <img src={user?.providerData[0].photoURL} alt="my profile thumbnail" className={styles.profileImage} />
-            <p style={{ textAlign: 'center', marginTop: '50px' }}>
-              <button onClick={handleLogOut} className={styles.logoutButton} type="button">
-                ログアウト
-              </button>
-            </p>
-          </div>
-        )} */}
+        {message}
       </div>
-      {/* <div>
-        <h3>ScenePicksについて</h3>
-        <p>新しい点に立てて、別の切り口から見れるようにする。今までと違う視点から作品を広めたり、</p>
-        <p>探せたりすることが面白いという大切なことを多くの人に知って欲しいという思いで開発しました。</p>
-        <p> 　　　　　　　　　　　　Nexusチームリーダー 　黒岩海斗</p>
-        <p>Make it a new point so that you can see it from another cut. </p>
-        <p>
-          It was developed with the desire that many people know that it is interesting to be able to spread and find
-          works from a different point of view.
-        </p>
-      </div> */}
     </PageTransition>
   )
 }
-//黒岩海斗作成
+
 export default MyPage

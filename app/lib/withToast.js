@@ -1,5 +1,10 @@
 import { useToasts } from 'react-toast-notifications'
 
+/**
+ * HOC for class components
+ * use useToast() hook for functional components
+ * @param {*} Component
+ */
 export const withToast = (Component) => {
   return function WrappedComponent(props) {
     const toastFuncs = useToasts()

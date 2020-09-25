@@ -4,6 +4,7 @@ import { PageTransition } from './PageTransition'
 
 /**
  * 全体レイアウトのHOC
+ * @author Takahiro Nishino
  * @param {*} children
  */
 const Layout = ({ children }) => {
