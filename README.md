@@ -1,3 +1,5 @@
+[](@Author Futa Nakayama and Riku Nunokawa)
+
 # C日程 TeamF
 
 ## ディレクトリ構成
