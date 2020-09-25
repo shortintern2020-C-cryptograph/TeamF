@@ -11,7 +11,7 @@ import { MainContext } from '../contexts/MainContext'
 import { withToast } from '../lib/withToast'
 
 /**
- * このアプリケーションのキャンバス壁画
+ * このアプリケーションのキャンバス描画
  * @author Ritsuki KOKUBO
  */
 class SPCanvas extends Component {
