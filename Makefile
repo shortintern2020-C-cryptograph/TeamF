@@ -1,3 +1,5 @@
+# @author Futa Nakayama & Riku Nunokawa
+
 SERVER_REPOSITORY_NAME:=teamF/scenepicks
 SERVER_CONTAINER_NAME:=scenepicks
 
@@ -8,6 +10,7 @@ FLYWAY_CONF?=-url=jdbc:mysql://$(DOCKER_DNS):3306/$(DBNAME) -user=root -password
 HOST_APP_BASE:=$(shell pwd)
 DOCKER_APP_BASE:=/go/src/github.com/shortintern2020-C-cryptograph/TeamF/server
 
+# @author Futa Nakayama
 
 local/run/server: # コンテナでdbだけ、サーバはローカルで起動（フロントはなにもしない）
 	$(make) docker/run/db
@@ -47,6 +50,8 @@ local/run/frontend: # フロントエンドを起動！
 
 local/stop: # ローカルで動かしてたやつ以外のコンテナを削除（only db or db + server）
 	docker-compose down
+
+# @author Riku Nunokawa
 
 DB_SERVICE:=db
 mysql/client:

@@ -1,3 +1,7 @@
+/**
+ * @author Riku Nunokawa
+ */
+
 CREATE TABLE favorite (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id INT UNSIGNED NOT NULL,

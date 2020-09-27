@@ -1,3 +1,7 @@
+/**
+ * @author Riku Nunokawa
+ */
+
 CREATE TABLE dialog(
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   content VARCHAR(255),

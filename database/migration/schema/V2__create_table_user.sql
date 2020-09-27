@@ -1,3 +1,7 @@
+/**
+ * @author Riku Nunokawa
+ */
+
 CREATE TABLE user (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   firebase_uid VARCHAR(255) NOT NULL,

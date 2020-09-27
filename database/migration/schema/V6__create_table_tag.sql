@@ -1,3 +1,7 @@
+/**
+ * @author Riku Nunokawa
+ */
+
 CREATE TABLE tag (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   name VARCHAR(255),
